@@ -1,0 +1,8 @@
+digraph G{           
+bgcolor = "#FFF3D1";  
+node_0000020e0dd36630 [shape = "square", style = filled, fillcolor = "aquamarine", label = "j"]
+node_0000020e0dd36648 [shape = "oval", style = filled, fillcolor = "pink", label = "6.00"]
+node_0000020e0dd36660 [shape = "record", style = filled, fillcolor = "azure", label = "{** | { <L> L | <R> R } }"]
+node_0000020e0dd36660: <L> -> node_0000020e0dd36648
+node_0000020e0dd36660: <R> -> node_0000020e0dd36630
+} 
