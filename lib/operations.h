@@ -2,8 +2,8 @@
 #define OPERATIONS_H
 
 #include <stdio.h>
-#include "tree.h"
 
+#include "tree_elem_t_info.h"
 
 TreeElem_t Add(TreeElem_t arg1, TreeElem_t arg2);
 TreeElem_t Sub(TreeElem_t arg1, TreeElem_t arg2);
@@ -30,25 +30,9 @@ enum FuncType
     BINARY
 };
 
-struct Operation
-{
-    const int    num;
-    const char  *symbol;
-
-    const FuncType      type;                                               // UNARY / BINARY
-    const FuncEntryForm form;                                               // PREFIX / INFIX в реальности
-
-    TreeElem_t  (*op_func)     (TreeElem_t arg1, TreeElem_t arg2);
-};
-
-struct ManageElem
-{
-    const int   name;
-    const char *symbol;
-};
-
 enum Operation_enum
 {
+    ASSIGN,
     ADD,
     SUB,
     MUL,
@@ -63,45 +47,101 @@ enum Operation_enum
     TAN
 };
 
-enum ManagerElems_enum
+struct Operation
+{
+    const Operation_enum num;
+    const char          *symbol;
+
+    const FuncType      type;                                               // UNARY / BINARY
+    const FuncEntryForm form;                                               // PREFIX / INFIX РІ СЂРµР°Р»СЊРЅРѕСЃС‚Рё
+
+    TreeElem_t  (*op_func)     (TreeElem_t arg1, TreeElem_t arg2);
+};
+
+const int OPERATIONS_NUM = 11;
+
+const Operation Operations[OPERATIONS_NUM] = 
+{
+    { ASSIGN, "=",    BINARY, INFIX,  NULL },
+    { ADD,    "+",    BINARY, INFIX,  Add },
+    { SUB,    "-",    BINARY, INFIX,  Sub },
+    { MUL,    "*",    BINARY, INFIX,  Mul },
+    { DIV,    "/",    BINARY, INFIX,  Div },
+    { DEG,    "**",   BINARY, INFIX,  Deg },
+
+    { LN,     "Р»РЅ",   UNARY,  PREFIX, Ln  },
+    { LOG,    "Р»РѕРі",  BINARY, PREFIX, Log },
+
+    { SIN,    "СЃРёРЅ",  UNARY,  PREFIX, Sin },
+    { COS,    "РєРѕСЃ",  UNARY,  PREFIX, Cos },
+    { TAN,    "С‚Р°РЅ",  UNARY,  PREFIX, Tan }
+};
+
+//------------------------------------------------------------------------------------------------------------//
+
+enum Type
+{
+    INT_T,
+    DOUBLE_T
+};
+
+struct Initializer
+{
+    Type type;
+    const char *symbol;
+};
+
+const int INITIALIZERS_NUM = 2;
+
+const Initializer Initializers[INITIALIZERS_NUM] =
+{
+    { INT_T,    "РёРЅС‚" },
+    { DOUBLE_T, "СЃСЃСЃСЂ"  }
+};
+
+//------------------------------------------------------------------------------------------------------------//
+
+enum Managers_enum
 {
     OPEN_BRACKET,
     CLOSE_BRACKET,
     COMMA,
-    EXPR_END
 };
 
-const int OPERATIONS_NUM = 10;
-
-const Operation Operations[OPERATIONS_NUM] = 
+struct ManageElem
 {
-    { ADD, "с",    BINARY, INFIX,  Add },
-    { SUB, "без",  BINARY, INFIX,  Sub },
-    { MUL, "множ", BINARY, INFIX,  Mul },
-    { DIV, "дел",  BINARY, INFIX,  Div },
-    { DEG, "степ", BINARY, INFIX,  Deg },
-
-    { LN,  "лн",   UNARY,  PREFIX, Ln  },
-    { LOG, "лог",  BINARY, PREFIX, Log },
-
-    { SIN, "син",  UNARY,  PREFIX, Sin },
-    { COS, "кос",  UNARY,  PREFIX, Cos },
-    { TAN, "тан",  UNARY,  PREFIX, Tan }
+    const Managers_enum  name;
+    const char          *symbol;
 };
 
-const int MANAGE_ELEMS_NUM = 4;
+const int MANAGE_ELEMS_NUM = 3;
 
-const ManageElem ManagerElems[MANAGE_ELEMS_NUM] = 
+const ManageElem Managers[MANAGE_ELEMS_NUM] = 
 {
     { OPEN_BRACKET,  "("  },
     { CLOSE_BRACKET, ")"  },
     { COMMA,         ","  },
-    { EXPR_END,      "\n" }
 };
 
-// const Operation  *GetOperationByNode   (Node *node);
-// const Operation  *GetOperationByNum    (int num);
-const Operation  *GetOperationBySymbol (char *sym);
-const ManageElem *GetManageElemBySymbol(char *sym);
+//---------------------------------------------------------------------------------------------------------------//
+
+const char *const NEW_EXPR_SYMBOL = ";";
+
+//---------------------------------------------------------------------------------------------------------------//
+
+enum NamedNode
+{
+    FUNC_TYPE,
+    VAR_TYPE
+};
+
+const char *const FUNC_TYPE_SYMBOL = "FUNC_T";
+const char *const VAR_TYPE_SYMBOL  = "VAR_T";
+
+//---------------------------------------------------------------------------------------------------------------//
+
+const Operation   *GetOperationBySymbol  (char *sym);
+const Initializer *GetInitBySymbol       (char *sym);
+const ManageElem  *GetManageElemBySymbol (char *sym);
 
 #endif

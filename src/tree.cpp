@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cstring>  
 #include <ctype.h>
 #include <sys/stat.h>
 #include <assert.h>
@@ -8,6 +9,7 @@
 #include "tree.h"
 #include "debug.h"
 #include "graph.h"
+#include "reader.h"
 #include "operations.h"
 
 
@@ -31,15 +33,13 @@ void TreeCtor(Tree *tree, size_t start_capacity ON_LANG_DEBUG(, const char *name
 
         mkdir(path);
     );
-
-    DIFF_DUMP(tree);
 }
 
 void TreeDtor(Tree *tree)
 {
     assert(tree);
 
-    DIFF_DUMP(tree);
+    LANG_DUMP(tree);
 
     NamesTableDtor(&tree->names_table);
 
@@ -143,30 +143,44 @@ void RemoveSubtree(Tree *tree, Node **start_node)
     RemoveNode(tree, start_node);
 }
 
-char *NodeValToStr(Node *node, char *res_str)
+char *NodeValToStr(Node *node)
 {
-// //fprintf(stderr, "called NodeValToStr(), val = %d\n", val);
     assert(node);
-    assert(res_str);
+
+    static char res_str[TOKEN_LEN] = {};
 
     if (node->type == NUM)
         sprintf(res_str, TREE_ELEM_PRINT_SPECIFIER, node->val.num);
     
     else if (node->type == VAR)
-        sprintf(res_str, "%s", node->val.var);
+        sprintf(res_str, "%s", node->val.prop_name);
 
     else if (node->type == OP)
-    {
-        // const Operation *cur_op = GetOperationByNode(node);
-
-        // sprintf(res_str, "%s", cur_op->symbol);
         sprintf(res_str, "%s", node->val.op->symbol);
+
+    else if (node->type == MANAGER)
+        sprintf(res_str, "%s", node->val.manager->symbol);
+
+    else if (node->type == INIT)
+        sprintf(res_str, "%s", node->val.init->symbol);
+
+    else if (node->type == NEW_EXPR)
+        sprintf(res_str, "%s", node->val.new_expr);
+    
+    else if (node->type == NAMED_NODE_TYPE)
+    {
+        if (node->val.named_node_type == FUNC_TYPE)
+            sprintf(res_str, "%s", FUNC_TYPE_SYMBOL);
+        
+        else 
+            sprintf(res_str, "%s", VAR_TYPE_SYMBOL);
     }
 
+    else if (node->type == EOT)
+        sprintf(res_str, "%s", EOT_SYMBOL);
 
-
-    else    // POISON_TYPE
-        sprintf(res_str, "%s", POISON_TYPE_MARK);
+    else if (node->type == POISON_TYPE)
+        sprintf(res_str, "%s", POISON_SYMBOL);
 
     return res_str;
 }

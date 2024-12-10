@@ -1,8 +1,66 @@
 digraph G{           
 bgcolor = "#FFF3D1";  
-node_0000020e0dd36630 [shape = "square", style = filled, fillcolor = "aquamarine", label = "j"]
-node_0000020e0dd36648 [shape = "oval", style = filled, fillcolor = "pink", label = "6.00"]
-node_0000020e0dd36660 [shape = "record", style = filled, fillcolor = "azure", label = "{** | { <L> L | <R> R } }"]
-node_0000020e0dd36660: <L> -> node_0000020e0dd36648
-node_0000020e0dd36660: <R> -> node_0000020e0dd36630
+node_0000017f28266630 [shape = "record", style = filled, fillcolor = "darkorange", label = "{инт | { <L> L | <R> R } }"]
+node_0000017f28266650 [shape = "square", style = filled, fillcolor = "aquamarine", label = "popa"]
+node_0000017f28266690 [shape = "oval", style = filled, fillcolor = "pink", label = "56"]
+node_0000017f282666b0 [shape = "record", style = filled, fillcolor = "azure", label = "{** | { <L> L | <R> R } }"]
+node_0000017f282666f0 [shape = "oval", style = filled, fillcolor = "pink", label = "3"]
+node_0000017f28266710 [shape = "record", style = filled, fillcolor = "azure", label = "{- | { <L> L | <R> R } }"]
+node_0000017f28266730 [shape = "oval", style = filled, fillcolor = "pink", label = "56"]
+node_0000017f28266750 [shape = "record", style = filled, fillcolor = "azure", label = "{/ | { <L> L | <R> R } }"]
+node_0000017f28266770 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
+node_0000017f282667b0 [shape = "record", style = filled, fillcolor = "grey", label = "{new_expr | { <L> L | <R> R } }"]
+node_0000017f282667d0 [shape = "record", style = filled, fillcolor = "darkorange", label = "{ссср | { <L> L | <R> R } }"]
+node_0000017f282667f0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "dab"]
+node_0000017f28266830 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
+node_0000017f28266850 [shape = "record", style = filled, fillcolor = "grey", label = "{new_expr | { <L> L | <R> R } }"]
+node_0000017f28266870 [shape = "oval", style = filled, fillcolor = "pink", label = "15"]
+node_0000017f28266890 [shape = "record", style = filled, fillcolor = "azure", label = "{- | { <L> L | <R> R } }"]
+node_0000017f282668b0 [shape = "oval", style = filled, fillcolor = "pink", label = "56"]
+node_0000017f282668d0 [shape = "record", style = filled, fillcolor = "azure", label = "{** | { <L> L | <R> R } }"]
+node_0000017f282668f0 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
+node_0000017f28266910 [shape = "record", style = filled, fillcolor = "azure", label = "{- | { <L> L | <R> R } }"]
+node_0000017f28266930 [shape = "oval", style = filled, fillcolor = "pink", label = "2"]
+node_0000017f28266950 [shape = "record", style = filled, fillcolor = "grey", label = "{new_expr | { <L> L | <R> R } }"]
+node_0000017f28266970 [shape = "record", style = filled, fillcolor = "darkorange", label = "{инт | { <L> L | <R> R } }"]
+node_0000017f28266990 [shape = "square", style = filled, fillcolor = "aquamarine", label = "ars"]
+node_0000017f282669d0 [shape = "oval", style = filled, fillcolor = "pink", label = "101"]
+node_0000017f282669f0 [shape = "record", style = filled, fillcolor = "azure", label = "{- | { <L> L | <R> R } }"]
+node_0000017f28266a10 [shape = "square", style = filled, fillcolor = "aquamarine", label = "popa"]
+node_0000017f28266a30 [shape = "record", style = filled, fillcolor = "grey", label = "{new_expr | { <L> L | <R> R } }"]
+node_0000017f28266a70 [shape = "record", style = filled, fillcolor = "darkseagreen", label = "{VAR_T | { <L> L | <R> R } }"]
+node_0000017f28266a90 [shape = "record", style = filled, fillcolor = "darkseagreen", label = "{VAR_T | { <L> L | <R> R } }"]
+node_0000017f28266ab0 [shape = "record", style = filled, fillcolor = "darkseagreen", label = "{VAR_T | { <L> L | <R> R } }"]
+node_0000017f28266ad0 [shape = "record", style = filled, fillcolor = "darkseagreen", label = "{VAR_T | { <L> L | <R> R } }"]
+node_0000017f28266630: <L> -> node_0000017f28266a70
+node_0000017f28266630: <R> -> node_0000017f282666b0
+node_0000017f282666b0: <L> -> node_0000017f28266690
+node_0000017f282666b0: <R> -> node_0000017f28266710
+node_0000017f28266710: <L> -> node_0000017f282666f0
+node_0000017f28266710: <R> -> node_0000017f28266750
+node_0000017f28266750: <L> -> node_0000017f28266730
+node_0000017f28266750: <R> -> node_0000017f28266770
+node_0000017f282667b0: <L> -> node_0000017f28266630
+node_0000017f282667b0: <R> -> node_0000017f28266850
+node_0000017f282667d0: <L> -> node_0000017f28266a90
+node_0000017f282667d0: <R> -> node_0000017f28266830
+node_0000017f28266850: <L> -> node_0000017f282667d0
+node_0000017f28266850: <R> -> node_0000017f28266950
+node_0000017f28266890: <L> -> node_0000017f28266870
+node_0000017f28266890: <R> -> node_0000017f282668d0
+node_0000017f282668d0: <L> -> node_0000017f282668b0
+node_0000017f282668d0: <R> -> node_0000017f282668f0
+node_0000017f28266910: <L> -> node_0000017f28266890
+node_0000017f28266910: <R> -> node_0000017f28266930
+node_0000017f28266950: <L> -> node_0000017f28266910
+node_0000017f28266950: <R> -> node_0000017f28266a30
+node_0000017f28266970: <L> -> node_0000017f28266ab0
+node_0000017f28266970: <R> -> node_0000017f282669f0
+node_0000017f282669f0: <L> -> node_0000017f282669d0
+node_0000017f282669f0: <R> -> node_0000017f28266ad0
+node_0000017f28266a30: <L> -> node_0000017f28266970
+node_0000017f28266a70: <L> -> node_0000017f28266650
+node_0000017f28266a90: <L> -> node_0000017f282667f0
+node_0000017f28266ab0: <L> -> node_0000017f28266990
+node_0000017f28266ad0: <L> -> node_0000017f28266a10
 } 

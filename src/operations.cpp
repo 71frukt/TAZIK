@@ -8,33 +8,6 @@
 
 extern FILE *LogFile;
 
-// const Operation *GetOperationByNode(Node *node)
-// {
-//     assert(node);
-
-//     if (node->type != OP)
-//         return NULL; 
-
-//     for (size_t i = 0; i < OPERATIONS_NUM; i++)
-//     {
-//         if (node->val.op == Operations[i].num)
-//             return &Operations[i];
-//     }
-
-//     return NULL;
-// }
-
-// const Operation *GetOperationByNum(int num)
-// {
-//     for (size_t i = 0; i < OPERATIONS_NUM; i++)
-//     {
-//         if (num == Operations[i].num)
-//             return &Operations[i];
-//     }
-
-//     return NULL;
-// }
-
 const Operation *GetOperationBySymbol(char *sym)
 {
     assert(sym);
@@ -48,14 +21,27 @@ const Operation *GetOperationBySymbol(char *sym)
     return NULL;
 }
 
+const Initializer *GetInitBySymbol(char *sym)
+{
+    assert(sym);
+
+    for (size_t i = 0; i < INITIALIZERS_NUM; i++)
+    {
+        if (strcmp(sym, Initializers[i].symbol) == 0)
+            return &Initializers[i];
+    }
+
+    return NULL;
+}
+
 const ManageElem *GetManageElemBySymbol(char *sym)
 {
     assert(sym);
 
     for (size_t i = 0; i < MANAGE_ELEMS_NUM; i++)
     {
-        if (strcmp(sym, ManagerElems[i].symbol) == 0)
-            return &ManagerElems[i];
+        if (strcmp(sym, Managers[i].symbol) == 0)
+            return &Managers[i];
     }
 
     return NULL;

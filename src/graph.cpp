@@ -5,6 +5,7 @@
 #include "tree.h"
 #include "graph.h"
 #include "operations.h"
+#include "reader.h"
 
 void DrawGraph(Tree *tree, char *dest_picture_path)
 {
@@ -41,33 +42,54 @@ void InitNodesInDot(Tree *tree, FILE *dot_file)
         if (cur_node == NULL)
             continue;
 
-        char node_val_str[TOKEN_LEN] = {};
+        char *node_val_str = NodeValToStr(cur_node);
 
-        NodeValToStr(cur_node, node_val_str);
-        
         if (cur_node->type == OP)
         {
-            // if (GetOperationByNode(cur_node)->type == BINARY)
             if (cur_node->val.op->type == BINARY)
                 fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"{%s | { <%s> %s | <%s> %s } }\"]\n",
                     NODE_NAME_PREFIX, cur_node, OP_NODE_SHAPE, OP_NODE_COLOR, node_val_str, LEFT_MARK, LEFT_MARK, RIGHT_MARK, RIGHT_MARK);
             
             else
                 fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"{%s | { <%s> %s } }\"]\n",
-                    NODE_NAME_PREFIX, cur_node, OP_NODE_SHAPE, OP_NODE_COLOR, node_val_str, UNIQ_ARG_MARK, UNIQ_ARG_MARK);
+                    NODE_NAME_PREFIX, cur_node, OP_NODE_SHAPE, OP_NODE_COLOR, node_val_str, LEFT_MARK, UNIQ_ARG_MARK);
         }
 
+        else if (cur_node->type == NEW_EXPR)
+            fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"{%s | { <%s> %s | <%s> %s } }\"]\n",
+                    NODE_NAME_PREFIX, cur_node, OP_NODE_SHAPE, NEW_EXPR_NODE_COLOR, "new_expr", LEFT_MARK, LEFT_MARK, RIGHT_MARK, RIGHT_MARK);
+
+        else if (cur_node->type == INIT)
+            fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"{%s | { <%s> %s | <%s> %s } }\"]\n",
+                    NODE_NAME_PREFIX, cur_node, OP_NODE_SHAPE, INIT_NODE_COLOR, node_val_str, LEFT_MARK, LEFT_MARK, RIGHT_MARK, RIGHT_MARK);
+                
         else if (cur_node->type == VAR)
             fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"%s\"]\n",
                 NODE_NAME_PREFIX, cur_node, VAR_NODE_SHAPE, VAR_NODE_COLOR, node_val_str);
-
+                
         else if (cur_node->type == NUM)
+        {
             fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"%s\"]\n",
                 NODE_NAME_PREFIX, cur_node, NUM_NODE_SHAPE, NUM_NODE_COLOR, node_val_str);
+        }
+
+        else if (cur_node->type == NAMED_NODE_TYPE)
+            fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"{%s | { <%s> %s | <%s> %s } }\"]\n",
+                    NODE_NAME_PREFIX, cur_node, OP_NODE_SHAPE, NAMED_NODE_TYPE_COLOR, node_val_str, LEFT_MARK, LEFT_MARK, RIGHT_MARK, RIGHT_MARK);
+            // fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"{ <%s> %s}\"]\n",
+                    // NODE_NAME_PREFIX, cur_node, NAMED_NODE_TYPE_SHAPE, NAMED_NODE_TYPE_COLOR, LEFT_MARK, node_val_str);
 
         else if (cur_node->type == MANAGER)
             fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"%s\"]\n",
                 NODE_NAME_PREFIX, cur_node, MANAGER_NODE_SHAPE, MANAGER_NODE_COLOR, node_val_str);
+
+        else if (cur_node->type == EOT)
+            fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"%s\"]\n",
+                NODE_NAME_PREFIX, cur_node, EOT_NODE_SHAPE, EOT_NODE_COLOR, node_val_str);
+
+        else // if (cur_node->type == POISON_TYPE)
+            fprintf(dot_file, "%s%p [shape = \"%s\", style = filled, fillcolor = \"%s\", label = \"%s\"]\n",
+                NODE_NAME_PREFIX, cur_node, POISON_NODE_SHAPE, POISON_NODE_COLOR, node_val_str);
     }
 }
 
@@ -102,6 +124,5 @@ void MakeGraphPicture(const char *dotfile_path, const char *picture_path)
     char cmd_command[CMD_COMMAND_LEN] = {};
 
     sprintf(cmd_command, "dot %s -T png -o %s\n", dotfile_path, picture_path);
-// //fprintf(stderr, "command: %s\n", cmd_command);
     system(cmd_command);
 }
