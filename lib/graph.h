@@ -18,17 +18,14 @@
 #define OP_NODE_COLOR         "azure"
 #define OP_NODE_SHAPE         "record"
 
-#define INIT_NODE_COLOR       "darkorange"
-#define INIT_NODE_SHAPE       "egg"
+#define KEY_WORD_COLOR        "darkorange"
+#define KEY_WORD_SHAPE        OP_NODE_SHAPE
 
 #define MANAGER_NODE_COLOR    "grey"
 #define MANAGER_NODE_SHAPE    "circle"
 
-#define NEW_EXPR_NODE_COLOR   "grey"
-#define NEW_EXPR_NODE_SHAPE   "note"
-
-#define NAMED_NODE_TYPE_COLOR "darkseagreen"
-#define NAMED_NODE_TYPE_SHAPE "component"
+#define TYPEOF_NAMED_NODE_COLOR "darkseagreen"
+#define TYPEOF_NAMED_NODE_SHAPE OP_NODE_SHAPE
 
 #define POISON_NODE_COLOR     "grey"
 #define POISON_NODE_SHAPE     "hexagon"

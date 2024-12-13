@@ -21,7 +21,6 @@ const TreeElem_t POISON_VAL = 0xDEB11;
 #define LEFT_MARK      "L"
 #define RIGHT_MARK     "R"
 #define UNIQ_ARG_MARK  "U"
-#define EOT_SYMBOL     "$"
 #define POISON_SYMBOL  "POISON"
 
 #define BASE_INPUT_FILE_NAME   "source_file.txt"
@@ -37,14 +36,14 @@ enum NodeType
 {
     NUM,
     VAR,
+    FUNC,
+    VAR_OR_FUNC,
     OP,
-    INIT,
+    KEY_WORD,
     MANAGER,
-    NEW_EXPR,
-    NAMED_NODE_TYPE,
+    TYPE_INDICATOR,
 
     POISON_TYPE,
-    EOT
 };
 
 
@@ -53,20 +52,21 @@ union NodeVal
     TreeElem_t         num;
     char              *prop_name;
     const Operation   *op;
-    const Initializer *init;
+    const KeyWord     *key_word;
     const ManageElem  *manager;
-    const char        *new_expr;
-    NamedNode          named_node_type;
+    TypeIndicator      type_indicator;
 };
 
 struct Node
 {
     NodeType type;
-
     NodeVal  val;
 
     Node    *left;
     Node    *right;
+
+    size_t born_line;
+    size_t born_column;
 };
 
 struct ProperName
@@ -120,5 +120,5 @@ void    NamesTableDtor  (NamesTable *table);
 
 bool    SubtreeContainsType(Node *cur_node, NodeType type);
 bool    OpNodeIsCommutativity(Node *op_node);
-
+bool    IsInitialise(Node *node);
 #endif

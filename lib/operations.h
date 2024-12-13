@@ -32,7 +32,6 @@ enum FuncType
 
 enum Operation_enum
 {
-    ASSIGN,
     ADD,
     SUB,
     MUL,
@@ -58,11 +57,10 @@ struct Operation
     TreeElem_t  (*op_func)     (TreeElem_t arg1, TreeElem_t arg2);
 };
 
-const int OPERATIONS_NUM = 11;
+const int OPERATIONS_NUM = 10;
 
 const Operation Operations[OPERATIONS_NUM] = 
 {
-    { ASSIGN, "=",    BINARY, INFIX,  NULL },
     { ADD,    "+",    BINARY, INFIX,  Add },
     { SUB,    "-",    BINARY, INFIX,  Sub },
     { MUL,    "*",    BINARY, INFIX,  Mul },
@@ -79,33 +77,14 @@ const Operation Operations[OPERATIONS_NUM] =
 
 //------------------------------------------------------------------------------------------------------------//
 
-enum Type
-{
-    INT_T,
-    DOUBLE_T
-};
-
-struct Initializer
-{
-    Type type;
-    const char *symbol;
-};
-
-const int INITIALIZERS_NUM = 2;
-
-const Initializer Initializers[INITIALIZERS_NUM] =
-{
-    { INT_T,    "инт" },
-    { DOUBLE_T, "ссср"  }
-};
-
-//------------------------------------------------------------------------------------------------------------//
-
 enum Managers_enum
 {
-    OPEN_BRACKET,
-    CLOSE_BRACKET,
+    OPEN_BLOCK_BRACKET,
+    CLOSE_BLOCK_BRACKET,
+    OPEN_EXPR_BRACKET,
+    CLOSE_EXPR_BRACKET,
     COMMA,
+    EOT
 };
 
 struct ManageElem
@@ -114,34 +93,61 @@ struct ManageElem
     const char          *symbol;
 };
 
-const int MANAGE_ELEMS_NUM = 3;
+const int MANAGE_ELEMS_NUM = 6;
 
 const ManageElem Managers[MANAGE_ELEMS_NUM] = 
 {
-    { OPEN_BRACKET,  "("  },
-    { CLOSE_BRACKET, ")"  },
-    { COMMA,         ","  },
+    { OPEN_BLOCK_BRACKET,  "начало_блока"   },
+    { CLOSE_BLOCK_BRACKET, "конец_блока" },
+    { OPEN_EXPR_BRACKET,   "(" },
+    { CLOSE_EXPR_BRACKET,  ")" },
+    { COMMA,               "," },
+    { EOT,                 "$" }
 };
 
 //---------------------------------------------------------------------------------------------------------------//
 
-const char *const NEW_EXPR_SYMBOL = ";";
-
-//---------------------------------------------------------------------------------------------------------------//
-
-enum NamedNode
+enum TypeIndicator
 {
-    FUNC_TYPE,
-    VAR_TYPE
+    VAR_TYPE,
+    FUNC_TYPE
 };
 
-const char *const FUNC_TYPE_SYMBOL = "FUNC_T";
 const char *const VAR_TYPE_SYMBOL  = "VAR_T";
+const char *const FUNC_TYPE_SYMBOL = "FUNC_T";
+
+//---------------------------------------------------------------------------------------------------------------//
+
+enum KeyWord_enum
+{
+    INT_INIT,
+    DOUBLE_INIT,
+    NEW_EXPR,
+    ASSIGN,
+    IF
+};
+
+struct KeyWord
+{
+    const KeyWord_enum  name;
+    const char         *symbol; 
+};
+
+const int KEY_WORDS_NUM = 5;
+
+const KeyWord KeyWords[KEY_WORDS_NUM] = 
+{
+    { INT_INIT,    "инт"  },
+    { DOUBLE_INIT, "дабл" },
+    { NEW_EXPR,    "новая_строка" },
+    { ASSIGN,      "="    },
+    { IF,          "если" }
+};
 
 //---------------------------------------------------------------------------------------------------------------//
 
 const Operation   *GetOperationBySymbol  (char *sym);
-const Initializer *GetInitBySymbol       (char *sym);
+const KeyWord     *GetKeyWordBySymbol    (char *sym);
 const ManageElem  *GetManageElemBySymbol (char *sym);
 
 #endif

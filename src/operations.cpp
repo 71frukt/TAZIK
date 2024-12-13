@@ -21,14 +21,14 @@ const Operation *GetOperationBySymbol(char *sym)
     return NULL;
 }
 
-const Initializer *GetInitBySymbol(char *sym)
+const KeyWord *GetKeyWordBySymbol(char *sym)
 {
     assert(sym);
 
-    for (size_t i = 0; i < INITIALIZERS_NUM; i++)
+    for (size_t i = 0; i < KEY_WORDS_NUM; i++)
     {
-        if (strcmp(sym, Initializers[i].symbol) == 0)
-            return &Initializers[i];
+        if (strcmp(sym, KeyWords[i].symbol) == 0)
+            return &KeyWords[i];
     }
 
     return NULL;

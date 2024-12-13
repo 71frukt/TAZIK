@@ -152,32 +152,28 @@ char *NodeValToStr(Node *node)
     if (node->type == NUM)
         sprintf(res_str, TREE_ELEM_PRINT_SPECIFIER, node->val.num);
     
-    else if (node->type == VAR)
+    else if (node->type == VAR || node->type == FUNC || node->type == VAR_OR_FUNC)
         sprintf(res_str, "%s", node->val.prop_name);
 
     else if (node->type == OP)
         sprintf(res_str, "%s", node->val.op->symbol);
 
     else if (node->type == MANAGER)
-        sprintf(res_str, "%s", node->val.manager->symbol);
-
-    else if (node->type == INIT)
-        sprintf(res_str, "%s", node->val.init->symbol);
-
-    else if (node->type == NEW_EXPR)
-        sprintf(res_str, "%s", node->val.new_expr);
-    
-    else if (node->type == NAMED_NODE_TYPE)
     {
-        if (node->val.named_node_type == FUNC_TYPE)
+        sprintf(res_str, "%s", node->val.manager->symbol);
+    }
+
+    else if (node->type == KEY_WORD)
+        sprintf(res_str, "%s", node->val.key_word->symbol);
+
+    else if (node->type == TYPE_INDICATOR)
+    {
+        if (node->val.type_indicator == FUNC_TYPE)
             sprintf(res_str, "%s", FUNC_TYPE_SYMBOL);
         
         else 
             sprintf(res_str, "%s", VAR_TYPE_SYMBOL);
     }
-
-    else if (node->type == EOT)
-        sprintf(res_str, "%s", EOT_SYMBOL);
 
     else if (node->type == POISON_TYPE)
         sprintf(res_str, "%s", POISON_SYMBOL);
@@ -279,4 +275,9 @@ bool OpNodeIsCommutativity(Node *op_node)
         return true;
     
     else return false;
+}
+
+bool IsInitialise(Node *node)
+{
+    return (node->type == KEY_WORD && (node->val.key_word->name == INT_INIT || node->val.key_word->name == DOUBLE_INIT));
 }
