@@ -1,82 +1,82 @@
 digraph G{           
 bgcolor = "#FFF3D1";  
-node_0000018876026670 [shape = "record", style = filled, fillcolor = "darkorange", label = "{инт | { <L> L | <R> R } }"]
-node_00000188760266a0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "func"]
-node_0000018876026700 [shape = "record", style = filled, fillcolor = "darkorange", label = "{инт | { <L> L | <R> R } }"]
-node_0000018876026730 [shape = "square", style = filled, fillcolor = "aquamarine", label = "popa"]
-node_00000188760267c0 [shape = "oval", style = filled, fillcolor = "pink", label = "56"]
-node_00000188760267f0 [shape = "record", style = filled, fillcolor = "azure", label = "{+ | { <L> L | <R> R } }"]
-node_0000018876026820 [shape = "oval", style = filled, fillcolor = "pink", label = "87"]
-node_0000018876026850 [shape = "record", style = filled, fillcolor = "darkorange", label = "{новая_строка | { <L> L | <R> R } }"]
-node_0000018876026880 [shape = "record", style = filled, fillcolor = "darkorange", label = "{инт | { <L> L | <R> R } }"]
-node_00000188760268b0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "a"]
-node_0000018876026910 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
-node_0000018876026940 [shape = "record", style = filled, fillcolor = "darkorange", label = "{новая_строка | { <L> L | <R> R } }"]
-node_0000018876026970 [shape = "oval", style = filled, fillcolor = "pink", label = "95"]
-node_00000188760269a0 [shape = "record", style = filled, fillcolor = "azure", label = "{+ | { <L> L | <R> R } }"]
-node_00000188760269d0 [shape = "oval", style = filled, fillcolor = "pink", label = "95"]
-node_0000018876026a00 [shape = "record", style = filled, fillcolor = "darkorange", label = "{новая_строка | { <L> L | <R> R } }"]
-node_0000018876026a30 [shape = "record", style = filled, fillcolor = "darkorange", label = "{если | { <L> L | <R> R } }"]
-node_0000018876026a90 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
-node_0000018876026b20 [shape = "record", style = filled, fillcolor = "darkorange", label = "{инт | { <L> L | <R> R } }"]
-node_0000018876026b50 [shape = "square", style = filled, fillcolor = "aquamarine", label = "a"]
-node_0000018876026bb0 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
-node_0000018876026be0 [shape = "record", style = filled, fillcolor = "azure", label = "{- | { <L> L | <R> R } }"]
-node_0000018876026c10 [shape = "oval", style = filled, fillcolor = "pink", label = "9"]
-node_0000018876026c40 [shape = "record", style = filled, fillcolor = "darkorange", label = "{новая_строка | { <L> L | <R> R } }"]
-node_0000018876026ca0 [shape = "record", style = filled, fillcolor = "darkorange", label = "{пока | { <L> L | <R> R } }"]
-node_0000018876026d00 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
-node_0000018876026d30 [shape = "record", style = filled, fillcolor = "azure", label = "{+ | { <L> L | <R> R } }"]
-node_0000018876026d60 [shape = "oval", style = filled, fillcolor = "pink", label = "9"]
-node_0000018876026d90 [shape = "record", style = filled, fillcolor = "azure", label = "{!= | { <L> L | <R> R } }"]
-node_0000018876026dc0 [shape = "oval", style = filled, fillcolor = "pink", label = "14"]
-node_0000018876026e50 [shape = "record", style = filled, fillcolor = "darkorange", label = "{инт | { <L> L | <R> R } }"]
-node_0000018876026e80 [shape = "square", style = filled, fillcolor = "aquamarine", label = "po"]
-node_0000018876026ee0 [shape = "oval", style = filled, fillcolor = "pink", label = "988"]
-node_0000018876026f10 [shape = "record", style = filled, fillcolor = "darkorange", label = "{новая_строка | { <L> L | <R> R } }"]
-node_0000018876026fd0 [shape = "record", style = filled, fillcolor = "darkorange", label = "{функ_т | { <L> L | <R> R } }"]
-node_0000018876027000 [shape = "record", style = filled, fillcolor = "darkorange", label = "{вар_т | { <L> L | <R> R } }"]
-node_0000018876027030 [shape = "record", style = filled, fillcolor = "darkorange", label = "{вар_т | { <L> L | <R> R } }"]
-node_0000018876027060 [shape = "record", style = filled, fillcolor = "darkorange", label = "{новая_строка | { <L> L | <R> R } }"]
-node_0000018876027090 [shape = "record", style = filled, fillcolor = "darkorange", label = "{вар_т | { <L> L | <R> R } }"]
-node_00000188760270c0 [shape = "record", style = filled, fillcolor = "darkorange", label = "{новая_строка | { <L> L | <R> R } }"]
-node_0000018876026670: <L> -> node_0000018876026fd0
-node_0000018876026670: <R> -> node_0000018876026850
-node_0000018876026700: <L> -> node_0000018876026730
-node_00000188760267f0: <L> -> node_00000188760267c0
-node_00000188760267f0: <R> -> node_0000018876026820
-node_0000018876026850: <L> -> node_00000188760267f0
-node_0000018876026850: <R> -> node_0000018876026940
-node_0000018876026880: <L> -> node_0000018876027000
-node_0000018876026880: <R> -> node_0000018876026910
-node_0000018876026940: <L> -> node_0000018876026880
-node_0000018876026940: <R> -> node_0000018876026a00
-node_00000188760269a0: <L> -> node_0000018876026970
-node_00000188760269a0: <R> -> node_00000188760269d0
-node_0000018876026a00: <L> -> node_00000188760269a0
-node_0000018876026a00: <R> -> node_0000018876027060
-node_0000018876026a30: <L> -> node_0000018876026a90
-node_0000018876026a30: <R> -> node_0000018876026c40
-node_0000018876026b20: <L> -> node_0000018876027030
-node_0000018876026b20: <R> -> node_0000018876026be0
-node_0000018876026be0: <L> -> node_0000018876026bb0
-node_0000018876026be0: <R> -> node_0000018876026c10
-node_0000018876026c40: <L> -> node_0000018876026b20
-node_0000018876026ca0: <L> -> node_0000018876026d90
-node_0000018876026ca0: <R> -> node_0000018876026f10
-node_0000018876026d30: <L> -> node_0000018876026d00
-node_0000018876026d30: <R> -> node_0000018876026d60
-node_0000018876026d90: <L> -> node_0000018876026d30
-node_0000018876026d90: <R> -> node_0000018876026dc0
-node_0000018876026e50: <L> -> node_0000018876027090
-node_0000018876026e50: <R> -> node_0000018876026ee0
-node_0000018876026f10: <L> -> node_0000018876026e50
-node_0000018876026fd0: <L> -> node_00000188760266a0
-node_0000018876026fd0: <R> -> node_0000018876026700
-node_0000018876027000: <L> -> node_00000188760268b0
-node_0000018876027030: <L> -> node_0000018876026b50
-node_0000018876027060: <L> -> node_0000018876026a30
-node_0000018876027060: <R> -> node_00000188760270c0
-node_0000018876027090: <L> -> node_0000018876026e80
-node_00000188760270c0: <L> -> node_0000018876026ca0
+node_000001c172ac6670 [shape = "record", style = filled, fillcolor = "darkorange", label = "инт"]
+node_000001c172ac66a0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "func"]
+node_000001c172ac6700 [shape = "record", style = filled, fillcolor = "darkorange", label = "инт"]
+node_000001c172ac6730 [shape = "square", style = filled, fillcolor = "aquamarine", label = "popa"]
+node_000001c172ac67c0 [shape = "oval", style = filled, fillcolor = "pink", label = "56"]
+node_000001c172ac67f0 [shape = "record", style = filled, fillcolor = "azure", label = "+"]
+node_000001c172ac6820 [shape = "oval", style = filled, fillcolor = "pink", label = "87"]
+node_000001c172ac6850 [shape = "record", style = filled, fillcolor = "darkorange", label = "новая_строка"]
+node_000001c172ac6880 [shape = "record", style = filled, fillcolor = "darkorange", label = "инт"]
+node_000001c172ac68b0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "a"]
+node_000001c172ac6910 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
+node_000001c172ac6940 [shape = "record", style = filled, fillcolor = "darkorange", label = "новая_строка"]
+node_000001c172ac6970 [shape = "oval", style = filled, fillcolor = "pink", label = "95"]
+node_000001c172ac69a0 [shape = "record", style = filled, fillcolor = "azure", label = "+"]
+node_000001c172ac69d0 [shape = "oval", style = filled, fillcolor = "pink", label = "95"]
+node_000001c172ac6a00 [shape = "record", style = filled, fillcolor = "darkorange", label = "новая_строка"]
+node_000001c172ac6a30 [shape = "record", style = filled, fillcolor = "darkorange", label = "если"]
+node_000001c172ac6a90 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
+node_000001c172ac6b20 [shape = "record", style = filled, fillcolor = "darkorange", label = "инт"]
+node_000001c172ac6b50 [shape = "square", style = filled, fillcolor = "aquamarine", label = "a"]
+node_000001c172ac6bb0 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
+node_000001c172ac6be0 [shape = "record", style = filled, fillcolor = "azure", label = "-"]
+node_000001c172ac6c10 [shape = "oval", style = filled, fillcolor = "pink", label = "9"]
+node_000001c172ac6c40 [shape = "record", style = filled, fillcolor = "darkorange", label = "новая_строка"]
+node_000001c172ac6ca0 [shape = "record", style = filled, fillcolor = "darkorange", label = "пока"]
+node_000001c172ac6d00 [shape = "oval", style = filled, fillcolor = "pink", label = "5"]
+node_000001c172ac6d30 [shape = "record", style = filled, fillcolor = "azure", label = "+"]
+node_000001c172ac6d60 [shape = "oval", style = filled, fillcolor = "pink", label = "9"]
+node_000001c172ac6d90 [shape = "record", style = filled, fillcolor = "azure", label = "!="]
+node_000001c172ac6dc0 [shape = "oval", style = filled, fillcolor = "pink", label = "14"]
+node_000001c172ac6e50 [shape = "record", style = filled, fillcolor = "darkorange", label = "инт"]
+node_000001c172ac6e80 [shape = "square", style = filled, fillcolor = "aquamarine", label = "po"]
+node_000001c172ac6ee0 [shape = "oval", style = filled, fillcolor = "pink", label = "988"]
+node_000001c172ac6f10 [shape = "record", style = filled, fillcolor = "darkorange", label = "новая_строка"]
+node_000001c172ac6fd0 [shape = "record", style = filled, fillcolor = "darkorange", label = "функ_т"]
+node_000001c172ac7000 [shape = "record", style = filled, fillcolor = "darkorange", label = "вар_т"]
+node_000001c172ac7030 [shape = "record", style = filled, fillcolor = "darkorange", label = "вар_т"]
+node_000001c172ac7060 [shape = "record", style = filled, fillcolor = "darkorange", label = "новая_строка"]
+node_000001c172ac7090 [shape = "record", style = filled, fillcolor = "darkorange", label = "вар_т"]
+node_000001c172ac70c0 [shape = "record", style = filled, fillcolor = "darkorange", label = "новая_строка"]
+node_000001c172ac6670 -> node_000001c172ac6fd0
+node_000001c172ac6670 -> node_000001c172ac6850
+node_000001c172ac6700 -> node_000001c172ac6730
+node_000001c172ac67f0 -> node_000001c172ac67c0
+node_000001c172ac67f0 -> node_000001c172ac6820
+node_000001c172ac6850 -> node_000001c172ac67f0
+node_000001c172ac6850 -> node_000001c172ac6940
+node_000001c172ac6880 -> node_000001c172ac7000
+node_000001c172ac6880 -> node_000001c172ac6910
+node_000001c172ac6940 -> node_000001c172ac6880
+node_000001c172ac6940 -> node_000001c172ac6a00
+node_000001c172ac69a0 -> node_000001c172ac6970
+node_000001c172ac69a0 -> node_000001c172ac69d0
+node_000001c172ac6a00 -> node_000001c172ac69a0
+node_000001c172ac6a00 -> node_000001c172ac7060
+node_000001c172ac6a30 -> node_000001c172ac6a90
+node_000001c172ac6a30 -> node_000001c172ac6c40
+node_000001c172ac6b20 -> node_000001c172ac7030
+node_000001c172ac6b20 -> node_000001c172ac6be0
+node_000001c172ac6be0 -> node_000001c172ac6bb0
+node_000001c172ac6be0 -> node_000001c172ac6c10
+node_000001c172ac6c40 -> node_000001c172ac6b20
+node_000001c172ac6ca0 -> node_000001c172ac6d90
+node_000001c172ac6ca0 -> node_000001c172ac6f10
+node_000001c172ac6d30 -> node_000001c172ac6d00
+node_000001c172ac6d30 -> node_000001c172ac6d60
+node_000001c172ac6d90 -> node_000001c172ac6d30
+node_000001c172ac6d90 -> node_000001c172ac6dc0
+node_000001c172ac6e50 -> node_000001c172ac7090
+node_000001c172ac6e50 -> node_000001c172ac6ee0
+node_000001c172ac6f10 -> node_000001c172ac6e50
+node_000001c172ac6fd0 -> node_000001c172ac66a0
+node_000001c172ac6fd0 -> node_000001c172ac6700
+node_000001c172ac7000 -> node_000001c172ac68b0
+node_000001c172ac7030 -> node_000001c172ac6b50
+node_000001c172ac7060 -> node_000001c172ac6a30
+node_000001c172ac7060 -> node_000001c172ac70c0
+node_000001c172ac7090 -> node_000001c172ac6e80
+node_000001c172ac70c0 -> node_000001c172ac6ca0
 } 

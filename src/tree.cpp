@@ -155,7 +155,7 @@ char *NodeValToStr(Node *node)
     else if (node->type == VAR || node->type == FUNC || node->type == VAR_OR_FUNC)
         sprintf(res_str, "%s", node->val.prop_name);
 
-    else if (node->type == OP)
+    else if (node->type == MATH_OP)
         sprintf(res_str, "%s", node->val.op->symbol);
 
     else if (node->type == MANAGER)
@@ -190,9 +190,9 @@ Node *TreeCopyPaste(Tree *source_tree, Tree *dest_tree, Node *coping_node)
         pasted_node = NewNode(dest_tree, coping_node->type, coping_node->val, NULL, NULL);
     }
 
-    else if (coping_node->type == OP)
+    else if (coping_node->type == MATH_OP)
     {
-        pasted_node = NewNode(dest_tree, OP, coping_node->val, NULL, NULL);
+        pasted_node = NewNode(dest_tree, MATH_OP, coping_node->val, NULL, NULL);
 
         pasted_node->left  = TreeCopyPaste(source_tree, dest_tree, coping_node->left);
 
@@ -208,7 +208,7 @@ Node *TreeCopyPaste(Tree *source_tree, Tree *dest_tree, Node *coping_node)
 
 size_t GetTreeHeight(Node *cur_node)
 {
-    if (cur_node->type != OP)
+    if (cur_node->type != MATH_OP)
         return 1;
 
     size_t left_height  = GetTreeHeight(cur_node->left);
@@ -259,8 +259,8 @@ bool SubtreeContainsType(Node *cur_node, NodeType type)
 
         bool right_subtree_cont_type = false;
 
-        // if (cur_node->type == OP && GetOperationByNode(cur_node)->type == BINARY)
-        if (cur_node->type == OP && cur_node->val.op->type == BINARY)       // чтобы не проходить одну и ту же ветку дважды для унарной операции
+        // if (cur_node->type == MATH_OP && GetOperationByNode(cur_node)->type == BINARY)
+        if (cur_node->type == MATH_OP && cur_node->val.op->type == BINARY)       // чтобы не проходить одну и ту же ветку дважды для унарной операции
             right_subtree_cont_type = SubtreeContainsType(cur_node->right, type);
 
         return (left_subtree_cont_type || right_subtree_cont_type);
@@ -271,7 +271,7 @@ bool OpNodeIsCommutativity(Node *op_node)
 {
     assert(op_node);
 
-    if (op_node->type == OP && (op_node->val.op->num == ADD || op_node->val.op->num == MUL))
+    if (op_node->type == MATH_OP && (op_node->val.op->num == ADD || op_node->val.op->num == MUL))
         return true;
     
     else return false;
@@ -284,6 +284,6 @@ bool IsInitialise(Node *node)
 
 bool IsBool(Node *node)
 {
-    const Operation *op = node->val.op;
-    return (node->type == OP && (op->num == BOOL_EQ || op->num == BOOL_NEQ || op->num == BOOL_GREATER || op->num == BOOL_LOWER));
+    const MathOperation *op = node->val.op;
+    return (node->type == MATH_OP && (op->num == BOOL_EQ || op->num == BOOL_NEQ || op->num == BOOL_GREATER || op->num == BOOL_LOWER));
 }

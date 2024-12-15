@@ -24,14 +24,8 @@
 #define MANAGER_NODE_COLOR    "grey"
 #define MANAGER_NODE_SHAPE    "circle"
 
-#define TYPEOF_NAMED_NODE_COLOR "darkseagreen"
-#define TYPEOF_NAMED_NODE_SHAPE OP_NODE_SHAPE
-
 #define POISON_NODE_COLOR     "grey"
 #define POISON_NODE_SHAPE     "hexagon"
-
-#define EOT_NODE_COLOR        "red"
-#define EOT_NODE_SHAPE        "diamond"
 
 const int GRAPH_IMG_WIDTH = 20;     // (%)
 const int CMD_COMMAND_LEN = 100;
@@ -41,14 +35,23 @@ void  InitNodesInDot   (Tree *tree, FILE *dot_file);
 void  MakeLinksInDot   (Tree *tree, FILE *dot_file);
 void  MakeGraphPicture (const char *dotfile_path, const char *picture_path);
 
-
 struct NodeGraphInfo
 {
-    void *data_array;
+    const NodeType    type;
     const char *const node_color;
     const char *const node_shape;
 };
 
-
+const NodeGraphInfo GraphViewInfo[NODE_TYPES_COUNT] = 
+{
+    { NUM,         "pink",       "oval"    },
+    { VAR,         "aquamarine", "square"  },
+    { FUNC,        "aquamarine", "square"  },
+    { VAR_OR_FUNC, "aquamarine", "square"  },
+    { MATH_OP,     "azure",      "record"  },
+    { KEY_WORD,    "darkorange", "record"  },
+    { MANAGER,     "grey",       "oval"    },
+    { POISON_TYPE, "red",        "hexagon" }
+};
 
 #endif

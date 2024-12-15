@@ -8,14 +8,14 @@
 
 extern FILE *LogFile;
 
-const Operation *GetOperationBySymbol(char *sym)
+const MathOperation *GetOperationBySymbol(char *sym)
 {
     assert(sym);
 
     for (size_t i = 0; i < OPERATIONS_NUM; i++)
     {
-        if (strcmp(sym, Operations[i].symbol) == 0)
-            return &Operations[i];
+        if (strcmp(sym, MathOperations[i].symbol) == 0)
+            return &MathOperations[i];
     }
 
     return NULL;

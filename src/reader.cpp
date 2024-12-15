@@ -115,13 +115,13 @@ Node *GetNamedToken(Tree *tree, char *token_name)
 
     else                                                                                // имя операнда или рандомный вкид
     {
-        const Operation   *cur_op    = GetOperationBySymbol  (token_name);
+        const MathOperation   *cur_op    = GetOperationBySymbol  (token_name);
         const KeyWord     *key_word  = GetKeyWordBySymbol    (token_name);
         const ManageElem  *manage_el = GetManageElemBySymbol (token_name);
 
         if (cur_op != NULL)
         {
-            return NewNode(tree, OP, {.op = cur_op}, NULL, NULL);
+            return NewNode(tree, MATH_OP, {.op = cur_op}, NULL, NULL);
         }
 
         else if (key_word != NULL)
@@ -309,7 +309,7 @@ Node *GetBool(Tree *dest_tree, size_t *ip)
     Node **tokens  = dest_tree->node_ptrs;
     Node *res_node = GetSum(dest_tree, ip);
 
-    while (tokens[*ip]->type == OP && IsBool(tokens[*ip]))
+    while (tokens[*ip]->type == MATH_OP && IsBool(tokens[*ip]))
     {
         Node *arg_1 = res_node;
         res_node    = tokens[(*ip)++];
@@ -327,7 +327,7 @@ Node *GetSum(Tree *dest_tree, size_t *ip)
     Node **tokens  = dest_tree->node_ptrs;
     Node *res_node = GetMul(dest_tree, ip);
 
-    while (tokens[*ip]->type == OP && (tokens[*ip]->val.op->num == ADD || tokens[*ip]->val.op->num == SUB))
+    while (tokens[*ip]->type == MATH_OP && (tokens[*ip]->val.op->num == ADD || tokens[*ip]->val.op->num == SUB))
     {
         Node *arg_1 = res_node;
         res_node    = tokens[(*ip)++];
@@ -345,7 +345,7 @@ Node *GetMul(Tree *dest_tree, size_t *ip)
     Node **tokens  = dest_tree->node_ptrs;
     Node *res_node = GetPow(dest_tree, ip);
 
-    while (tokens[*ip]->type == OP && (tokens[*ip]->val.op->num == MUL || tokens[*ip]->val.op->num == DIV))
+    while (tokens[*ip]->type == MATH_OP && (tokens[*ip]->val.op->num == MUL || tokens[*ip]->val.op->num == DIV))
     {
         Node *arg_1 = res_node;
         res_node    = tokens[(*ip)++];
@@ -365,7 +365,7 @@ Node *GetPow(Tree *dest_tree, size_t *ip)
 
     Node *cur_op = tokens[*ip];
 
-    if (cur_op->type != OP)
+    if (cur_op->type != MATH_OP)
         return res_node;
 
     if (cur_op->val.op->num == DEG)
@@ -388,7 +388,7 @@ Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 {
     Node **tokens = dest_tree->node_ptrs;
 
-    if (tokens[*ip]->type != OP)
+    if (tokens[*ip]->type != MATH_OP)
         return GetSumInBrackets(dest_tree, ip);
 
 

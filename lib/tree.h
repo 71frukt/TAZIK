@@ -31,6 +31,7 @@ const TreeElem_t POISON_VAL = 0xDEB11;
 #define ON_LANG_DEBUG(...)
 #endif
 
+const size_t NODE_TYPES_COUNT = 8;
 
 enum NodeType
 {
@@ -38,10 +39,9 @@ enum NodeType
     VAR,
     FUNC,
     VAR_OR_FUNC,
-    OP,
+    MATH_OP,
     KEY_WORD,
     MANAGER,
-    // TYPE_INDICATOR,
 
     POISON_TYPE,
 };
@@ -51,10 +51,9 @@ union NodeVal
 {
     TreeElem_t         num;
     char              *prop_name;
-    const Operation   *op;
+    const MathOperation   *op;
     const KeyWord     *key_word;
     const ManageElem  *manager;
-    // TypeIndicator      type_indicator;
 };
 
 struct Node

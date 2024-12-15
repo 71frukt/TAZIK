@@ -50,7 +50,7 @@ enum Operation_enum
     TAN
 };
 
-struct Operation
+struct MathOperation
 {
     const Operation_enum num;
     const char          *symbol;
@@ -63,7 +63,7 @@ struct Operation
 
 const int OPERATIONS_NUM = 14;
 
-const Operation Operations[OPERATIONS_NUM] = 
+const MathOperation MathOperations[OPERATIONS_NUM] = 
 {
     { BOOL_EQ,      "==",   BINARY, INFIX, NULL },
     { BOOL_NEQ,     "!=",   BINARY, INFIX, NULL },
@@ -113,18 +113,7 @@ const ManageElem Managers[MANAGE_ELEMS_NUM] =
     { EOT,                 "$" }
 };
 
-//---------------------------------------------------------------------------------------------------------------//
-
-// enum TypeIndicator
-// {
-//     VAR_TYPE,
-//     FUNC_TYPE
-// };
-
-// const char *const VAR_TYPE_SYMBOL  = "VAR_T";
-// const char *const FUNC_TYPE_SYMBOL = "FUNC_T";
-
-//---------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------//
 
 enum KeyWord_enum
 {
@@ -160,7 +149,7 @@ const KeyWord KeyWords[KEY_WORDS_NUM] =
 
 //---------------------------------------------------------------------------------------------------------------//
 
-const Operation   *GetOperationBySymbol  (char *sym);
+const MathOperation   *GetOperationBySymbol  (char *sym);
 const KeyWord     *GetKeyWordBySymbol    (char *sym);
 const ManageElem  *GetManageElemBySymbol (char *sym);
 
