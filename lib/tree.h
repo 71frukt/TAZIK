@@ -41,7 +41,7 @@ enum NodeType
     OP,
     KEY_WORD,
     MANAGER,
-    TYPE_INDICATOR,
+    // TYPE_INDICATOR,
 
     POISON_TYPE,
 };
@@ -54,7 +54,7 @@ union NodeVal
     const Operation   *op;
     const KeyWord     *key_word;
     const ManageElem  *manager;
-    TypeIndicator      type_indicator;
+    // TypeIndicator      type_indicator;
 };
 
 struct Node
@@ -118,7 +118,9 @@ ProperName *NewNameInTable  (NamesTable *table, char *name);
 void    NamesTableCtor  (size_t start_capa, NamesTable *table);
 void    NamesTableDtor  (NamesTable *table);
 
-bool    SubtreeContainsType(Node *cur_node, NodeType type);
-bool    OpNodeIsCommutativity(Node *op_node);
-bool    IsInitialise(Node *node);
+bool    SubtreeContainsType   (Node *cur_node, NodeType type);
+bool    OpNodeIsCommutativity (Node *op_node);
+bool    IsInitialise          (Node *node);
+bool    IsBool                (Node *node);
+
 #endif

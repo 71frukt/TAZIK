@@ -42,4 +42,13 @@ void  MakeLinksInDot   (Tree *tree, FILE *dot_file);
 void  MakeGraphPicture (const char *dotfile_path, const char *picture_path);
 
 
+struct NodeGraphInfo
+{
+    void *data_array;
+    const char *const node_color;
+    const char *const node_shape;
+};
+
+
+
 #endif

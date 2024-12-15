@@ -13,8 +13,11 @@ Node *GetNamedToken (Tree *tree, char *token_name);
 
 Node *GetFuncInit       (Tree *dest_tree);
 Node *GetBlock          (Tree *dest_tree, size_t *ip);
-Node *GetVarInit        (Tree *dest_tree, size_t *ip);
 Node *GetIf             (Tree *dest_tree, size_t *ip);
+Node *GetWhile          (Tree *dest_tree, size_t *ip);
+Node *GetBool           (Tree *dest_tree, size_t *ip);
+Node *GetExpr           (Tree *dest_tree, size_t *ip);
+Node *GetVarInit        (Tree *dest_tree, size_t *ip);
 Node *GetSum            (Tree *dest_tree, size_t *ip);
 Node *GetMul            (Tree *dest_tree, size_t *ip);
 Node *GetPow            (Tree *dest_tree, size_t *ip);

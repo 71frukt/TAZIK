@@ -166,14 +166,14 @@ char *NodeValToStr(Node *node)
     else if (node->type == KEY_WORD)
         sprintf(res_str, "%s", node->val.key_word->symbol);
 
-    else if (node->type == TYPE_INDICATOR)
-    {
-        if (node->val.type_indicator == FUNC_TYPE)
-            sprintf(res_str, "%s", FUNC_TYPE_SYMBOL);
+    // else if (node->type == TYPE_INDICATOR)
+    // {
+    //     if (node->val.type_indicator == FUNC_TYPE)
+    //         sprintf(res_str, "%s", FUNC_TYPE_SYMBOL);
         
-        else 
-            sprintf(res_str, "%s", VAR_TYPE_SYMBOL);
-    }
+    //     else 
+    //         sprintf(res_str, "%s", VAR_TYPE_SYMBOL);
+    // }
 
     else if (node->type == POISON_TYPE)
         sprintf(res_str, "%s", POISON_SYMBOL);
@@ -280,4 +280,10 @@ bool OpNodeIsCommutativity(Node *op_node)
 bool IsInitialise(Node *node)
 {
     return (node->type == KEY_WORD && (node->val.key_word->name == INT_INIT || node->val.key_word->name == DOUBLE_INIT));
+}
+
+bool IsBool(Node *node)
+{
+    const Operation *op = node->val.op;
+    return (node->type == OP && (op->num == BOOL_EQ || op->num == BOOL_NEQ || op->num == BOOL_GREATER || op->num == BOOL_LOWER));
 }

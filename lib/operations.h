@@ -32,6 +32,10 @@ enum FuncType
 
 enum Operation_enum
 {
+    BOOL_EQ,
+    BOOL_NEQ,
+    BOOL_GREATER,
+    BOOL_LOWER,
     ADD,
     SUB,
     MUL,
@@ -57,22 +61,26 @@ struct Operation
     TreeElem_t  (*op_func)     (TreeElem_t arg1, TreeElem_t arg2);
 };
 
-const int OPERATIONS_NUM = 10;
+const int OPERATIONS_NUM = 14;
 
 const Operation Operations[OPERATIONS_NUM] = 
 {
-    { ADD,    "+",    BINARY, INFIX,  Add },
-    { SUB,    "-",    BINARY, INFIX,  Sub },
-    { MUL,    "*",    BINARY, INFIX,  Mul },
-    { DIV,    "/",    BINARY, INFIX,  Div },
-    { DEG,    "**",   BINARY, INFIX,  Deg },
-
-    { LN,     "лн",   UNARY,  PREFIX, Ln  },
-    { LOG,    "лог",  BINARY, PREFIX, Log },
-
-    { SIN,    "син",  UNARY,  PREFIX, Sin },
-    { COS,    "кос",  UNARY,  PREFIX, Cos },
-    { TAN,    "тан",  UNARY,  PREFIX, Tan }
+    { BOOL_EQ,      "==",   BINARY, INFIX, NULL },
+    { BOOL_NEQ,     "!=",   BINARY, INFIX, NULL },
+    { BOOL_GREATER, ">",    BINARY, INFIX, NULL },
+    { BOOL_LOWER,   "<",    BINARY, INFIX, NULL },
+    { ADD,          "+",    BINARY, INFIX,  Add },
+    { SUB,          "-",    BINARY, INFIX,  Sub },
+    { MUL,          "*",    BINARY, INFIX,  Mul },
+    { DIV,          "/",    BINARY, INFIX,  Div },
+    { DEG,          "**",   BINARY, INFIX,  Deg },
+ 
+    { LN,           "лн",   UNARY,  PREFIX, Ln  },
+    { LOG,          "лог",  BINARY, PREFIX, Log },
+ 
+    { SIN,          "син",  UNARY,  PREFIX, Sin },
+    { COS,          "кос",  UNARY,  PREFIX, Cos },
+    { TAN,          "тан",  UNARY,  PREFIX, Tan }
 };
 
 //------------------------------------------------------------------------------------------------------------//
@@ -107,24 +115,27 @@ const ManageElem Managers[MANAGE_ELEMS_NUM] =
 
 //---------------------------------------------------------------------------------------------------------------//
 
-enum TypeIndicator
-{
-    VAR_TYPE,
-    FUNC_TYPE
-};
+// enum TypeIndicator
+// {
+//     VAR_TYPE,
+//     FUNC_TYPE
+// };
 
-const char *const VAR_TYPE_SYMBOL  = "VAR_T";
-const char *const FUNC_TYPE_SYMBOL = "FUNC_T";
+// const char *const VAR_TYPE_SYMBOL  = "VAR_T";
+// const char *const FUNC_TYPE_SYMBOL = "FUNC_T";
 
 //---------------------------------------------------------------------------------------------------------------//
 
 enum KeyWord_enum
 {
+    VAR_T_INDICATOR,
+    FUNC_T_INDICATOR,
     INT_INIT,
     DOUBLE_INIT,
     NEW_EXPR,
     ASSIGN,
-    IF
+    IF,
+    WHILE
 };
 
 struct KeyWord
@@ -133,15 +144,18 @@ struct KeyWord
     const char         *symbol; 
 };
 
-const int KEY_WORDS_NUM = 5;
+const int KEY_WORDS_NUM = 8;
 
 const KeyWord KeyWords[KEY_WORDS_NUM] = 
 {
-    { INT_INIT,    "инт"  },
-    { DOUBLE_INIT, "дабл" },
-    { NEW_EXPR,    "новая_строка" },
-    { ASSIGN,      "="    },
-    { IF,          "если" }
+    { VAR_T_INDICATOR,  "вар_т"  },
+    { FUNC_T_INDICATOR, "функ_т" },
+    { INT_INIT,         "инт"    },
+    { DOUBLE_INIT,      "дабл"   },
+    { NEW_EXPR,         "новая_строка" },
+    { ASSIGN,           "="      },
+    { IF,               "если"   },
+    { WHILE,            "пока"   }
 };
 
 //---------------------------------------------------------------------------------------------------------------//

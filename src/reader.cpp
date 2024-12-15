@@ -170,7 +170,7 @@ Node *GetFuncInit(Tree *dest_tree)
     arg->left = tokens[ip++];               // name of var
     arg->left->type = VAR;
 
-    func_init->left = NewNode(dest_tree, TYPE_INDICATOR, {.type_indicator = FUNC_TYPE}, func_node, arg);
+    func_init->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[FUNC_T_INDICATOR]}, func_node, arg);
 
     if (tokens[ip]->type != MANAGER || tokens[ip]->val.manager->name != CLOSE_EXPR_BRACKET)
         SYNTAX_ERROR(dest_tree, tokens[ip], "close bracket in declaring arguments");
@@ -191,93 +191,28 @@ Node *GetBlock(Tree *dest_tree, size_t *ip)
 {
     assert(dest_tree);
     LANG_DUMP(dest_tree);
-fprintf(stderr, "new block\n");
+
     Node **tokens  = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != OPEN_BLOCK_BRACKET)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "open block bracket");
 
     RemoveNode(dest_tree, &tokens[(*ip)++]);
-    Node *this_block = GetVarInit(dest_tree, ip);
-    Node *cur_top  = this_block;
-    Node *cur_line = NULL;
-    Node *cur_expr = NULL;
 
-    // if (tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == NEW_BLOCK)
-    // {
-    //     cur_top->left = GetBlock(dest_tree, ip);
-    // }
-
-    // else
-    // {
-        cur_expr = GetVarInit(dest_tree, ip);
-
-        if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != NEW_EXPR)
-            SYNTAX_ERROR(dest_tree, tokens[*ip], KeyWords[NEW_EXPR].symbol);
-
-        cur_line = tokens[(*ip)++];
-        cur_line->left = cur_expr;
-        cur_top->left  = cur_line;
-        // dest_tree->root_ptr = cur_line;
-    // }
-
+    Node *res_block = GetIf(dest_tree, ip);
+    Node *cur_top = res_block;
 
     while (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != CLOSE_BLOCK_BRACKET)
     {
-        // Node *new_block = NULL;
+        Node *new_top = GetIf(dest_tree, ip);
 
-        // if (tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == NEW_BLOCK)
-        // {
-        //     new_block = GetBlock(dest_tree, ip);
-        //     cur_top->right  = new_block;
-        //     cur_top = new_block;
-        // }
-        
-        // else
-        // {
-            Node *new_expr = GetVarInit(dest_tree, ip);
-
-            if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != NEW_EXPR)
-                SYNTAX_ERROR(dest_tree, tokens[*ip], KeyWords[NEW_EXPR].symbol);
-
-            Node *new_line = tokens[(*ip)++];
-            new_line->left  = new_expr;
-
-            cur_top->right = new_line;
-            cur_top        = new_line;
-            
-        // }
+        cur_top->right = new_top;
+        cur_top = new_top;
     }
 
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
-    return this_block;
-}
-
-Node *GetVarInit(Tree *dest_tree, size_t *ip)
-{
-    assert(dest_tree);
-
-    Node **tokens  = dest_tree->node_ptrs;
-
-    if (!IsInitialise(tokens[*ip]))
-        return GetIf(dest_tree, ip);
-
-    Node *init_node = tokens[(*ip)++];
-
-    if (tokens[*ip]->type != VAR_OR_FUNC)
-        SYNTAX_ERROR(dest_tree, tokens[*ip], "type of VAR");
-
-    init_node->left = NewNode(dest_tree, TYPE_INDICATOR, {.type_indicator = VAR_TYPE}, tokens[(*ip)++], NULL);
-
-    if (!(tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == ASSIGN))
-        SYNTAX_ERROR(dest_tree, tokens[*ip], "assign node");
-
-    RemoveNode(dest_tree, &tokens[(*ip)++]);    // при инициализации нода присваивани€ в дереве не нужна
-
-    init_node->right = GetSum(dest_tree, ip);
-    
-    return init_node;
+    return res_block;
 }
 
 Node *GetIf(Tree *dest_tree, size_t *ip)
@@ -285,7 +220,7 @@ Node *GetIf(Tree *dest_tree, size_t *ip)
     Node **tokens  = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != IF)
-        return GetSum(dest_tree, ip);
+        return GetWhile(dest_tree, ip);
 
     Node *if_node = tokens[(*ip)++];
 
@@ -300,20 +235,100 @@ Node *GetIf(Tree *dest_tree, size_t *ip)
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
     if_node->right = GetBlock(dest_tree, ip);
+fprintf(stderr, "end of if, ip = %lld\n", *ip);
+    return NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[NEW_EXPR]}, if_node, NULL);
+}
 
-    return if_node;
+Node *GetWhile(Tree *dest_tree, size_t *ip)
+{
+    Node **tokens  = dest_tree->node_ptrs;
+
+    if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != WHILE)
+        return GetExpr(dest_tree, ip);
+
+    Node *while_node = tokens[(*ip)++];
+
+    if (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != OPEN_EXPR_BRACKET)
+        SYNTAX_ERROR(dest_tree, tokens[*ip], "open bracket for condition");
+    RemoveNode(dest_tree, &tokens[(*ip)++]);
+
+    while_node->left = GetBool(dest_tree, ip);
+
+    if (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != CLOSE_EXPR_BRACKET)
+        SYNTAX_ERROR(dest_tree, tokens[*ip], "close bracket for condition");
+    RemoveNode(dest_tree, &tokens[(*ip)++]);
+
+    while_node->right = GetBlock(dest_tree, ip);
+fprintf(stderr, "end of while, ip = %lld\n", *ip);
+    return NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[NEW_EXPR]}, while_node, NULL);
+}
+
+Node *GetExpr(Tree *dest_tree, size_t *ip)              // то, что отдел€етс€ ;
+{
+    Node **tokens  = dest_tree->node_ptrs;
+
+    Node *expr = GetVarInit(dest_tree, ip);
+
+    if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != NEW_EXPR)
+        SYNTAX_ERROR(dest_tree, tokens[*ip], "end of expr symbol");
+
+    Node *res_line = tokens[(*ip)++];
+    res_line->left = expr;
+
+    return res_line;
+}
+
+Node *GetVarInit(Tree *dest_tree, size_t *ip)
+{
+    assert(dest_tree);
+
+    Node **tokens  = dest_tree->node_ptrs;
+
+    if (!IsInitialise(tokens[*ip]))
+        return GetBool(dest_tree, ip);
+
+    Node *init_node = tokens[(*ip)++];
+
+    if (tokens[*ip]->type != VAR_OR_FUNC)
+        SYNTAX_ERROR(dest_tree, tokens[*ip], "type of VAR");
+
+    init_node->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[VAR_T_INDICATOR]}, tokens[(*ip)++], NULL);
+
+    if (!(tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == ASSIGN))
+        SYNTAX_ERROR(dest_tree, tokens[*ip], "assign node");
+
+    RemoveNode(dest_tree, &tokens[(*ip)++]);    // при инициализации нода присваивани€ в дереве не нужна
+
+    init_node->right = GetBool(dest_tree, ip);
+    
+    return init_node;
+}
+
+Node *GetBool(Tree *dest_tree, size_t *ip)
+{
+    Node **tokens  = dest_tree->node_ptrs;
+    Node *res_node = GetSum(dest_tree, ip);
+
+    while (tokens[*ip]->type == OP && IsBool(tokens[*ip]))
+    {
+        Node *arg_1 = res_node;
+        res_node    = tokens[(*ip)++];
+        Node *arg_2 = GetSum(dest_tree, ip);
+
+        res_node->left  = arg_1;
+        res_node->right = arg_2;
+    }
+
+    return res_node;
 }
 
 Node *GetSum(Tree *dest_tree, size_t *ip)
 {
     Node **tokens  = dest_tree->node_ptrs;
-fprintf(stderr, "first arg, ip = %lld\n", *ip);
     Node *res_node = GetMul(dest_tree, ip);
+
     while (tokens[*ip]->type == OP && (tokens[*ip]->val.op->num == ADD || tokens[*ip]->val.op->num == SUB))
     {
-fprintf(stderr, "second arg\n");
-
-
         Node *arg_1 = res_node;
         res_node    = tokens[(*ip)++];
         Node *arg_2 = GetMul(dest_tree, ip);
@@ -375,6 +390,7 @@ Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 
     if (tokens[*ip]->type != OP)
         return GetSumInBrackets(dest_tree, ip);
+
 
     Node *op_node = tokens[(*ip)++];
 
@@ -455,7 +471,7 @@ Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
     {
         Node *cur_node = tokens[(*ip)++];
         cur_node->type = VAR;
-        TypeIndicator type = VAR_TYPE;
+        const KeyWord *type = &KeyWords[VAR_T_INDICATOR];
         Node *arg = NULL;
 
         if (tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == OPEN_EXPR_BRACKET)     // тогда это функци€
@@ -463,7 +479,7 @@ Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
             RemoveNode(dest_tree, &tokens[(*ip)++]);
 
             cur_node->type = FUNC;
-            type = FUNC_TYPE;
+            type = &KeyWords[FUNC_T_INDICATOR];
 
             arg = GetSum(dest_tree, ip);
 
@@ -473,7 +489,7 @@ Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
             RemoveNode(dest_tree, &tokens[(*ip)++]);
         }
 
-        return NewNode(dest_tree, TYPE_INDICATOR, {.type_indicator = type}, cur_node, arg);
+        return NewNode(dest_tree, KEY_WORD, {.key_word = type}, cur_node, arg);
     }
 
     else
