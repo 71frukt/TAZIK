@@ -1,0 +1,148 @@
+#ifndef OPERATIONS_H
+#define OPERATIONS_H
+
+#include <stdio.h>
+
+#include "tree_elem_t_info.h"
+
+enum FuncEntryForm
+{
+    PREFIX,
+    INFIX
+};
+
+enum FuncType
+{
+    UNARY,
+    BINARY
+};
+
+enum Operation_enum
+{
+    BOOL_EQ,
+    BOOL_NEQ,
+    BOOL_GREATER,
+    BOOL_LOWER,
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    DEG,
+
+    LN,
+    LOG,
+
+    SIN,
+    COS,
+    TAN
+};
+
+struct MathOperation
+{
+    const Operation_enum  num;
+    const char           *my_symbol;
+    const char           *real_symbol;
+
+    const FuncType       type;                                               // UNARY  / BINARY
+    const FuncEntryForm  form;                                               // PREFIX / INFIX РІ
+};
+
+const int OPERATIONS_NUM = 14;
+
+const MathOperation MathOperations[OPERATIONS_NUM] = 
+{
+    { BOOL_EQ,      "==",   "==",  BINARY, INFIX  },
+    { BOOL_NEQ,     "!=",   "!=",  BINARY, INFIX  },
+    { BOOL_GREATER, ">",    ">",   BINARY, INFIX  },
+    { BOOL_LOWER,   "<",    "<",   BINARY, INFIX  },
+    { ADD,          "+",    "+",   BINARY, INFIX  },
+    { SUB,          "-",    "-",   BINARY, INFIX  },
+    { MUL,          "*",    "*",   BINARY, INFIX  },
+    { DIV,          "/",    "/",   BINARY, INFIX  },
+    { DEG,          "^",    "^",   BINARY, INFIX  },
+  
+    { LN,           "лн",   "ln",  UNARY,  PREFIX },
+    { LOG,          "лог",  "log", BINARY, PREFIX },
+  
+    { SIN,          "син",  "sin", UNARY,  PREFIX },
+    { COS,          "кос",  "cos", UNARY,  PREFIX },
+    { TAN,          "тан",  "tg",  UNARY,  PREFIX }
+};
+
+//------------------------------------------------------------------------------------------------------------//
+
+enum Managers_enum
+{
+    OPEN_BLOCK_BRACKET,
+    CLOSE_BLOCK_BRACKET,
+    OPEN_EXPR_BRACKET,
+    CLOSE_EXPR_BRACKET,
+    COMMA,
+    EOT
+};
+
+struct ManageElem
+{
+    const Managers_enum  name;
+    const char          *my_symbol;
+    const char          *real_symbol;
+};
+
+const int MANAGE_ELEMS_NUM = 6;
+
+const ManageElem Managers[MANAGE_ELEMS_NUM] = 
+{
+    { OPEN_BLOCK_BRACKET,  "начало_блока", "{"   },
+    { CLOSE_BLOCK_BRACKET, "конец_блока",  "}"   },
+    { OPEN_EXPR_BRACKET,   "(",            "("   },
+    { CLOSE_EXPR_BRACKET,  ")",            ")"   },
+    { COMMA,               ",",            ","   },
+    { EOT,                 "$",            "EOT" }
+};
+
+//------------------------------------------------------------------------------------------------------------//
+
+enum KeyWord_enum
+{
+    VAR_T_INDICATOR,
+    FUNC_T_INDICATOR,
+    FUNC_CALL,
+    INT_INIT,
+    DOUBLE_INIT,
+    NEW_EXPR,
+    NEW_FUNC,
+    ASSIGN,
+    IF,
+    WHILE
+};
+
+struct KeyWord
+{
+    const KeyWord_enum  name;
+    const char         *my_symbol;
+    const char         *real_symbol;
+};
+
+const int KEY_WORDS_NUM = 10;
+
+const KeyWord KeyWords[KEY_WORDS_NUM] = 
+{
+    { VAR_T_INDICATOR,  "вар_т",         "var_t"     },
+    { FUNC_T_INDICATOR, "функ_т",        "func_t"    },
+    { FUNC_CALL,        "кол",           "func_call" },
+    { INT_INIT,         "инт",           "int"       },
+    { DOUBLE_INIT,      "дабл",          "double"    },
+    { NEW_EXPR,         "новая_строка",  "new_line"  },
+    { NEW_FUNC,         "новая_функция", "new_func"  },
+    { ASSIGN,           "=" ,            "="         },
+    { IF,               "если",          "if"        },
+    { WHILE,            "пока",          "while"     }
+};
+
+//---------------------------------------------------------------------------------------------------------------//
+
+const MathOperation   *GetOperationBySymbol  (char *sym);
+const KeyWord     *GetKeyWordBySymbol    (char *sym);
+const ManageElem  *GetManageElemBySymbol (char *sym);
+
+#endif

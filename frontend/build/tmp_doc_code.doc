@@ -1,0 +1,35 @@
+digraph G{              
+bgcolor = "darkslategray";     
+edge [color = "aqua"  
+];node_000001a06f546640 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_000001a06f546670 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "func"]
+node_000001a06f5466d0 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_000001a06f546700 [shape = "square", style = filled, fillcolor = "aquamarine", label = "huilan"]
+node_000001a06f546790 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_000001a06f5467c0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "aboba"]
+node_000001a06f546820 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "func"]
+node_000001a06f546880 [shape = "oval", style = filled, fillcolor = "skyblue", label = "5"]
+node_000001a06f5468b0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "-"]
+node_000001a06f5468e0 [shape = "oval", style = filled, fillcolor = "skyblue", label = "95"]
+node_000001a06f546940 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
+node_000001a06f5469d0 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
+node_000001a06f546a00 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_000001a06f546a30 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
+node_000001a06f546a60 [shape = "egg", style = filled, fillcolor = "tan", label = "func_call"]
+node_000001a06f546a90 [shape = "egg", style = filled, fillcolor = "tan", label = "new_func"]
+node_000001a06f546640 -> node_000001a06f5469d0
+node_000001a06f546640 -> node_000001a06f546940
+node_000001a06f5466d0 -> node_000001a06f546700
+node_000001a06f546790 -> node_000001a06f546a00
+node_000001a06f546790 -> node_000001a06f546a60
+node_000001a06f5468b0 -> node_000001a06f546880
+node_000001a06f5468b0 -> node_000001a06f5468e0
+node_000001a06f546940 -> node_000001a06f546790
+node_000001a06f5469d0 -> node_000001a06f546670
+node_000001a06f5469d0 -> node_000001a06f5466d0
+node_000001a06f546a00 -> node_000001a06f5467c0
+node_000001a06f546a30 -> node_000001a06f546820
+node_000001a06f546a30 -> node_000001a06f5468b0
+node_000001a06f546a60 -> node_000001a06f546a30
+node_000001a06f546a90 -> node_000001a06f546640
+} 
