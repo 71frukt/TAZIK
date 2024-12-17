@@ -1,0 +1,6 @@
+[submodule "DIFF"]
+	path = DIFF
+	url = https://github.com/71frukt/DIFF
+[submodule "SPU"]
+	path = SPU
+	url = https://github.com/71frukt/SPU

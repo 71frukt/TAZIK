@@ -5,6 +5,7 @@
 
 #include "operations.h"
 #include "tree_debug.h"
+#include "asm_operations.h"
 
 extern FILE *LogFile;
 
@@ -51,4 +52,40 @@ const ManageElem *GetManageElemBySymbol(char *sym, SymbolMode mode)
     }
 
     return NULL;
+}
+
+void PrintAsmForMathOP(Node *math_op, FILE *dest_file)
+{
+    assert(math_op);
+    assert(math_op->type == MATH_OP);
+    assert(dest_file);
+
+    PrintAsmCodeForArg(math_op->left,  dest_file);
+    PrintAsmCodeForArg(math_op->right, dest_file);
+
+    fprintf(dest_file, "%s\n", math_op->val.math_op->asm_symbol);
+}
+
+void PrintAsmCodeForArg(Node *arg, FILE *dest_file)
+{
+    if (arg->type == NUM)
+        fprintf(dest_file, "%s " TREE_ELEM_PRINT_SPECIFIER "\n", AsmOperations[PUSH_ASM].sym, arg->val.num);
+    
+    else if (arg->type == KEY_WORD && arg->val.key_word->name == VAR_T_INDICATOR)
+        fprintf(dest_file, "%s [%lld]\n", AsmOperations[PUSH_ASM].sym, arg->left->val.prop_name->number);
+
+    else
+        PrintAsmCodeByNode(arg, dest_file);
+}
+
+void PrintAsmCodeByNode(Node *node, FILE *dest_file)
+{
+    assert(node);
+    assert(dest_file);
+
+    if (node->type == MATH_OP)
+        PrintAsmForMathOP(node, dest_file);
+    
+    else
+        return;        // TODO: доделать для ключевых слов
 }

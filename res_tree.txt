@@ -1,1 +1,1 @@
-new_func ( int ( func_t ( func ( NULL ; NULL ) ; int ( huilan ( NULL ; NULL ) ; NULL ) ) ; new_line ( int ( var_t ( aboba ( NULL ; NULL ) ; NULL ) ; func_call ( func_t ( func ( NULL ; NULL ) ; - ( 5 ( NULL ; NULL ) ; 95 ( NULL ; NULL ) ) ) ; NULL ) ) ; new_line ( return ( + ( var_t ( aboba ( NULL ; NULL ) ; NULL ) ; 98 ( NULL ; NULL ) ) ; NULL ) ; NULL ) ) ) ; NULL ) 
++ ( - ( * ( + ( 1 ( NULL ; NULL ) ; var_t ( x ( NULL ; NULL ) ; NULL ) ) ; var_t ( x ( NULL ; NULL ) ; NULL ) ) ; * ( var_t ( z ( NULL ; NULL ) ; NULL ) ; 5 ( NULL ; NULL ) ) ) ; 6 ( NULL ; NULL ) ) 

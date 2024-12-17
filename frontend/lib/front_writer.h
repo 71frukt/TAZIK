@@ -1,5 +1,5 @@
-#ifndef WRITER_H
-#define WRITER_H
+#ifndef FRONT_WRITER_H
+#define FRONT_WRITER_H
 
 #define BASE_SAVE_TREE_FILE_NAME  "../../res_tree.txt"
 

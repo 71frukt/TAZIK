@@ -273,10 +273,23 @@ Node *GetNodeInfoBySymbol(char *sym, Tree *tree, Node *cur_node, SymbolMode mode
         cur_node = NULL;
     }
 
+    else if (isdigit(*sym))
+    {
+        cur_node->type = NUM;
+        if(sscanf(sym, TREE_ELEM_SCANF_SPECIFIER, &cur_node->val.num) != 1)
+            fprintf(stderr, "invalid val of number in GetNodeInfoBySymbol()\n");
+    }
+
     else
     {
         cur_node->type = VAR_OR_FUNC;
-        cur_node->val.prop_name = NewNameInTable(&tree->names_table, sym);
+
+        ProperName *prop_name = FindNameInTable(&tree->names_table, sym);
+
+        if (prop_name == NULL)
+            cur_node->val.prop_name  = NewNameInTable(&tree->names_table, sym);
+
+        else cur_node->val.prop_name = prop_name;
     }
 
     return cur_node;

@@ -22,8 +22,6 @@ const TreeElem_t POISON_VAL = 0xDEB11;
 #define UNIQ_ARG_MARK  "U"
 #define POISON_SYMBOL  "POISON"
 
-#define BASE_INPUT_CODE_FILE_NAME   "source_file.txt"
-
 #ifdef TREE_DEBUG
 #define ON_TREE_DEBUG(...)  __VA_ARGS__
 #else

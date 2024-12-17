@@ -1,9 +1,9 @@
-#ifndef READER_H
-#define READER_H
+#ifndef FRONT_READER_H
+#define FRONT_READER_H
 
 #include "../../tree/tree_lib.h"
 
-#define BASE_INPUT_CODE_FILE_NAME   "source_file.txt"
+#define BASE_INPUT_CODE_FILE_NAME   "../../source_file.txt"
 
 const size_t TOKEN_STR_LEN = 50;
 FILE *GetInputFile    (const int argc, const char *argv[]);

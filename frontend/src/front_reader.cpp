@@ -22,7 +22,10 @@ FILE *GetInputFile(const int argc, const char *argv[])
 void BuildTreeByCode(Tree *tree, FILE *source)
 {
     MakeTokens(tree, source);
-    tree->root_ptr = GetCode(tree);
+
+    size_t ip = 0;
+    tree->root_ptr = GetSum(tree, &ip);     // TODO: бпелеммн
+    RemoveNode(tree, &tree->node_ptrs[ip]);
 }
 
 void MakeTokens(Tree *tree, FILE *source)
@@ -561,7 +564,7 @@ void SyntaxError(Tree *tree, Node *cur_node, const char *expected_token, const c
                     "Maybe forgot to put %s here ( position %lld:%lld )",
                     file, line, func, expected_token, cur_node->born_line, cur_node->born_column);
 
-                    // Syntax error: forgot to put ) here (file ...,line ...)
+                    // Syntax error: forgot to put ) here (file ...,line ...)   // TODO ??
                         // int main (int argc, char *argv[]   {
                                                         //  ^ 
     abort();

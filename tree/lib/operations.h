@@ -17,7 +17,7 @@ enum FuncType
     BINARY
 };
 
-enum Operation_enum
+enum MathOperation_enum
 {
     BOOL_EQ,
     BOOL_NEQ,
@@ -37,36 +37,41 @@ enum Operation_enum
     TAN
 };
 
+struct Node;
+void PrintAsmForMathOP (Node *math_op, FILE *dest_file);
+void PrintAsmCodeForArg(Node *arg,     FILE *dest_file);
+
 struct MathOperation
 {
-    const Operation_enum  num;
+    const MathOperation_enum  num;
     const char           *my_symbol;
     const char           *real_symbol;
+    const char           *asm_symbol;
 
     const FuncType       type;                                               // UNARY  / BINARY
-    const FuncEntryForm  form;                                               // PREFIX / INFIX РІ
+    const FuncEntryForm  form;                                               // PREFIX / INFIX
 };
 
 const int OPERATIONS_NUM = 14;
 
 const MathOperation MathOperations[OPERATIONS_NUM] = 
 {
-    { BOOL_EQ,      "==",   "==",  BINARY, INFIX  },
-    { BOOL_NEQ,     "!=",   "!=",  BINARY, INFIX  },
-    { BOOL_GREATER, ">",    ">",   BINARY, INFIX  },
-    { BOOL_LOWER,   "<",    "<",   BINARY, INFIX  },
-    { ADD,          "+",    "+",   BINARY, INFIX  },
-    { SUB,          "-",    "-",   BINARY, INFIX  },
-    { MUL,          "*",    "*",   BINARY, INFIX  },
-    { DIV,          "/",    "/",   BINARY, INFIX  },
-    { DEG,          "^",    "^",   BINARY, INFIX  },
+    { BOOL_EQ,      "==",   "==",  NULL,  BINARY, INFIX  },
+    { BOOL_NEQ,     "!=",   "!=",  NULL,  BINARY, INFIX  },
+    { BOOL_GREATER, ">",    ">",   NULL,  BINARY, INFIX  },
+    { BOOL_LOWER,   "<",    "<",   NULL,  BINARY, INFIX  },
+    { ADD,          "+",    "+",   "ADD", BINARY, INFIX  },
+    { SUB,          "-",    "-",   "SUB", BINARY, INFIX  },
+    { MUL,          "*",    "*",   "MUL", BINARY, INFIX  },
+    { DIV,          "/",    "/",   "DIV", BINARY, INFIX  },
+    { DEG,          "^",    "^",   NULL,  BINARY, INFIX  },
   
-    { LN,           "лн",   "ln",  UNARY,  PREFIX },
-    { LOG,          "лог",  "log", BINARY, PREFIX },
+    { LN,           "лн",   "ln",  NULL, UNARY,  PREFIX },
+    { LOG,          "лог",  "log", NULL, BINARY, PREFIX },
   
-    { SIN,          "син",  "sin", UNARY,  PREFIX },
-    { COS,          "кос",  "cos", UNARY,  PREFIX },
-    { TAN,          "тан",  "tg",  UNARY,  PREFIX }
+    { SIN,          "син",  "sin", "SIN", UNARY,  PREFIX },
+    { COS,          "кос",  "cos", "COS", UNARY,  PREFIX },
+    { TAN,          "тан",  "tg",  "TG",  UNARY,  PREFIX }
 };
 
 //------------------------------------------------------------------------------------------------------------//
@@ -152,5 +157,7 @@ enum SymbolMode
 const MathOperation *GetOperationBySymbol  (char *sym, SymbolMode mode);
 const KeyWord       *GetKeyWordBySymbol    (char *sym, SymbolMode mode);
 const ManageElem    *GetManageElemBySymbol (char *sym, SymbolMode mode);
+
+void PrintAsmCodeByNode(Node *node, FILE *dest_file);
 
 #endif

@@ -1,3 +1,6 @@
+#ifndef BACK_READER_H
+#define BACK_READER_H
+
 #include <stdio.h>
 #include "../../tree/tree_lib.h"
 
@@ -7,3 +10,5 @@
 
 FILE *GetInputFile        (const int argc, const char *argv[]);
 Node *BuildTreeByFileData (FILE *source, Tree *tree);
+
+#endif
