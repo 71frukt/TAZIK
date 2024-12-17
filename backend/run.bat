@@ -1,3 +1,3 @@
 cd build
-main.exe
+backend.exe
 cd ../

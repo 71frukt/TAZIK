@@ -113,7 +113,8 @@ enum KeyWord_enum
     NEW_FUNC,
     ASSIGN,
     IF,
-    WHILE
+    WHILE,
+    RETURN
 };
 
 struct KeyWord
@@ -123,7 +124,7 @@ struct KeyWord
     const char         *real_symbol;
 };
 
-const int KEY_WORDS_NUM = 10;
+const int KEY_WORDS_NUM = 11;
 
 const KeyWord KeyWords[KEY_WORDS_NUM] = 
 {
@@ -136,13 +137,20 @@ const KeyWord KeyWords[KEY_WORDS_NUM] =
     { NEW_FUNC,         "новая_функция", "new_func"  },
     { ASSIGN,           "=" ,            "="         },
     { IF,               "если",          "if"        },
-    { WHILE,            "пока",          "while"     }
+    { WHILE,            "пока",          "while"     },
+    { RETURN,           "рет",           "return"    }
 };
 
 //---------------------------------------------------------------------------------------------------------------//
 
-const MathOperation   *GetOperationBySymbol  (char *sym);
-const KeyWord     *GetKeyWordBySymbol    (char *sym);
-const ManageElem  *GetManageElemBySymbol (char *sym);
+enum SymbolMode
+{
+    MY_CODE_MODE,
+    REAL_CODE_MODE
+};
+
+const MathOperation *GetOperationBySymbol  (char *sym, SymbolMode mode);
+const KeyWord       *GetKeyWordBySymbol    (char *sym, SymbolMode mode);
+const ManageElem    *GetManageElemBySymbol (char *sym, SymbolMode mode);
 
 #endif

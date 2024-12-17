@@ -153,10 +153,10 @@ char *NodeValToStr(Node *node)
         sprintf(res_str, TREE_ELEM_PRINT_SPECIFIER, node->val.num);
     
     else if (node->type == VAR || node->type == FUNC || node->type == VAR_OR_FUNC)
-        sprintf(res_str, "%s", node->val.prop_name);
+        sprintf(res_str, "%s", node->val.prop_name->name);
 
     else if (node->type == MATH_OP)
-        sprintf(res_str, "%s", node->val.op->real_symbol);
+        sprintf(res_str, "%s", node->val.math_op->real_symbol);
 
     else if (node->type == MANAGER)
     {
@@ -197,7 +197,7 @@ Node *TreeCopyPaste(Tree *source_tree, Tree *dest_tree, Node *coping_node)
         pasted_node->left  = TreeCopyPaste(source_tree, dest_tree, coping_node->left);
 
         // if (GetOperationByNode(pasted_node)->type == BINARY)
-        if (pasted_node->val.op->type == BINARY)
+        if (pasted_node->val.math_op->type == BINARY)
             pasted_node->right = TreeCopyPaste(source_tree, dest_tree, coping_node->right);
 
         else (pasted_node->right = pasted_node->left);
@@ -244,6 +244,44 @@ ProperName *NewNameInTable(NamesTable *table, char *name)
     return &table->names[table->size++];
 }
 
+Node *GetNodeInfoBySymbol(char *sym, Tree *tree, Node *cur_node, SymbolMode mode)
+{
+    const MathOperation *math_op  = GetOperationBySymbol  (sym, mode);
+    const KeyWord       *key_word = GetKeyWordBySymbol    (sym, mode);
+    const ManageElem    *manager  = GetManageElemBySymbol (sym, mode);
+
+    if (math_op != NULL)
+    {
+        cur_node->type        = MATH_OP;
+        cur_node->val.math_op = math_op;
+    }
+
+    else if (key_word != NULL)
+    {
+        cur_node->type         = KEY_WORD;
+        cur_node->val.key_word = key_word;
+    }
+
+    else if (manager != NULL)
+    {
+        cur_node->type        = MANAGER;
+        cur_node->val.manager = manager;
+    }
+
+    else if (strcmp(sym, "NULL") == 0)
+    {
+        cur_node = NULL;
+    }
+
+    else
+    {
+        cur_node->type = VAR_OR_FUNC;
+        cur_node->val.prop_name = NewNameInTable(&tree->names_table, sym);
+    }
+
+    return cur_node;
+}
+
 bool SubtreeContainsType(Node *cur_node, NodeType type)
 {
     if (cur_node == NULL)
@@ -259,7 +297,7 @@ bool SubtreeContainsType(Node *cur_node, NodeType type)
         bool right_subtree_cont_type = false;
 
         // if (cur_node->type == MATH_OP && GetOperationByNode(cur_node)->type == BINARY)
-        if (cur_node->type == MATH_OP && cur_node->val.op->type == BINARY)       // чтобы не проходить одну и ту же ветку дважды для унарной операции
+        if (cur_node->type == MATH_OP && cur_node->val.math_op->type == BINARY)       // чтобы не проходить одну и ту же ветку дважды для унарной операции
             right_subtree_cont_type = SubtreeContainsType(cur_node->right, type);
 
         return (left_subtree_cont_type || right_subtree_cont_type);
@@ -270,7 +308,7 @@ bool OpNodeIsCommutativity(Node *op_node)
 {
     assert(op_node);
 
-    if (op_node->type == MATH_OP && (op_node->val.op->num == ADD || op_node->val.op->num == MUL))
+    if (op_node->type == MATH_OP && (op_node->val.math_op->num == ADD || op_node->val.math_op->num == MUL))
         return true;
     
     else return false;
@@ -283,6 +321,6 @@ bool IsInitialise(Node *node)
 
 bool IsBool(Node *node)
 {
-    const MathOperation *op = node->val.op;
-    return (node->type == MATH_OP && (op->num == BOOL_EQ || op->num == BOOL_NEQ || op->num == BOOL_GREATER || op->num == BOOL_LOWER));
+    const MathOperation *math_op = node->val.math_op;
+    return (node->type == MATH_OP && (math_op->num == BOOL_EQ || math_op->num == BOOL_NEQ || math_op->num == BOOL_GREATER || math_op->num == BOOL_LOWER));
 }

@@ -4,22 +4,22 @@
 #include <string.h>
 
 #include "../../tree/tree_lib.h"
-#include "reader.h"
+#include "front_reader.h"
 
 FILE *GetInputFile(const int argc, const char *argv[])
 {
     FILE *input_file = NULL;
 
     if (argc < 2)
-        input_file = fopen(BASE_INPUT_FILE_NAME, "r");
+        input_file = fopen(BASE_INPUT_CODE_FILE_NAME, "r");
     
     else
-        input_file = fopen(argv[1], "w");
+        input_file = fopen(argv[1], "r");
 
     return input_file;   
 }
 
-void BuildTree(Tree *tree, FILE *source)
+void BuildTreeByCode(Tree *tree, FILE *source)
 {
     MakeTokens(tree, source);
     tree->root_ptr = GetCode(tree);
@@ -30,32 +30,32 @@ void MakeTokens(Tree *tree, FILE *source)
     size_t cur_line   = 0;
     size_t cur_column = 0;
 
-    char start_ch = (char) getc(source);
-    ungetc(start_ch, source);
+    char cur_ch = (char) getc(source);
+    ungetc(cur_ch, source);
 
-    while (start_ch != EOF)
+    while (cur_ch != EOF)
     {
-        fprintf(stderr, "col = %lld, line = %lld\n", cur_column, cur_line);
-        fprintf(stderr, "real col = %ld\n\n", ftell(source));
+        // fprintf(stderr, "col = %lld, line = %lld\n", cur_column, cur_line);
+        // fprintf(stderr, "real col = %ld\n\n", ftell(source));
 
-        start_ch = (char) getc(source);
+        cur_ch = (char) getc(source);
         
-        if (start_ch == '\n')
+        if (cur_ch == '\n')
         {
             cur_line++;
             cur_column = 0;
             continue;
         }
 
-        else if (isspace(start_ch))
+        else if (isspace(cur_ch))
         {
             cur_column++;
             continue;
         }
 
-        if (isdigit(start_ch))
+        if (isdigit(cur_ch))
         {
-            ungetc(start_ch, source);
+            ungetc(cur_ch, source);
             int shift = 0;
 
             TreeElem_t val = POISON_VAL;
@@ -72,7 +72,7 @@ void MakeTokens(Tree *tree, FILE *source)
         {
             char cur_token[TOKEN_STR_LEN] = {};
 
-            ungetc(start_ch, source);
+            ungetc(cur_ch, source);
             int shift = 0;
 
             fscanf(source, "%s%n", cur_token, &shift);
@@ -94,6 +94,8 @@ void MakeTokens(Tree *tree, FILE *source)
         }
     }
 
+    NewNode(tree, MANAGER, {.manager = &Managers[EOT]}, NULL, NULL);
+
     TREE_DUMP(tree);
 }
 
@@ -108,18 +110,18 @@ Node *GetNamedToken(Tree *tree, char *token_name)
         if (cur_name_ptr == NULL)
             cur_name_ptr = NewNameInTable(&tree->names_table, token_name);
 
-        return NewNode(tree, VAR_OR_FUNC, {.prop_name = cur_name_ptr->name}, NULL, NULL);      // TODO: добавить функции, не только переменные
+        return NewNode(tree, VAR_OR_FUNC, {.prop_name = cur_name_ptr}, NULL, NULL);
     }
 
     else                                                                                // имя операнда или рандомный вкид
     {
-        const MathOperation   *cur_op = GetOperationBySymbol  (token_name);
-        const KeyWord     *key_word   = GetKeyWordBySymbol    (token_name);
-        const ManageElem  *manage_el  = GetManageElemBySymbol (token_name);
+        const MathOperation   *cur_op     = GetOperationBySymbol  (token_name, MY_CODE_MODE);
+        const KeyWord         *key_word   = GetKeyWordBySymbol    (token_name, MY_CODE_MODE);
+        const ManageElem      *manage_el  = GetManageElemBySymbol (token_name, MY_CODE_MODE);
 
         if (cur_op != NULL)
         {
-            return NewNode(tree, MATH_OP, {.op = cur_op}, NULL, NULL);
+            return NewNode(tree, MATH_OP, {.math_op = cur_op}, NULL, NULL);
         }
 
         else if (key_word != NULL)
@@ -131,6 +133,9 @@ Node *GetNamedToken(Tree *tree, char *token_name)
         {
             return NewNode(tree, MANAGER, {.manager = manage_el}, NULL, NULL);
         }
+
+        // Node *new_node = NewNode(tree, POISON_TYPE, {}, NULL, NULL);
+        // return GetNodeInfoBySymbol(token_name, tree, new_node, MY_CODE_MODE);
     }
 
     return NULL;
@@ -210,7 +215,7 @@ Node *GetBlock(Tree *dest_tree, size_t *ip)
     assert(dest_tree);
     TREE_DUMP(dest_tree);
 
-    Node **tokens  = dest_tree->node_ptrs;
+    Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != OPEN_BLOCK_BRACKET)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "open block bracket");
@@ -235,7 +240,7 @@ Node *GetBlock(Tree *dest_tree, size_t *ip)
 
 Node *GetIf(Tree *dest_tree, size_t *ip)
 {
-    Node **tokens  = dest_tree->node_ptrs;
+    Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != IF)
         return GetWhile(dest_tree, ip);
@@ -259,7 +264,7 @@ fprintf(stderr, "end of if, ip = %lld\n", *ip);
 
 Node *GetWhile(Tree *dest_tree, size_t *ip)
 {
-    Node **tokens  = dest_tree->node_ptrs;
+    Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != WHILE)
         return GetExpr(dest_tree, ip);
@@ -283,7 +288,7 @@ fprintf(stderr, "end of while, ip = %lld\n", *ip);
 
 Node *GetExpr(Tree *dest_tree, size_t *ip)              // то, что отделяется ;
 {
-    Node **tokens  = dest_tree->node_ptrs;
+    Node **tokens = dest_tree->node_ptrs;
 
     Node *expr = GetVarInit(dest_tree, ip);
 
@@ -300,10 +305,10 @@ Node *GetVarInit(Tree *dest_tree, size_t *ip)
 {
     assert(dest_tree);
 
-    Node **tokens  = dest_tree->node_ptrs;
+    Node **tokens = dest_tree->node_ptrs;
 
     if (!IsInitialise(tokens[*ip]))
-        return GetBool(dest_tree, ip);
+        return GetReturn(dest_tree, ip);
 
     Node *init_node = tokens[(*ip)++];
 
@@ -320,6 +325,20 @@ Node *GetVarInit(Tree *dest_tree, size_t *ip)
     init_node->right = GetBool(dest_tree, ip);
     
     return init_node;
+}
+
+Node *GetReturn(Tree *dest_tree, size_t *ip)
+{
+    assert(dest_tree);
+    Node **tokens = dest_tree->node_ptrs;
+
+    if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != RETURN)
+        return GetBool(dest_tree, ip);
+
+    Node *ret_node = tokens[(*ip)++];
+    ret_node->left = GetBool(dest_tree, ip);
+
+    return ret_node;
 }
 
 Node *GetBool(Tree *dest_tree, size_t *ip)
@@ -345,7 +364,7 @@ Node *GetSum(Tree *dest_tree, size_t *ip)
     Node **tokens  = dest_tree->node_ptrs;
     Node *res_node = GetMul(dest_tree, ip);
 
-    while (tokens[*ip]->type == MATH_OP && (tokens[*ip]->val.op->num == ADD || tokens[*ip]->val.op->num == SUB))
+    while (tokens[*ip]->type == MATH_OP && (tokens[*ip]->val.math_op->num == ADD || tokens[*ip]->val.math_op->num == SUB))
     {
         Node *arg_1 = res_node;
         res_node    = tokens[(*ip)++];
@@ -363,7 +382,7 @@ Node *GetMul(Tree *dest_tree, size_t *ip)
     Node **tokens  = dest_tree->node_ptrs;
     Node *res_node = GetPow(dest_tree, ip);
 
-    while (tokens[*ip]->type == MATH_OP && (tokens[*ip]->val.op->num == MUL || tokens[*ip]->val.op->num == DIV))
+    while (tokens[*ip]->type == MATH_OP && (tokens[*ip]->val.math_op->num == MUL || tokens[*ip]->val.math_op->num == DIV))
     {
         Node *arg_1 = res_node;
         res_node    = tokens[(*ip)++];
@@ -386,7 +405,7 @@ Node *GetPow(Tree *dest_tree, size_t *ip)
     if (cur_op->type != MATH_OP)
         return res_node;
 
-    if (cur_op->val.op->num == DEG)
+    if (cur_op->val.math_op->num == DEG)
     {
         Node *basis = res_node;
         res_node = tokens[(*ip)++];
@@ -412,10 +431,10 @@ Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 
     Node *op_node = tokens[(*ip)++];
 
-    if (op_node->val.op->form == INFIX)
+    if (op_node->val.math_op->form == INFIX)
         SYNTAX_ERROR(dest_tree, op_node, "prefix form of operand");
 
-    if (op_node->val.op->type == UNARY)
+    if (op_node->val.math_op->type == UNARY)
     {
         Node *arg = GetSumInBrackets(dest_tree, ip);
         op_node->left  = arg;

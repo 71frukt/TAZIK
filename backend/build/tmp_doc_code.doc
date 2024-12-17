@@ -1,0 +1,35 @@
+digraph G{              
+bgcolor = "darkslategray";     
+edge [color = "aqua"  
+];node_0000021aaffd6640 [shape = "egg", style = filled, fillcolor = "tan", label = "new_func"]
+node_0000021aaffd6670 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_0000021aaffd66a0 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
+node_0000021aaffd66d0 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "func"]
+node_0000021aaffd6700 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_0000021aaffd6730 [shape = "square", style = filled, fillcolor = "aquamarine", label = "huilan"]
+node_0000021aaffd6760 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
+node_0000021aaffd6790 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_0000021aaffd67c0 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_0000021aaffd67f0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "aboba"]
+node_0000021aaffd6820 [shape = "egg", style = filled, fillcolor = "tan", label = "func_call"]
+node_0000021aaffd6850 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
+node_0000021aaffd6880 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "func"]
+node_0000021aaffd68b0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "-"]
+node_0000021aaffd68e0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "5"]
+node_0000021aaffd6910 [shape = "square", style = filled, fillcolor = "aquamarine", label = "95"]
+node_0000021aaffd6640 -> node_0000021aaffd6670
+node_0000021aaffd6670 -> node_0000021aaffd66a0
+node_0000021aaffd6670 -> node_0000021aaffd6760
+node_0000021aaffd66a0 -> node_0000021aaffd66d0
+node_0000021aaffd66a0 -> node_0000021aaffd6700
+node_0000021aaffd6700 -> node_0000021aaffd6730
+node_0000021aaffd6760 -> node_0000021aaffd6790
+node_0000021aaffd6790 -> node_0000021aaffd67c0
+node_0000021aaffd6790 -> node_0000021aaffd6820
+node_0000021aaffd67c0 -> node_0000021aaffd67f0
+node_0000021aaffd6820 -> node_0000021aaffd6850
+node_0000021aaffd6850 -> node_0000021aaffd6880
+node_0000021aaffd6850 -> node_0000021aaffd68b0
+node_0000021aaffd68b0 -> node_0000021aaffd68e0
+node_0000021aaffd68b0 -> node_0000021aaffd6910
+} 

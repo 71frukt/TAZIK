@@ -22,7 +22,7 @@ const TreeElem_t POISON_VAL = 0xDEB11;
 #define UNIQ_ARG_MARK  "U"
 #define POISON_SYMBOL  "POISON"
 
-#define BASE_INPUT_FILE_NAME   "source_file.txt"
+#define BASE_INPUT_CODE_FILE_NAME   "source_file.txt"
 
 #ifdef TREE_DEBUG
 #define ON_TREE_DEBUG(...)  __VA_ARGS__
@@ -45,14 +45,19 @@ enum NodeType
     POISON_TYPE,
 };
 
+struct ProperName
+{
+    size_t number;
+    char   name[TOKEN_LEN];
+};
 
 union NodeVal
 {
-    TreeElem_t         num;
-    char              *prop_name;
-    const MathOperation   *op;
-    const KeyWord     *key_word;
-    const ManageElem  *manager;
+    TreeElem_t           num;
+    ProperName          *prop_name;
+    const MathOperation *math_op;
+    const KeyWord       *key_word;
+    const ManageElem    *manager;
 };
 
 struct Node
@@ -65,12 +70,6 @@ struct Node
 
     size_t born_line;
     size_t born_column;
-};
-
-struct ProperName
-{
-    size_t number;
-    char   name[TOKEN_LEN];
 };
 
 struct NamesTable
@@ -113,6 +112,8 @@ char   *NodeValToStr  (Node *node);
 
 ProperName *FindNameInTable (NamesTable *table, char *name);
 ProperName *NewNameInTable  (NamesTable *table, char *name);
+
+Node *GetNodeInfoBySymbol(char *sym, Tree *tree, Node *cur_node, SymbolMode mode);
 
 void    NamesTableCtor  (size_t start_capa, NamesTable *table);
 void    NamesTableDtor  (NamesTable *table);

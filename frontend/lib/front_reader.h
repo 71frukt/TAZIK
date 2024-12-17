@@ -3,22 +3,23 @@
 
 #include "../../tree/tree_lib.h"
 
-#define BASE_INPUT_FILE_NAME   "source_file.txt"
+#define BASE_INPUT_CODE_FILE_NAME   "source_file.txt"
 
 const size_t TOKEN_STR_LEN = 50;
-FILE *GetInputFile  (const int argc, const char *argv[]);
-void  BuildTree     (Tree *tree, FILE *source);
-void  MakeTokens    (Tree *tree, FILE *source);
-Node *GetNamedToken (Tree *tree, char *token_name);
+FILE *GetInputFile    (const int argc, const char *argv[]);
+void  BuildTreeByCode (Tree *tree, FILE *source);
+void  MakeTokens      (Tree *tree, FILE *source);
+Node *GetNamedToken   (Tree *tree, char *token_name);
 
 Node *GetCode           (Tree *dest_tree);
 Node *GetFuncInit       (Tree *dest_tree, size_t *ip);
 Node *GetBlock          (Tree *dest_tree, size_t *ip);
-Node *GetIf             (Tree *dest_tree, size_t *ip);
 Node *GetWhile          (Tree *dest_tree, size_t *ip);
-Node *GetBool           (Tree *dest_tree, size_t *ip);
+Node *GetIf             (Tree *dest_tree, size_t *ip);
 Node *GetExpr           (Tree *dest_tree, size_t *ip);
 Node *GetVarInit        (Tree *dest_tree, size_t *ip);
+Node *GetReturn         (Tree *dest_tree, size_t *ip);
+Node *GetBool           (Tree *dest_tree, size_t *ip);
 Node *GetSum            (Tree *dest_tree, size_t *ip);
 Node *GetMul            (Tree *dest_tree, size_t *ip);
 Node *GetPow            (Tree *dest_tree, size_t *ip);

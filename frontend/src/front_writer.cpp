@@ -1,12 +1,12 @@
 #include <stdio.h>
 
 #include "../../tree/tree_lib.h"
-#include "writer.h"
+#include "front_writer.h"
 
 FILE *GetOutputFile(const int argc, const char *argv[])
 {
     if (argc < 3)
-        return fopen(DEFAULT_OUTPUT_FILE_NAME, "w");
+        return fopen(BASE_SAVE_TREE_FILE_NAME, "w");
     
     else
         return fopen(argv[2], "w");
