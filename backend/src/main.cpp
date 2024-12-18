@@ -19,7 +19,7 @@ int main(const int argc, const char *argv[])
 
     FILE *asm_file = GetOutputFile(argc, argv);
 
-    PrintAsmCodeByNode(source_tree.root_ptr, asm_file);
+    // PrintAsmCodeByNode(source_tree.root_ptr, asm_file);
 
     fprintf(stderr, "BACKEND_END\n");
 

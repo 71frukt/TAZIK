@@ -30,6 +30,9 @@ const KeyWord *GetKeyWordBySymbol(char *sym, SymbolMode mode)
 
     for (size_t i = 0; i < KEY_WORDS_NUM; i++)
     {
+        if (KeyWords[i].my_symbol == NULL)
+            continue;
+
         const char *compare_sym = (mode == MY_CODE_MODE ? KeyWords[i].my_symbol : KeyWords[i].real_symbol);
 
         if (strcmp(sym, compare_sym) == 0)
@@ -80,7 +83,7 @@ void PrintArgAsmCode(Node *arg, FILE *dest_file)
         fprintf(dest_file, "%s " TREE_ELEM_PRINT_SPECIFIER "\n", AsmOperations[PUSH_ASM].sym, arg->val.num);
     
     else if (arg->type == KEY_WORD && arg->val.key_word->name == VAR_T_INDICATOR)
-        fprintf(dest_file, "%s [%lld]\n", AsmOperations[PUSH_ASM].sym, arg->left->val.prop_name->number);
+        fprintf(dest_file, "%s [BX + %lld]\n", AsmOperations[PUSH_ASM].sym, arg->left->val.prop_name->number);
 
     else
         PrintAsmCodeByNode(arg, dest_file);
@@ -151,6 +154,16 @@ void PrintWhileAsm(Node *while_node, FILE *dest_file)
                         "while_end_mark_%lld:       \n", AsmOperations[JMP_ASM].sym, cur_mark_num, cur_mark_num);
 }
 
+void PrintReturnAsm(Node *ret_node, FILE *dest_file)
+{
+    assert(ret_node);
+    assert(dest_file);
+
+    PrintAsmCodeByNode(ret_node->left, dest_file);
+
+    fprintf(dest_file, "%s\n", AsmOperations[RET_ASM].sym);
+}
+
 void PrintNewExprAsm(Node *new_expr_node, FILE *dest_file)
 {
     assert(new_expr_node);
@@ -164,6 +177,23 @@ void PrintNewExprAsm(Node *new_expr_node, FILE *dest_file)
 
     if (new_expr_node->right != NULL)
         PrintArgAsmCode(new_expr_node->right, dest_file);
+}
+
+void PrintNewFuncAsm(Node *new_func_node, FILE *dest_file)          // AX - start of frame, BX - cur size
+{
+    assert(new_func_node);
+    assert(dest_file);
+
+    fprintf(dest_file, "%s:\n", new_func_node->left->left->left->val.prop_name->name);
+    fprintf(dest_file, "%s [BX] \n", AsmOperations[POP_ASM].sym);
+
+    fprintf(dest_file, "%s BX   \n"                     // BX ++
+                       "%s 1    \n"
+                       "%s      \n"
+                       "%s BX   \n", 
+        AsmOperations[PUSH_ASM].sym, AsmOperations[PUSH_ASM].sym, AsmOperations[ADD_ASM].sym, AsmOperations[POP_ASM].sym);
+
+        
 }
 
 void PrintAsmCodeByNode(Node *node, FILE *dest_file)

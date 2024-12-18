@@ -290,15 +290,6 @@ void GetBlockNamesTable(Tree *tree, Node *block, Node *cur_node)
         Node *var_node = cur_node->left->left;
         assert(var_node->type == VAR);
 
-        if (table->capacity == 0)
-            NamesTableCtor(START_NAMES_TABLE_CAPA, table);
-
-        if (table->size >= table->capacity)
-        {
-            table->capacity *= 2;
-            table->names = (ProperName *) realloc(table->names, table->capacity);
-        }
-
         var_node->val.prop_name = NewNameInTable(table, var_node->val.prop_name->name);
     }
 
@@ -316,7 +307,28 @@ void MakeNamesTablesForBlocks(Tree *tree, Node *cur_node)
     if (cur_node == NULL)
         return;
 
-    if (cur_node->type == NEW_BLOCK)
+    if (cur_node->type == KEY_WORD && cur_node->val.key_word->name == NEW_FUNC)
+    {
+        Node *arg = cur_node->left->left->right->left->left;
+        Node *block_node = cur_node->left->right;
+
+        NamesTable *block_table = &block_node->val.block.names_table;
+
+        // arg->val.prop_name = NewNameInTable(block_table, arg->val.prop_name->name);
+
+        GetBlockNamesTable(tree, block_node, cur_node->left->left->right);
+
+        GetBlockNamesTable(tree, block_node, block_node->left);
+
+        MakeNamesTablesForBlocks(tree, cur_node->left->right);
+
+        for (size_t i = 0; i < cur_node->val.block.names_table.size; i++)
+        {
+            fprintf(stderr, "init node = '%s', num = %lld\n", cur_node->val.block.names_table.names[i].name, cur_node->val.block.names_table.names[i].number);
+        }
+    }
+
+    else if (cur_node->type == NEW_BLOCK)
     {
         cur_node->val.block.prev_block = tree->cur_block;
         tree->cur_block = cur_node;

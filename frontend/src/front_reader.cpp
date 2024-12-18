@@ -24,8 +24,8 @@ void BuildTreeByCode(Tree *tree, FILE *source)
     MakeTokens(tree, source);
 
     size_t ip = 0;
-    tree->root_ptr = GetBlock(tree, &ip);     // TODO: ВРЕМЕННО
-    RemoveNode(tree, &tree->node_ptrs[ip]);
+    tree->root_ptr = GetCode(tree);
+    // RemoveNode(tree, &tree->node_ptrs[ip]);
 
     MakeNamesTablesForBlocks(tree, tree->root_ptr);
 
@@ -102,8 +102,6 @@ fprintf(stderr, "tree size = %lld\n\n", tree->size);
 
 Node *GetNamedToken(Tree *tree, char *token_name)
 {
-    fprintf(stderr, "token_name = '%s'\n", token_name);
-
     if (IsEngLetter(*token_name))                                                       // это имя функции или переменной
     {
         ProperName *cur_name_ptr = FindNameInTable(&tree->names_table, token_name);

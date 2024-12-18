@@ -14,5 +14,8 @@ INCLUDE = -I lib
 
 all: $(OBJS)	
 
-%.o: %.cpp
+%.o: %.cpp %.h
 	g++ $(FLAGS) $(INCLUDE) -c $< -o $@
+
+clean:
+	rm -r tree/src/*.o
