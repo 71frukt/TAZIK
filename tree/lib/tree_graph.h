@@ -30,10 +30,11 @@ const NodeGraphInfo GraphViewInfo[NODE_TYPES_COUNT] =
     { NUM,         "skyblue",       "oval"    },
     { VAR,         "aquamarine",    "square"  },
     { FUNC,        "darkturquoise", "square"  },
-    { VAR_OR_FUNC, "aquamarine",    "square"  },
+    { VAR_OR_FUNC, "red",           "square"  },
     { MATH_OP,     "seagreen1",     "record"  },
     { KEY_WORD,    "tan",           "egg"     },
     { MANAGER,     "grey",          "oval"    },
+    { NEW_BLOCK,   "yellow",        "hexagon" },
     { POISON_TYPE, "red",           "hexagon" }
 };
 

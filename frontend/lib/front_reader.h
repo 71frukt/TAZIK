@@ -19,6 +19,7 @@ Node *GetIf             (Tree *dest_tree, size_t *ip);
 Node *GetExpr           (Tree *dest_tree, size_t *ip);
 Node *GetVarInit        (Tree *dest_tree, size_t *ip);
 Node *GetReturn         (Tree *dest_tree, size_t *ip);
+Node *GetAssign         (Tree *dest_tree, size_t *ip);
 Node *GetBool           (Tree *dest_tree, size_t *ip);
 Node *GetSum            (Tree *dest_tree, size_t *ip);
 Node *GetMul            (Tree *dest_tree, size_t *ip);
@@ -28,6 +29,7 @@ Node *GetSumInBrackets  (Tree *dest_tree, size_t *ip);
 Node *GetVarOrFunc      (Tree *dest_tree, size_t *ip);
 Node *GetNumber         (Tree *dest_tree, size_t *ip);
 
+void GetBlockNamesTable(Node *block, Node *cur_node);
 
 bool IsEngLetter (char ch);
 

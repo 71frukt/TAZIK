@@ -1,31 +1,21 @@
 digraph G{              
 bgcolor = "darkslategray";     
 edge [color = "aqua"  
-];node_000002ca111e6640 [shape = "record", style = filled, fillcolor = "seagreen1", label = "+"]
-node_000002ca111e6670 [shape = "record", style = filled, fillcolor = "seagreen1", label = "-"]
-node_000002ca111e66a0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "*"]
-node_000002ca111e66d0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "+"]
-node_000002ca111e6700 [shape = "oval", style = filled, fillcolor = "skyblue", label = "1"]
-node_000002ca111e6730 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000002ca111e6760 [shape = "square", style = filled, fillcolor = "aquamarine", label = "x"]
-node_000002ca111e6790 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000002ca111e67c0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "x"]
-node_000002ca111e67f0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "*"]
-node_000002ca111e6820 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000002ca111e6850 [shape = "square", style = filled, fillcolor = "aquamarine", label = "z"]
-node_000002ca111e6880 [shape = "oval", style = filled, fillcolor = "skyblue", label = "5"]
-node_000002ca111e68b0 [shape = "oval", style = filled, fillcolor = "skyblue", label = "6"]
-node_000002ca111e6640 -> node_000002ca111e6670
-node_000002ca111e6640 -> node_000002ca111e68b0
-node_000002ca111e6670 -> node_000002ca111e66a0
-node_000002ca111e6670 -> node_000002ca111e67f0
-node_000002ca111e66a0 -> node_000002ca111e66d0
-node_000002ca111e66a0 -> node_000002ca111e6790
-node_000002ca111e66d0 -> node_000002ca111e6700
-node_000002ca111e66d0 -> node_000002ca111e6730
-node_000002ca111e6730 -> node_000002ca111e6760
-node_000002ca111e6790 -> node_000002ca111e67c0
-node_000002ca111e67f0 -> node_000002ca111e6820
-node_000002ca111e67f0 -> node_000002ca111e6880
-node_000002ca111e6820 -> node_000002ca111e6850
+];node_00000182f1346640 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_00000182f1346670 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_00000182f13466a0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "x"]
+node_00000182f13466d0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "+"]
+node_00000182f1346700 [shape = "oval", style = filled, fillcolor = "skyblue", label = "5"]
+node_00000182f1346730 [shape = "record", style = filled, fillcolor = "seagreen1", label = "*"]
+node_00000182f1346760 [shape = "oval", style = filled, fillcolor = "skyblue", label = "6"]
+node_00000182f1346790 [shape = "record", style = filled, fillcolor = "seagreen1", label = "cos"]
+node_00000182f13467c0 [shape = "oval", style = filled, fillcolor = "skyblue", label = "6"]
+node_00000182f1346640 -> node_00000182f1346670
+node_00000182f1346640 -> node_00000182f13466d0
+node_00000182f1346670 -> node_00000182f13466a0
+node_00000182f13466d0 -> node_00000182f1346700
+node_00000182f13466d0 -> node_00000182f1346730
+node_00000182f1346730 -> node_00000182f1346760
+node_00000182f1346730 -> node_00000182f1346790
+node_00000182f1346790 -> node_00000182f13467c0
 } 

@@ -38,8 +38,9 @@ enum MathOperation_enum
 };
 
 struct Node;
-void PrintAsmForMathOP (Node *math_op, FILE *dest_file);
-void PrintAsmCodeForArg(Node *arg,     FILE *dest_file);
+
+void PrintMathOpAsm  (Node *math_op, FILE *dest_file);
+void PrintArgAsmCode (Node *arg, FILE *dest_file);
 
 struct MathOperation
 {
@@ -107,6 +108,9 @@ const ManageElem Managers[MANAGE_ELEMS_NUM] =
 
 //------------------------------------------------------------------------------------------------------------//
 
+void PrintInitAsm   (Node *init_node, FILE *dest_file);
+void PrintAssignAsm (Node *assign_node, FILE *dest_file);
+
 enum KeyWord_enum
 {
     VAR_T_INDICATOR,
@@ -127,6 +131,8 @@ struct KeyWord
     const KeyWord_enum  name;
     const char         *my_symbol;
     const char         *real_symbol;
+
+    void (*PrintAsmCodeFunc)(Node *node, FILE *dest_file);
 };
 
 const int KEY_WORDS_NUM = 11;
@@ -136,11 +142,11 @@ const KeyWord KeyWords[KEY_WORDS_NUM] =
     { VAR_T_INDICATOR,  "вар_т",         "var_t"     },
     { FUNC_T_INDICATOR, "функ_т",        "func_t"    },
     { FUNC_CALL,        "кол",           "func_call" },
-    { INT_INIT,         "инт",           "int"       },
-    { DOUBLE_INIT,      "дабл",          "double"    },
+    { INT_INIT,         "инт",           "int",      PrintInitAsm },
+    { DOUBLE_INIT,      "дабл",          "double",   PrintInitAsm },
     { NEW_EXPR,         "новая_строка",  "new_line"  },
     { NEW_FUNC,         "новая_функция", "new_func"  },
-    { ASSIGN,           "=" ,            "="         },
+    { ASSIGN,           "=" ,            "=",        PrintAssignAsm },
     { IF,               "если",          "if"        },
     { WHILE,            "пока",          "while"     },
     { RETURN,           "рет",           "return"    }

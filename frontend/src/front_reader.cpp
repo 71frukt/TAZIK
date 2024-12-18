@@ -24,8 +24,10 @@ void BuildTreeByCode(Tree *tree, FILE *source)
     MakeTokens(tree, source);
 
     size_t ip = 0;
-    tree->root_ptr = GetSum(tree, &ip);     // TODO: ÂÐÅÌÅÍÍÎ
-    RemoveNode(tree, &tree->node_ptrs[ip]);
+    tree->root_ptr = GetCode(tree);     // TODO: ÂÐÅÌÅÍÍÎ
+    // RemoveNode(tree, &tree->node_ptrs[ip]);
+
+    TREE_DUMP(tree);
 }
 
 void MakeTokens(Tree *tree, FILE *source)
@@ -111,7 +113,9 @@ Node *GetNamedToken(Tree *tree, char *token_name)
         ProperName *cur_name_ptr = FindNameInTable(&tree->names_table, token_name);
 
         if (cur_name_ptr == NULL)
+        {
             cur_name_ptr = NewNameInTable(&tree->names_table, token_name);
+        }
 
         return NewNode(tree, VAR_OR_FUNC, {.prop_name = cur_name_ptr}, NULL, NULL);
     }
@@ -238,7 +242,16 @@ Node *GetBlock(Tree *dest_tree, size_t *ip)
 
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
-    return res_block;
+    Node *new_block_node = NewNode(dest_tree, NEW_BLOCK, {.block = {}}, res_block, NULL);
+
+    GetBlockNamesTable(new_block_node, res_block);
+
+    for (int i = 0; i < new_block_node->val.block.names_table.size; i++)
+    {
+        fprintf(stderr, "init node = '%s', num = %lld\n", new_block_node->val.block.names_table.names[i].name, new_block_node->val.block.names_table.names[i].number);
+    }
+
+    return new_block_node;
 }
 
 Node *GetIf(Tree *dest_tree, size_t *ip)
@@ -314,11 +327,12 @@ Node *GetVarInit(Tree *dest_tree, size_t *ip)
         return GetReturn(dest_tree, ip);
 
     Node *init_node = tokens[(*ip)++];
+    Node *var_node  = GetVarOrFunc(dest_tree, ip);
 
-    if (tokens[*ip]->type != VAR_OR_FUNC)
+    if (var_node->type != KEY_WORD || var_node->val.key_word->name != VAR_T_INDICATOR)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "type of VAR");
 
-    init_node->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[VAR_T_INDICATOR]}, tokens[(*ip)++], NULL);
+    init_node->left = var_node;
 
     if (!(tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == ASSIGN))
         SYNTAX_ERROR(dest_tree, tokens[*ip], "assign node");
@@ -336,12 +350,34 @@ Node *GetReturn(Tree *dest_tree, size_t *ip)
     Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != RETURN)
-        return GetBool(dest_tree, ip);
+        return GetAssign(dest_tree, ip);
 
     Node *ret_node = tokens[(*ip)++];
     ret_node->left = GetBool(dest_tree, ip);
 
     return ret_node;
+}
+
+Node *GetAssign(Tree *dest_tree, size_t *ip)
+{
+    assert(dest_tree);
+    Node **tokens = dest_tree->node_ptrs;
+
+    if (tokens[(*ip) + 1]->type != KEY_WORD || tokens[(*ip) + 1]->val.key_word->name != ASSIGN)
+        return GetBool(dest_tree, ip);
+
+    Node *var_node  = GetVarOrFunc(dest_tree, ip);
+fprintf(stderr, "ip = %lld\n", *ip);
+    if (var_node->type != KEY_WORD || var_node->val.key_word->name != VAR_T_INDICATOR)
+        SYNTAX_ERROR(dest_tree, var_node, "an attempt to assign a non-variable");
+
+    Node *init_node = tokens[(*ip)++];
+    Node *expr_node = GetBool(dest_tree, ip);
+
+    init_node->left  = var_node;
+    init_node->right = expr_node;
+
+    return init_node;
 }
 
 Node *GetBool(Tree *dest_tree, size_t *ip)
@@ -441,7 +477,7 @@ Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) èëè f(.. , ..)
     {
         Node *arg = GetSumInBrackets(dest_tree, ip);
         op_node->left  = arg;
-        op_node->right = arg;
+        op_node->right = NULL;
 
         return op_node;
     }
@@ -509,6 +545,8 @@ Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
 
     if (tokens[*ip]->type == VAR_OR_FUNC)
     {
+        fprintf(stderr, "In getVarOrFunc()\n");
+
         Node *cur_node = tokens[(*ip)++];
         cur_node->type = VAR;
         Node *arg = NULL;
@@ -556,12 +594,38 @@ Node *GetNumber(Tree *dest_tree, size_t *ip)
     }
 }
 
+void GetBlockNamesTable(Node *block, Node *cur_node)
+{
+    assert(block);
+    assert(block->type == NEW_BLOCK);
+
+    if (cur_node == NULL)
+        return;
+
+    if (cur_node->type == KEY_WORD && IsInitialise(cur_node))
+    {
+        Node *var_node = cur_node->left->left;
+        assert(var_node->type == VAR);
+
+        var_node->val.prop_name = NewNameInTable(&block->val.block.names_table, var_node->val.prop_name->name);
+    }
+
+    else if (cur_node->type == KEY_WORD && cur_node->val.key_word->name == NEW_EXPR)
+    {
+        GetBlockNamesTable(block, cur_node->left);
+        GetBlockNamesTable(block, cur_node->right);
+    }
+
+    else
+        return;
+}
+
 void SyntaxError(Tree *tree, Node *cur_node, const char *expected_token, const char *file, int line, const char *func)
 {
     TREE_DUMP(tree);
 
     fprintf(stderr, "SyntaxError called in %s:%d %s()\n"
-                    "Maybe forgot to put %s here ( position %lld:%lld )",
+                    "%s here ( position %lld:%lld )",
                     file, line, func, expected_token, cur_node->born_line, cur_node->born_column);
 
                     // Syntax error: forgot to put ) here (file ...,line ...)   // TODO ??

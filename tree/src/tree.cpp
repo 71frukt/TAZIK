@@ -175,6 +175,9 @@ char *NodeValToStr(Node *node)
     //         sprintf(res_str, "%s", VAR_TYPE_SYMBOL);
     // }
 
+    else if (node->type == NEW_BLOCK)
+        sprintf(res_str, "%s", "new_block");
+
     else if (node->type == POISON_TYPE)
         sprintf(res_str, "%s", POISON_SYMBOL);
 
@@ -232,6 +235,9 @@ ProperName *FindNameInTable(NamesTable *table, char *name)
 
 ProperName *NewNameInTable(NamesTable *table, char *name)
 {
+    if (table->capacity == 0)
+        NamesTableCtor(START_NAMES_TABLE_CAPA, table);
+
     if (table->size >= table->capacity)
     {
         table->capacity *= 2;

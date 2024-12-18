@@ -1,1 +1,1 @@
-+ ( - ( * ( + ( 1 ( NULL ; NULL ) ; var_t ( x ( NULL ; NULL ) ; NULL ) ) ; var_t ( x ( NULL ; NULL ) ; NULL ) ) ; * ( var_t ( z ( NULL ; NULL ) ; NULL ) ; 5 ( NULL ; NULL ) ) ) ; 6 ( NULL ; NULL ) ) 
+new_func ( NULL ; NULL ) 

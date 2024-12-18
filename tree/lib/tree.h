@@ -28,7 +28,7 @@ const TreeElem_t POISON_VAL = 0xDEB11;
 #define ON_TREE_DEBUG(...)
 #endif
 
-const size_t NODE_TYPES_COUNT = 8;
+const size_t NODE_TYPES_COUNT = 9;
 
 enum NodeType
 {
@@ -39,6 +39,7 @@ enum NodeType
     MATH_OP,
     KEY_WORD,
     MANAGER,
+    NEW_BLOCK,
 
     POISON_TYPE,
 };
@@ -49,10 +50,23 @@ struct ProperName
     char   name[TOKEN_LEN];
 };
 
+struct NamesTable
+{
+    ProperName *names;
+    size_t size;
+    size_t capacity;
+};
+
+struct Block
+{
+    NamesTable names_table;
+};
+
 union NodeVal
 {
     TreeElem_t           num;
     ProperName          *prop_name;
+    Block                block;
     const MathOperation *math_op;
     const KeyWord       *key_word;
     const ManageElem    *manager;
@@ -70,12 +84,6 @@ struct Node
     size_t born_column;
 };
 
-struct NamesTable
-{
-    ProperName *names;
-    size_t size;
-    size_t capacity;
-};
 
 struct TreeAllocMarks
 {
