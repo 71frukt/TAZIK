@@ -6,16 +6,19 @@ FLAGS = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equa
 SRCS = $(wildcard src/*.cpp)
 # OBJS = $(SRCS:.cpp=.o)
 OBJS = $(SRCS:.cpp=.o)
+
 INCLUDE = -I lib
 
 # OBJDIR = bin
 # $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 #     $(CC) $(CXXFLAGS) $< -c -o $@
 
-all: $(OBJS)	
+all: clean $(OBJS)
 
-%.o: %.cpp %.h
+%.o: %.cpp
 	g++ $(FLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
-	rm -r tree/src/*.o
+	del src\*.o
+
+rebuild: clean all

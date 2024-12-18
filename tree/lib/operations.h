@@ -42,6 +42,7 @@ struct Node;
 void PrintAsmCodeByNode (Node *node,    FILE *dest_file);
 void PrintMathOpAsm     (Node *math_op, FILE *dest_file);
 void PrintArgAsmCode    (Node *arg,     FILE *dest_file);
+void PopToEmptyRam      (FILE *asm_file);
 
 struct MathOperation
 {
@@ -111,7 +112,7 @@ const ManageElem Managers[MANAGE_ELEMS_NUM] =
 
 void PrintInitAsm    (Node *init_node,     FILE *dest_file);
 void PrintAssignAsm  (Node *assign_node,   FILE *dest_file);
-void PrintNewExprAsm (Node *new_expr_node, FILE *dest_file);
+void PrintChildrenAsm (Node *new_expr_node, FILE *dest_file);
 void PrintIfAsm      (Node *if_node,       FILE *dest_file);
 void PrintWhileAsm   (Node *while_node,    FILE *dest_file);
 void PrintReturnAsm  (Node *ret_node,      FILE *dest_file);
@@ -145,13 +146,13 @@ const int KEY_WORDS_NUM = 11;
 
 const KeyWord KeyWords[KEY_WORDS_NUM] = 
 {
-    { VAR_T_INDICATOR,   "GOV1",           "var_t"     },
-    { FUNC_T_INDICATOR,  "GOV1",           "func_t"    },
-    { FUNC_CALL,         "GOV1",           "func_call" },
+    { VAR_T_INDICATOR,   NULL,           "var_t"     },
+    { FUNC_T_INDICATOR,  NULL,           "func_t"    },
+    { FUNC_CALL,         NULL,           "func_call" },
     { INT_INIT,         "инт",           "int",      PrintInitAsm },
     { DOUBLE_INIT,      "дабл",          "double",   PrintInitAsm },
-    { NEW_EXPR,         "новая_строка",  "new_line", PrintNewExprAsm },
-    { NEW_FUNC,         NULL,            "new_func"  },
+    { NEW_EXPR,         "новая_строка",  "new_line", PrintChildrenAsm },
+    { NEW_FUNC,         NULL,            "new_func", PrintChildrenAsm },
     { ASSIGN,           "=" ,            "=",        PrintAssignAsm },
     { IF,               "если",          "if",       PrintIfAsm },
     { WHILE,            "пока",          "while",    PrintWhileAsm },
@@ -169,5 +170,6 @@ enum SymbolMode
 const MathOperation *GetOperationBySymbol  (char *sym, SymbolMode mode);
 const KeyWord       *GetKeyWordBySymbol    (char *sym, SymbolMode mode);
 const ManageElem    *GetManageElemBySymbol (char *sym, SymbolMode mode);
+
 
 #endif

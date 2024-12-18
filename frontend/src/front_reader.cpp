@@ -38,7 +38,7 @@ void MakeTokens(Tree *tree, FILE *source)
     size_t cur_column = 0;
 
     char cur_ch = (char) getc(source);
-    ungetc(cur_ch, source);
+    ungetc(cur_ch, source); // TODO: fix ungetc(-1)
 
     while (cur_ch != EOF)
     {
@@ -142,13 +142,15 @@ Node *GetNamedToken(Tree *tree, char *token_name)
     return NULL;
 }
 
-bool IsEngLetter(char ch)
+bool IsEngLetter(char ch) // isalpha
 {
     return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
 
 Node *GetCode(Tree *dest_tree)
 {
+    assert(dest_tree);
+
     size_t ip = 0;
 
     Node **tokens  = dest_tree->node_ptrs;
@@ -176,6 +178,7 @@ Node *GetCode(Tree *dest_tree)
 Node *GetFuncInit(Tree *dest_tree, size_t *ip)
 {
     assert(dest_tree);
+    assert(ip);
     TREE_DUMP(dest_tree);
 
     Node **tokens = dest_tree->node_ptrs;
@@ -215,7 +218,7 @@ Node *GetFuncInit(Tree *dest_tree, size_t *ip)
 
 Node *GetBlock(Tree *dest_tree, size_t *ip)
 {
-    assert(dest_tree);
+    assert(dest_tree);          // TODO: assert(ip);
     TREE_DUMP(dest_tree);
 
     Node **tokens = dest_tree->node_ptrs;
@@ -490,8 +493,8 @@ Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 
     else
     {
-        bool is_OPEN_EXPR_BRACKET = tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == OPEN_EXPR_BRACKET;
-        if (!is_OPEN_EXPR_BRACKET)
+        bool is_open_expr_bracket = tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == OPEN_EXPR_BRACKET;
+        if (!is_open_expr_bracket)
             SYNTAX_ERROR(dest_tree, tokens[*ip], Managers[OPEN_EXPR_BRACKET].my_symbol);
         RemoveNode(dest_tree, &tokens[*ip]);
         (*ip)++;
@@ -506,8 +509,8 @@ Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 
         Node *arg_2 = GetSum(dest_tree, ip);
 
-        bool is_CLOSE_EXPR_BRACKET = tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == CLOSE_EXPR_BRACKET;
-        if (!is_CLOSE_EXPR_BRACKET)
+        bool is_close_expr_bracket = tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == CLOSE_EXPR_BRACKET;
+        if (!is_close_expr_bracket)
             SYNTAX_ERROR(dest_tree, tokens[*ip], Managers[CLOSE_EXPR_BRACKET].my_symbol);
         RemoveNode(dest_tree, &tokens[*ip]);
         (*ip)++;
@@ -530,9 +533,9 @@ Node *GetSumInBrackets(Tree *dest_tree, size_t *ip)
 
         Node *res_node = GetSum(dest_tree, ip);
 
-        bool is_CLOSE_EXPR_BRACKET = tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == CLOSE_EXPR_BRACKET;
+        bool is_close_expr_bracket = tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == CLOSE_EXPR_BRACKET;
 
-        if (!is_CLOSE_EXPR_BRACKET)
+        if (!is_close_expr_bracket)
             SYNTAX_ERROR(dest_tree, tokens[*ip], Managers[CLOSE_EXPR_BRACKET].my_symbol);
 
         RemoveNode(dest_tree, &tokens[*ip]);
@@ -603,6 +606,7 @@ Node *GetNumber(Tree *dest_tree, size_t *ip)
 void SyntaxError(Tree *tree, Node *cur_node, const char *expected_token, const char *file, int line, const char *func)
 {
     TREE_DUMP(tree);
+    // TODO: asserts
 
     fprintf(stderr, "SyntaxError called in %s:%d %s()\n"
                     "%s here ( position %lld:%lld )",

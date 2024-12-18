@@ -243,7 +243,7 @@ ProperName *FindNameInBlock(Node *cur_block, char *name)
     ProperName *res_name = FindNameInTable(&cur_block->val.block.names_table, name);
 
     if (res_name == NULL && cur_block->val.block.prev_block != NULL)
-        return FindNameInTable(&cur_block->val.block.prev_block->val.block.names_table, name);
+        return FindNameInBlock(cur_block->val.block.prev_block, name);
     
     else
         return res_name;
@@ -312,32 +312,37 @@ void MakeNamesTablesForBlocks(Tree *tree, Node *cur_node)
         Node *arg = cur_node->left->left->right->left->left;
         Node *block_node = cur_node->left->right;
 
-        NamesTable *block_table = &block_node->val.block.names_table;
-
-        // arg->val.prop_name = NewNameInTable(block_table, arg->val.prop_name->name);
+        block_node->val.block.shift = 0;
 
         GetBlockNamesTable(tree, block_node, cur_node->left->left->right);
 
-        GetBlockNamesTable(tree, block_node, block_node->left);
+        MakeNamesTablesForBlocks(tree, block_node);
 
-        MakeNamesTablesForBlocks(tree, cur_node->left->right);
+        MakeNamesTablesForBlocks(tree, cur_node->right);
 
-        for (size_t i = 0; i < cur_node->val.block.names_table.size; i++)
+        fprintf(stderr, "size of names table = %lld\n", block_node->val.block.names_table.size);
+        for (size_t i = 0; i < block_node->val.block.names_table.size; i++)
         {
-            fprintf(stderr, "init node = '%s', num = %lld\n", cur_node->val.block.names_table.names[i].name, cur_node->val.block.names_table.names[i].number);
+            fprintf(stderr, "init node = '%s', num = %lld\n", block_node->val.block.names_table.names[i].name, block_node->val.block.names_table.names[i].number);
         }
     }
 
     else if (cur_node->type == NEW_BLOCK)
     {
         cur_node->val.block.prev_block = tree->cur_block;
+
+        if (tree->cur_block == NULL)
+            cur_node->val.block.shift = 0;
+        else
+            cur_node->val.block.shift = tree->cur_block->val.block.shift + tree->cur_block->val.block.names_table.size;
+
         tree->cur_block = cur_node;
 
         GetBlockNamesTable(tree, cur_node, cur_node->left);
 
         for (size_t i = 0; i < cur_node->val.block.names_table.size; i++)
         {
-            fprintf(stderr, "init node = '%s', num = %lld\n", cur_node->val.block.names_table.names[i].name, cur_node->val.block.names_table.names[i].number);
+            fprintf(stderr, "init node = '%s', num = %lld\n", cur_node->val.block.names_table.names[i].name, cur_node->val.block.names_table.names[i].number + cur_node->val.block.shift);
         }
 
         tree->cur_block = tree->cur_block->val.block.prev_block;  

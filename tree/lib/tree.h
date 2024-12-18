@@ -63,6 +63,8 @@ struct Block
 {
     NamesTable names_table;
     Node *prev_block;
+
+    size_t shift;   // глобальное смещение относительно первого блока (блока функции)
 };
 
 union NodeVal
