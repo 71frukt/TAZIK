@@ -31,7 +31,7 @@ const KeyWord *GetKeyWordBySymbol(char *sym, SymbolMode mode)
     for (size_t i = 0; i < KEY_WORDS_NUM; i++)
     {
         const char *compare_sym = (mode == MY_CODE_MODE ? KeyWords[i].my_symbol : KeyWords[i].real_symbol);
-fprintf(stderr, "compare with '%s'\n", compare_sym);
+
         if (strcmp(sym, compare_sym) == 0)
             return &KeyWords[i];
     }
@@ -65,11 +65,17 @@ void PrintMathOpAsm(Node *math_op, FILE *dest_file)
     if (math_op->val.math_op->type == BINARY)
         PrintArgAsmCode(math_op->right, dest_file);
 
-    fprintf(dest_file, "%s\n", math_op->val.math_op->asm_symbol);
+    fprintf(dest_file, "%s ", math_op->val.math_op->asm_symbol);
+
+    if (!IsBool(math_op))
+        fprintf(dest_file, "\n");
 }
 
 void PrintArgAsmCode(Node *arg, FILE *dest_file)
 {
+    assert(arg);
+    assert(dest_file);
+
     if (arg->type == NUM)
         fprintf(dest_file, "%s " TREE_ELEM_PRINT_SPECIFIER "\n", AsmOperations[PUSH_ASM].sym, arg->val.num);
     
@@ -108,6 +114,58 @@ void PrintAssignAsm(Node *assign_node, FILE *dest_file)
     fprintf(dest_file, "%s [%lld]\n", AsmOperations[POP_ASM].sym, assign_node->left->val.prop_name->number);
 }
 
+void PrintIfAsm(Node *if_node, FILE *dest_file)
+{
+    assert(if_node);
+    assert(dest_file);
+    assert(if_node->left->type == MATH_OP && IsBool(if_node->left));
+
+    static size_t if_marks_count = 0;
+
+    size_t cur_mark_num = if_marks_count++;
+    PrintMathOpAsm(if_node->left, dest_file);
+    fprintf(dest_file, "if_mark_%lld:\n", cur_mark_num);
+
+    PrintAsmCodeByNode(if_node->right, dest_file);
+
+    fprintf(dest_file, "if_mark_%lld:\n", cur_mark_num);
+}
+
+void PrintWhileAsm(Node *while_node, FILE *dest_file)
+{
+    assert(while_node);
+    assert(dest_file);
+    assert(while_node->left->type == MATH_OP && IsBool(while_node->left));
+
+    static size_t while_marks_count = 0;
+
+    size_t cur_mark_num = while_marks_count++;
+    fprintf(dest_file, "while_start_mark_%lld:\n", cur_mark_num);
+
+    PrintMathOpAsm(while_node->left, dest_file);
+    fprintf(dest_file, "while_end_mark_%lld:\n", cur_mark_num);
+
+    PrintAsmCodeByNode(while_node->right, dest_file);
+
+    fprintf(dest_file,  "%s while_start_mark_%lld:  \n"
+                        "while_end_mark_%lld:       \n", AsmOperations[JMP_ASM].sym, cur_mark_num, cur_mark_num);
+}
+
+void PrintNewExprAsm(Node *new_expr_node, FILE *dest_file)
+{
+    assert(new_expr_node);
+    assert(dest_file);
+    assert(new_expr_node->type == KEY_WORD && new_expr_node->val.key_word->name == NEW_EXPR);
+
+    fprintf(dest_file, "\n");
+
+    if (new_expr_node->left != NULL)
+        PrintArgAsmCode(new_expr_node->left, dest_file);
+
+    if (new_expr_node->right != NULL)
+        PrintArgAsmCode(new_expr_node->right, dest_file);
+}
+
 void PrintAsmCodeByNode(Node *node, FILE *dest_file)
 {
     assert(node);
@@ -120,6 +178,9 @@ void PrintAsmCodeByNode(Node *node, FILE *dest_file)
     {
         node->val.key_word->PrintAsmCodeFunc(node, dest_file);
     }
+
+    else if (node->type == NEW_BLOCK)
+        PrintAsmCodeByNode(node->left, dest_file);
 
     else
         return;        // TODO: доделать для ключевых слов

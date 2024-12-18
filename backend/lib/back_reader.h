@@ -9,6 +9,7 @@
 #endif
 
 FILE *GetInputFile        (const int argc, const char *argv[]);
-Node *BuildTreeByFileData (FILE *source, Tree *tree);
+void  BuildTreeByFileData (FILE *source, Tree *tree);
+Node *MakeAndLinkNodes    (FILE *source, Tree *tree);
 
 #endif

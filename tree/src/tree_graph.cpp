@@ -13,9 +13,9 @@ void DrawGraph(Tree *tree, char *dest_picture_path)
 
     FILE *dot_file = fopen(TMP_DOTFILE_NAME, "w");
 
-    fprintf(dot_file, "digraph G{              \n"
-                        "bgcolor = \"%s\";     \n" 
-                        "edge [color = \"%s\"  \n];", BACKGROUND_COLOR, EDGE_COLOR);
+    fprintf(dot_file, "digraph G{               \n"
+                        "bgcolor = \"%s\";      \n" 
+                        "edge [color = \"%s\"]; \n", BACKGROUND_COLOR, EDGE_COLOR);
 
     InitNodesInDot(tree, dot_file);
     MakeLinksInDot(tree, dot_file);

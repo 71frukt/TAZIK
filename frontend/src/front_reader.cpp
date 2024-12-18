@@ -24,8 +24,10 @@ void BuildTreeByCode(Tree *tree, FILE *source)
     MakeTokens(tree, source);
 
     size_t ip = 0;
-    tree->root_ptr = GetCode(tree);     // TODO: бпелеммн
-    // RemoveNode(tree, &tree->node_ptrs[ip]);
+    tree->root_ptr = GetBlock(tree, &ip);     // TODO: бпелеммн
+    RemoveNode(tree, &tree->node_ptrs[ip]);
+
+    MakeNamesTablesForBlocks(tree, tree->root_ptr);
 
     TREE_DUMP(tree);
 }
@@ -83,12 +85,6 @@ void MakeTokens(Tree *tree, FILE *source)
             fscanf(source, "%s%n", cur_token, &shift);
             cur_column += shift;
 
-            // if (strcmp(cur_token, EOT_SYMBOL) == 0)
-            // {
-            //     NewNode(tree, EOT, {}, NULL, NULL);
-            //     break;
-            // }
-
             Node *new_node = GetNamedToken(tree, cur_token);
 
             if (new_node != NULL)
@@ -100,7 +96,7 @@ void MakeTokens(Tree *tree, FILE *source)
     }
 
     NewNode(tree, MANAGER, {.manager = &Managers[EOT]}, NULL, NULL);
-
+fprintf(stderr, "tree size = %lld\n\n", tree->size);
     TREE_DUMP(tree);
 }
 
@@ -202,8 +198,10 @@ Node *GetFuncInit(Tree *dest_tree, size_t *ip)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "init of arguments");
 
     Node *arg = tokens[(*ip)++];                    // int/double
-    arg->left = tokens[(*ip)++];                    // name of var
-    arg->left->type = VAR;
+    Node *var = tokens[(*ip)++];                    // name of var
+    var->type = VAR;
+
+    arg->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[VAR_T_INDICATOR]}, var, NULL);
 
     func_init->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[FUNC_T_INDICATOR]}, func_node, arg);
 
@@ -229,8 +227,12 @@ Node *GetBlock(Tree *dest_tree, size_t *ip)
 
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
+    // new_block_node->val.block.prev_block = dest_tree->cur_block;
+    // dest_tree->cur_block = new_block_node;
+
     Node *res_block = GetIf(dest_tree, ip);
     Node *cur_top = res_block;
+    // new_block_node->left = res_block;
 
     while (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != CLOSE_BLOCK_BRACKET)
     {
@@ -240,16 +242,22 @@ Node *GetBlock(Tree *dest_tree, size_t *ip)
         cur_top = new_top;
     }
 
+    Node *new_block_node = NewNode(dest_tree, NEW_BLOCK, {.block = {}}, res_block, NULL);
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
-    Node *new_block_node = NewNode(dest_tree, NEW_BLOCK, {.block = {}}, res_block, NULL);
+    // if (new_block_node->val.block.prev_block != NULL)
+    //     RefillBlockNamesTable(dest_tree, new_block_node->val.block.prev_block, new_block_node->val.block.prev_block->left);
 
-    GetBlockNamesTable(new_block_node, res_block);
+    // RefillBlockNamesTable(dest_tree, new_block_node, res_block);
 
-    for (int i = 0; i < new_block_node->val.block.names_table.size; i++)
-    {
-        fprintf(stderr, "init node = '%s', num = %lld\n", new_block_node->val.block.names_table.names[i].name, new_block_node->val.block.names_table.names[i].number);
-    }
+    // GetBlockNamesTable(dest_tree, new_block_node, res_block);
+// 
+    // for (int i = 0; i < new_block_node->val.block.names_table.size; i++)
+    // {
+        // fprintf(stderr, "init node = '%s', num = %lld\n", new_block_node->val.block.names_table.names[i].name, new_block_node->val.block.names_table.names[i].number);
+    // }
+
+    // dest_tree->cur_block = dest_tree->cur_block->val.block.prev_block;
 
     return new_block_node;
 }
@@ -267,7 +275,7 @@ Node *GetIf(Tree *dest_tree, size_t *ip)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "open bracket for condition");
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
-    if_node->left = GetSum(dest_tree, ip);
+    if_node->left = GetBool(dest_tree, ip);
 
     if (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != CLOSE_EXPR_BRACKET)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "close bracket for condition");
@@ -592,32 +600,6 @@ Node *GetNumber(Tree *dest_tree, size_t *ip)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "type of NUM or VAR");
         return NULL;
     }
-}
-
-void GetBlockNamesTable(Node *block, Node *cur_node)
-{
-    assert(block);
-    assert(block->type == NEW_BLOCK);
-
-    if (cur_node == NULL)
-        return;
-
-    if (cur_node->type == KEY_WORD && IsInitialise(cur_node))
-    {
-        Node *var_node = cur_node->left->left;
-        assert(var_node->type == VAR);
-
-        var_node->val.prop_name = NewNameInTable(&block->val.block.names_table, var_node->val.prop_name->name);
-    }
-
-    else if (cur_node->type == KEY_WORD && cur_node->val.key_word->name == NEW_EXPR)
-    {
-        GetBlockNamesTable(block, cur_node->left);
-        GetBlockNamesTable(block, cur_node->right);
-    }
-
-    else
-        return;
 }
 
 void SyntaxError(Tree *tree, Node *cur_node, const char *expected_token, const char *file, int line, const char *func)

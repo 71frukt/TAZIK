@@ -57,9 +57,12 @@ struct NamesTable
     size_t capacity;
 };
 
+#define NEW_BLOCK_SYM  "new_block"
+
 struct Block
 {
     NamesTable names_table;
+    Node *prev_block;
 };
 
 union NodeVal
@@ -95,6 +98,7 @@ struct Tree
 {
     Node **node_ptrs;
     Node *root_ptr;
+    Node *cur_block;
 
     size_t capacity;
     size_t size;
@@ -117,7 +121,11 @@ size_t  GetTreeHeight (Node *cur_node);
 char   *NodeValToStr  (Node *node);
 
 ProperName *FindNameInTable (NamesTable *table, char *name);
+ProperName *FindNameInBlock (Node   *cur_block, char *name);
 ProperName *NewNameInTable  (NamesTable *table, char *name);
+
+void GetBlockNamesTable       (Tree *tree, Node *block, Node *cur_node);
+void MakeNamesTablesForBlocks (Tree *tree, Node *cur_node);
 
 Node *GetNodeInfoBySymbol(char *sym, Tree *tree, Node *cur_node, SymbolMode mode);
 

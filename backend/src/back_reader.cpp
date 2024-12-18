@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 #include "back_reader.h"
 #include "../../tree/tree_lib.h"
@@ -17,7 +18,19 @@ FILE *GetInputFile(const int argc, const char *argv[])
     return input_file;   
 }
 
-Node *BuildTreeByFileData(FILE *source, Tree *tree)
+void BuildTreeByFileData(FILE *source, Tree *tree)
+{
+    assert(source);
+    assert(tree);
+
+    tree->root_ptr = MakeAndLinkNodes(source, tree);
+
+    TREE_DUMP(tree);
+
+    MakeNamesTablesForBlocks(tree, tree->root_ptr);
+}
+
+Node *MakeAndLinkNodes(FILE *source, Tree *tree)
 {
     char cur_token[TOKEN_LEN] = {};
 
@@ -33,12 +46,12 @@ fprintf(stderr, "token = '%s'\n", cur_token);
     if (fscanf(source, "%s", cur_token) != 1 || strcmp(cur_token, "(") != 0)
         fprintf(stderr, "Expected '(' after '%s'\n", cur_token);
 
-    new_node->left = BuildTreeByFileData(source, tree);
+    new_node->left = MakeAndLinkNodes(source, tree);
 
     if (fscanf(source, "%s", cur_token) != 1 || strcmp(cur_token, ";") != 0)
         fprintf(stderr, "Expected ';' after '%s'\n", cur_token);
 
-    new_node->right = BuildTreeByFileData(source, tree);
+    new_node->right = MakeAndLinkNodes(source, tree);
 
     if (fscanf(source, "%s", cur_token) != 1 || strcmp(cur_token, ")") != 0)
         fprintf(stderr, "Expected ')' after '%s'\n", cur_token);

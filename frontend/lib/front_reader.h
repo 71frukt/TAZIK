@@ -29,8 +29,6 @@ Node *GetSumInBrackets  (Tree *dest_tree, size_t *ip);
 Node *GetVarOrFunc      (Tree *dest_tree, size_t *ip);
 Node *GetNumber         (Tree *dest_tree, size_t *ip);
 
-void GetBlockNamesTable(Node *block, Node *cur_node);
-
 bool IsEngLetter (char ch);
 
 void SyntaxError(Tree *tree, Node *cur_node, const char *expected_token, const char *file, int line, const char *func);

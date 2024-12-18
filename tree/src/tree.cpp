@@ -176,7 +176,7 @@ char *NodeValToStr(Node *node)
     // }
 
     else if (node->type == NEW_BLOCK)
-        sprintf(res_str, "%s", "new_block");
+        sprintf(res_str, NEW_BLOCK_SYM);
 
     else if (node->type == POISON_TYPE)
         sprintf(res_str, "%s", POISON_SYMBOL);
@@ -233,6 +233,22 @@ ProperName *FindNameInTable(NamesTable *table, char *name)
     return NULL;
 }
 
+ProperName *FindNameInBlock(Node *cur_block, char *name)
+{
+    assert(name);
+
+    if (cur_block == NULL)
+        return NULL;
+    
+    ProperName *res_name = FindNameInTable(&cur_block->val.block.names_table, name);
+
+    if (res_name == NULL && cur_block->val.block.prev_block != NULL)
+        return FindNameInTable(&cur_block->val.block.prev_block->val.block.names_table, name);
+    
+    else
+        return res_name;
+}
+
 ProperName *NewNameInTable(NamesTable *table, char *name)
 {
     if (table->capacity == 0)
@@ -248,6 +264,78 @@ ProperName *NewNameInTable(NamesTable *table, char *name)
     strncpy(table->names[table->size].name, name, TOKEN_LEN);
 
     return &table->names[table->size++];
+}
+
+void GetBlockNamesTable(Tree *tree, Node *block, Node *cur_node)
+{
+    assert(block);
+    assert(block->type == NEW_BLOCK);
+
+    NamesTable *table = &block->val.block.names_table;
+
+    if (cur_node == NULL)
+        return;
+
+    if (cur_node->type == NEW_BLOCK)
+        MakeNamesTablesForBlocks(tree, cur_node);
+
+    else if (cur_node->type == VAR)
+    {
+        ProperName *cur_name = FindNameInBlock(block, cur_node->val.prop_name->name);
+        cur_node->val.prop_name = cur_name;
+    }
+
+    else if (cur_node->type == KEY_WORD && IsInitialise(cur_node))
+    {
+        Node *var_node = cur_node->left->left;
+        assert(var_node->type == VAR);
+
+        if (table->capacity == 0)
+            NamesTableCtor(START_NAMES_TABLE_CAPA, table);
+
+        if (table->size >= table->capacity)
+        {
+            table->capacity *= 2;
+            table->names = (ProperName *) realloc(table->names, table->capacity);
+        }
+
+        var_node->val.prop_name = NewNameInTable(table, var_node->val.prop_name->name);
+    }
+
+    else  //if (cur_node->type == KEY_WORD && cur_node->val.key_word->name == NEW_EXPR)
+    {
+        GetBlockNamesTable(tree, block, cur_node->left);
+        GetBlockNamesTable(tree, block, cur_node->right);
+    }
+}
+
+void MakeNamesTablesForBlocks(Tree *tree, Node *cur_node)
+{
+    assert(tree);
+
+    if (cur_node == NULL)
+        return;
+
+    if (cur_node->type == NEW_BLOCK)
+    {
+        cur_node->val.block.prev_block = tree->cur_block;
+        tree->cur_block = cur_node;
+
+        GetBlockNamesTable(tree, cur_node, cur_node->left);
+
+        for (size_t i = 0; i < cur_node->val.block.names_table.size; i++)
+        {
+            fprintf(stderr, "init node = '%s', num = %lld\n", cur_node->val.block.names_table.names[i].name, cur_node->val.block.names_table.names[i].number);
+        }
+
+        tree->cur_block = tree->cur_block->val.block.prev_block;  
+    }
+
+    else
+    {
+        MakeNamesTablesForBlocks(tree, cur_node->left);
+        MakeNamesTablesForBlocks(tree, cur_node->right);
+    }
 }
 
 Node *GetNodeInfoBySymbol(char *sym, Tree *tree, Node *cur_node, SymbolMode mode)
@@ -266,12 +354,17 @@ Node *GetNodeInfoBySymbol(char *sym, Tree *tree, Node *cur_node, SymbolMode mode
     {
         cur_node->type         = KEY_WORD;
         cur_node->val.key_word = key_word;
-    }
 
+    }
     else if (manager != NULL)
     {
         cur_node->type        = MANAGER;
         cur_node->val.manager = manager;
+    }
+
+    else if (strcmp(sym, NEW_BLOCK_SYM) == 0)
+    {
+        cur_node->type = NEW_BLOCK;
     }
 
     else if (strcmp(sym, "NULL") == 0)
@@ -300,6 +393,8 @@ Node *GetNodeInfoBySymbol(char *sym, Tree *tree, Node *cur_node, SymbolMode mode
 
     return cur_node;
 }
+
+
 
 bool SubtreeContainsType(Node *cur_node, NodeType type)
 {

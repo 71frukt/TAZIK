@@ -13,7 +13,7 @@ int main(const int argc, const char *argv[])
     Tree source_tree = {};
     TreeCtor(&source_tree, START_TREE_SIZE ON_TREE_DEBUG(, "source"));
 
-    source_tree.root_ptr = BuildTreeByFileData(source_file, &source_tree);
+    BuildTreeByFileData(source_file, &source_tree);
 
     TREE_DUMP(&source_tree);
 
