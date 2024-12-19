@@ -10,10 +10,15 @@ BUILD_DIR  = build
 EXECUTABLE = backend
 OBJECTS    = $(SOURCES:.cpp=.o) $(TREE_LIB)
 
-all: $(EXECUTABLE)
+all: clean $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
 	g++ $(FLAGS) $^ -o $(BUILD_DIR)/$@
 
 %.o : %.cpp
 	g++ -c $(FLAGS) $(INCLUDE) $< -o $@
+
+clean:
+	del src\*.o
+
+rebuild: clean all

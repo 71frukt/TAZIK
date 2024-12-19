@@ -61,8 +61,8 @@ const MathOperation MathOperations[OPERATIONS_NUM] =
 {
     { BOOL_EQ,      "==",   "==",  "JNE", BINARY, INFIX  },
     { BOOL_NEQ,     "!=",   "!=",  "JE",  BINARY, INFIX  },
-    { BOOL_GREATER, ">",    ">",   "JB",  BINARY, INFIX  },
-    { BOOL_LOWER,   "<",    "<",   "JA",  BINARY, INFIX  },
+    { BOOL_GREATER, ">",    "\\>",   "JB",  BINARY, INFIX  },
+    { BOOL_LOWER,   "<",    "\\<",   "JA",  BINARY, INFIX  },
     { ADD,          "+",    "+",   "ADD", BINARY, INFIX  },
     { SUB,          "-",    "-",   "SUB", BINARY, INFIX  },
     { MUL,          "*",    "*",   "MUL", BINARY, INFIX  },
@@ -110,13 +110,12 @@ const ManageElem Managers[MANAGE_ELEMS_NUM] =
 
 //------------------------------------------------------------------------------------------------------------//
 
-void PrintInitAsm    (Node *init_node,     FILE *dest_file);
-void PrintAssignAsm  (Node *assign_node,   FILE *dest_file);
+void PrintInitAsm     (Node *init_node,     FILE *dest_file);
+void PrintAssignAsm   (Node *assign_node,   FILE *dest_file);
 void PrintChildrenAsm (Node *new_expr_node, FILE *dest_file);
-void PrintIfAsm      (Node *if_node,       FILE *dest_file);
-void PrintWhileAsm   (Node *while_node,    FILE *dest_file);
-void PrintReturnAsm  (Node *ret_node,      FILE *dest_file);
-void PrintNewFuncAsm (Node *new_func_node, FILE *dest_file);
+void PrintIfAsm       (Node *if_node,       FILE *dest_file);
+void PrintWhileAsm    (Node *while_node,    FILE *dest_file);
+void PrintReturnAsm   (Node *ret_node,      FILE *dest_file);
 
 enum KeyWord_enum
 {

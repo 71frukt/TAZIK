@@ -282,15 +282,18 @@ void GetBlockNamesTable(Tree *tree, Node *block, Node *cur_node)
     else if (cur_node->type == VAR)
     {
         ProperName *cur_name = FindNameInBlock(block, cur_node->val.prop_name->name);
+        fprintf(stderr, "use of inited var named '%s', num = %lld\n", cur_name->name, cur_name->number);
         cur_node->val.prop_name = cur_name;
     }
 
     else if (cur_node->type == KEY_WORD && IsInitialise(cur_node))
     {
         Node *var_node = cur_node->left->left;
-        assert(var_node->type == VAR);
+        assert(var_node->type == VAR || var_node->type == FUNC || var_node->type == VAR_OR_FUNC);
 
         var_node->val.prop_name = NewNameInTable(table, var_node->val.prop_name->name);
+
+        GetBlockNamesTable(tree, block, cur_node->right);
     }
 
     else  //if (cur_node->type == KEY_WORD && cur_node->val.key_word->name == NEW_EXPR)

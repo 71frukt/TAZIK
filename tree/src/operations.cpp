@@ -30,10 +30,10 @@ const KeyWord *GetKeyWordBySymbol(char *sym, SymbolMode mode)
 
     for (size_t i = 0; i < KEY_WORDS_NUM; i++)
     {
-        if (KeyWords[i].my_symbol == NULL)
-            continue;
-
         const char *compare_sym = (mode == MY_CODE_MODE ? KeyWords[i].my_symbol : KeyWords[i].real_symbol);
+
+        if (compare_sym == NULL)
+            continue;
 
         if (strcmp(sym, compare_sym) == 0)
             return &KeyWords[i];
@@ -93,7 +93,6 @@ void PrintChildrenAsm(Node *new_expr_node, FILE *dest_file)
 {
     assert(new_expr_node);
     assert(dest_file);
-    assert(new_expr_node->type == KEY_WORD && new_expr_node->val.key_word->name == NEW_EXPR);
 
     fprintf(dest_file, "\n");
 
@@ -106,12 +105,10 @@ void PrintChildrenAsm(Node *new_expr_node, FILE *dest_file)
 
 void PopToEmptyRam(FILE *asm_file)
 {
-    fprintf(asm_file, "%s [BX] \n", AsmOperations[POP_ASM].sym);
-
     fprintf(asm_file, "%s BX   \n"                     // BX ++
-                    "%s 1    \n"
-                    "%s      \n"
-                    "%s BX   \n", 
+                      "%s 1    \n"
+                      "%s      \n"
+                      "%s BX   \n", 
         AsmOperations[PUSH_ASM].sym, AsmOperations[PUSH_ASM].sym, AsmOperations[ADD_ASM].sym, AsmOperations[POP_ASM].sym);
 }
 
@@ -126,17 +123,20 @@ void PrintInitAsm(Node *init_node, FILE *dest_file)
     if(init_node->left->type == KEY_WORD && init_node->left->val.key_word->name == VAR_T_INDICATOR)
     {
         PrintArgAsmCode(init_node->right, dest_file);
-        // fprintf(dest_file, "%s [%lld]\n", AsmOperations[POP_ASM].sym, var_node->val.prop_name->number);
+        fprintf(dest_file, "%s [AX + %lld]\n", AsmOperations[POP_ASM].sym, var_node->val.prop_name->number);
         PopToEmptyRam(dest_file);
     }
 
-    // else 
-    // {
-    //     fprintf(dest_file, "%s:\n", init_node->left->left->val.prop_name->name);        // AX - start of frame, BX - cur size
-    //     PopToEmptyRam(dest_file);       // pop [BX++]
+    else 
+    {
+        fprintf(dest_file, "%s:\n", init_node->left->left->val.prop_name->name);        // AX - start of frame, BX - cur size
 
+        fprintf(dest_file, "%s [BX] \n", AsmOperations[POP_ASM].sym);
 
-    // }
+        PopToEmptyRam(dest_file);       // pop [BX++]
+
+        PrintAsmCodeByNode(init_node->right, dest_file);                                // BX = AX и pop AX печатаются перед Return
+    }
 }
 
 void PrintAssignAsm(Node *assign_node, FILE *dest_file)
@@ -193,6 +193,11 @@ void PrintReturnAsm(Node *ret_node, FILE *dest_file)
     assert(dest_file);
 
     PrintAsmCodeByNode(ret_node->left, dest_file);
+
+    fprintf(dest_file, "%s AX   \n"     // AX - start of frame, BX - cur size
+                       "%s BX   \n"     // BX = AX
+                       "%s AX   \n",    // pop AX
+            AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
 
     fprintf(dest_file, "%s\n", AsmOperations[RET_ASM].sym);
 }
