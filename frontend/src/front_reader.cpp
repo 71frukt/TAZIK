@@ -198,11 +198,13 @@ Node *GetFuncInit(Tree *dest_tree, size_t *ip)
     if (!IsInitialise(tokens[*ip]) || tokens[*ip + 1]->type != VAR_OR_FUNC)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "init of arguments");
 
-    Node *arg = tokens[(*ip)++];                    // int/double
-    Node *var = tokens[(*ip)++];                    // name of var
-    var->type = VAR;
+    Node *arg = GetExprSequence(dest_tree, ip);
 
-    arg->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[VAR_T_INDICATOR]}, var, NULL);
+//     Node *arg = tokens[(*ip)++];                    // int/double
+//     Node *var = tokens[(*ip)++];                    // name of var
+//     var->type = VAR;
+// // 
+//     arg->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[VAR_T_INDICATOR]}, var, NULL);
 
     func_init->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[FUNC_T_INDICATOR]}, func_node, arg);
 
@@ -219,7 +221,8 @@ Node *GetFuncInit(Tree *dest_tree, size_t *ip)
 Node *GetBlock(Tree *dest_tree, size_t *ip)
 {
     assert(dest_tree);          // TODO: assert(ip);
-    TREE_DUMP(dest_tree);
+    assert(ip);
+    // TREE_DUMP(dest_tree);
 
     Node **tokens = dest_tree->node_ptrs;
 
@@ -246,25 +249,14 @@ Node *GetBlock(Tree *dest_tree, size_t *ip)
     Node *new_block_node = NewNode(dest_tree, NEW_BLOCK, {.block = {}}, res_block, NULL);
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
-    // if (new_block_node->val.block.prev_block != NULL)
-    //     RefillBlockNamesTable(dest_tree, new_block_node->val.block.prev_block, new_block_node->val.block.prev_block->left);
-
-    // RefillBlockNamesTable(dest_tree, new_block_node, res_block);
-
-    // GetBlockNamesTable(dest_tree, new_block_node, res_block);
-// 
-    // for (int i = 0; i < new_block_node->val.block.names_table.size; i++)
-    // {
-        // fprintf(stderr, "init node = '%s', num = %lld\n", new_block_node->val.block.names_table.names[i].name, new_block_node->val.block.names_table.names[i].number);
-    // }
-
-    // dest_tree->cur_block = dest_tree->cur_block->val.block.prev_block;
-
     return new_block_node;
 }
 
 Node *GetIf(Tree *dest_tree, size_t *ip)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != IF)
@@ -283,12 +275,15 @@ Node *GetIf(Tree *dest_tree, size_t *ip)
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
     if_node->right = GetBlock(dest_tree, ip);
-fprintf(stderr, "end of if, ip = %lld\n", *ip);
+
     return NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[NEW_EXPR]}, if_node, NULL);
 }
 
 Node *GetWhile(Tree *dest_tree, size_t *ip)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != WHILE)
@@ -307,12 +302,15 @@ Node *GetWhile(Tree *dest_tree, size_t *ip)
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
     while_node->right = GetBlock(dest_tree, ip);
-fprintf(stderr, "end of while, ip = %lld\n", *ip);
+
     return NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[NEW_EXPR]}, while_node, NULL);
 }
 
 Node *GetExpr(Tree *dest_tree, size_t *ip)              // то, что отдел€етс€ ;
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens = dest_tree->node_ptrs;
 
     Node *expr = GetVarInit(dest_tree, ip);
@@ -329,7 +327,8 @@ Node *GetExpr(Tree *dest_tree, size_t *ip)              // то, что отдел€етс€ ;
 Node *GetVarInit(Tree *dest_tree, size_t *ip)
 {
     assert(dest_tree);
-
+    assert(ip);
+    
     Node **tokens = dest_tree->node_ptrs;
 
     if (!IsInitialise(tokens[*ip]))
@@ -344,7 +343,7 @@ Node *GetVarInit(Tree *dest_tree, size_t *ip)
     init_node->left = var_node;
 
     if (!(tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == ASSIGN))
-        SYNTAX_ERROR(dest_tree, tokens[*ip], "assign node");
+        return init_node;
 
     RemoveNode(dest_tree, &tokens[(*ip)++]);    // при инициализации нода присваивани€ в дереве не нужна
 
@@ -353,9 +352,35 @@ Node *GetVarInit(Tree *dest_tree, size_t *ip)
     return init_node;
 }
 
+Node *GetExprSequence(Tree *dest_tree, size_t *ip)
+{
+    assert(dest_tree);
+    assert(ip);
+
+    Node **tokens   = dest_tree->node_ptrs;
+    Node *arg       = GetVarInit(dest_tree, ip);
+    Node *cur_comma = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[COMMA]}, arg, NULL);
+    Node *res_comma = cur_comma;
+TREE_DUMP(dest_tree);
+    while (tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == COMMA)
+    {
+        Node *new_comma = tokens[(*ip)++];
+        Node *new_arg = GetVarInit(dest_tree, ip);
+
+        cur_comma->right = new_comma;
+        cur_comma = new_comma;
+        
+        new_comma->left = new_arg;
+    }
+
+    return res_comma;
+}
+
 Node *GetReturn(Tree *dest_tree, size_t *ip)
 {
     assert(dest_tree);
+    assert(ip);
+
     Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != KEY_WORD || tokens[*ip]->val.key_word->name != RETURN)
@@ -370,6 +395,8 @@ Node *GetReturn(Tree *dest_tree, size_t *ip)
 Node *GetAssign(Tree *dest_tree, size_t *ip)
 {
     assert(dest_tree);
+    assert(ip);
+
     Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[(*ip) + 1]->type != KEY_WORD || tokens[(*ip) + 1]->val.key_word->name != ASSIGN)
@@ -391,6 +418,9 @@ fprintf(stderr, "ip = %lld\n", *ip);
 
 Node *GetBool(Tree *dest_tree, size_t *ip)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens  = dest_tree->node_ptrs;
     Node *res_node = GetSum(dest_tree, ip);
 
@@ -409,6 +439,9 @@ Node *GetBool(Tree *dest_tree, size_t *ip)
 
 Node *GetSum(Tree *dest_tree, size_t *ip)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens  = dest_tree->node_ptrs;
     Node *res_node = GetMul(dest_tree, ip);
 
@@ -427,6 +460,9 @@ Node *GetSum(Tree *dest_tree, size_t *ip)
 
 Node *GetMul(Tree *dest_tree, size_t *ip)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens  = dest_tree->node_ptrs;
     Node *res_node = GetPow(dest_tree, ip);
 
@@ -445,6 +481,9 @@ Node *GetMul(Tree *dest_tree, size_t *ip)
 
 Node *GetPow(Tree *dest_tree, size_t *ip)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens  = dest_tree->node_ptrs;
     Node *res_node = GetOp(dest_tree, ip);
 
@@ -471,6 +510,9 @@ Node *GetPow(Tree *dest_tree, size_t *ip)
 
 Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type != MATH_OP)
@@ -501,7 +543,7 @@ Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 
         Node *arg_1 = GetSum(dest_tree, ip);
 
-        bool is_comma =  tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == COMMA;
+        bool is_comma = tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == COMMA;
         if (!is_comma)
             SYNTAX_ERROR(dest_tree, tokens[*ip], Managers[COMMA].my_symbol);
         RemoveNode(dest_tree, &tokens[*ip]);
@@ -524,6 +566,9 @@ Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 
 Node *GetSumInBrackets(Tree *dest_tree, size_t *ip)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == OPEN_EXPR_BRACKET)
@@ -550,6 +595,9 @@ Node *GetSumInBrackets(Tree *dest_tree, size_t *ip)
 
 Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type == VAR_OR_FUNC)
@@ -589,6 +637,9 @@ Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
 
 Node *GetNumber(Tree *dest_tree, size_t *ip)
 {
+    assert(dest_tree);
+    assert(ip);
+
     Node **tokens = dest_tree->node_ptrs;
 
     if (tokens[*ip]->type == NUM)

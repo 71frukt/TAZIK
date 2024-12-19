@@ -21,6 +21,7 @@ Node *GetVarInit        (Tree *dest_tree, size_t *ip);
 Node *GetReturn         (Tree *dest_tree, size_t *ip);
 Node *GetAssign         (Tree *dest_tree, size_t *ip);
 Node *GetBool           (Tree *dest_tree, size_t *ip);
+Node *GetExprSequence   (Tree *dest_tree, size_t *ip);
 Node *GetSum            (Tree *dest_tree, size_t *ip);
 Node *GetMul            (Tree *dest_tree, size_t *ip);
 Node *GetPow            (Tree *dest_tree, size_t *ip);

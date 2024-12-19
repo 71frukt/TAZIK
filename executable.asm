@@ -17,7 +17,7 @@ ADD
 POP BX   
 
 PUSH AX   
-PUSH 10
+PUSH 5
 
 PUSH BX   
 POP AX   
