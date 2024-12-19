@@ -312,7 +312,6 @@ void MakeNamesTablesForBlocks(Tree *tree, Node *cur_node)
 
     if (cur_node->type == KEY_WORD && cur_node->val.key_word->name == NEW_FUNC)
     {
-        Node *arg = cur_node->left->left->right->left->left;
         Node *block_node = cur_node->left->right;
 
         block_node->val.block.shift = 0;

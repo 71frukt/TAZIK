@@ -41,7 +41,6 @@ struct Node;
 
 void PrintAsmCodeByNode (Node *node,    FILE *dest_file);
 void PrintMathOpAsm     (Node *math_op, FILE *dest_file);
-void PrintArgAsmCode    (Node *arg,     FILE *dest_file);
 void PopToEmptyRam      (FILE *asm_file);
 
 struct MathOperation
@@ -110,12 +109,14 @@ const ManageElem Managers[MANAGE_ELEMS_NUM] =
 
 //------------------------------------------------------------------------------------------------------------//
 
+void PrintVarTAsm     (Node *var_t_node,    FILE *dest_file);
 void PrintInitAsm     (Node *init_node,     FILE *dest_file);
 void PrintAssignAsm   (Node *assign_node,   FILE *dest_file);
 void PrintChildrenAsm (Node *new_expr_node, FILE *dest_file);
 void PrintIfAsm       (Node *if_node,       FILE *dest_file);
 void PrintWhileAsm    (Node *while_node,    FILE *dest_file);
 void PrintReturnAsm   (Node *ret_node,      FILE *dest_file);
+void PrintCallAsm     (Node *call_node,     FILE *dest_file);
 
 enum KeyWord_enum
 {
@@ -145,17 +146,17 @@ const int KEY_WORDS_NUM = 11;
 
 const KeyWord KeyWords[KEY_WORDS_NUM] = 
 {
-    { VAR_T_INDICATOR,   NULL,           "var_t"     },
-    { FUNC_T_INDICATOR,  NULL,           "func_t"    },
-    { FUNC_CALL,         NULL,           "func_call" },
-    { INT_INIT,         "инт",           "int",      PrintInitAsm },
-    { DOUBLE_INIT,      "дабл",          "double",   PrintInitAsm },
-    { NEW_EXPR,         "новая_строка",  "new_line", PrintChildrenAsm },
-    { NEW_FUNC,         NULL,            "new_func", PrintChildrenAsm },
-    { ASSIGN,           "=" ,            "=",        PrintAssignAsm },
-    { IF,               "если",          "if",       PrintIfAsm },
-    { WHILE,            "пока",          "while",    PrintWhileAsm },
-    { RETURN,           "рет",           "return",   PrintReturnAsm }
+    { VAR_T_INDICATOR,   NULL,           "var_t",     PrintVarTAsm },
+    { FUNC_T_INDICATOR,  NULL,           "func_t",    NULL },
+    { FUNC_CALL,         NULL,           "func_call", PrintCallAsm },
+    { INT_INIT,         "инт",           "int",       PrintInitAsm },
+    { DOUBLE_INIT,      "дабл",          "double",    PrintInitAsm },
+    { NEW_EXPR,         "новая_строка",  "new_line",  PrintChildrenAsm },
+    { NEW_FUNC,         NULL,            "new_func",  PrintChildrenAsm },
+    { ASSIGN,           "=" ,            "=",         PrintAssignAsm },
+    { IF,               "если",          "if",        PrintIfAsm },
+    { WHILE,            "пока",          "while",     PrintWhileAsm },
+    { RETURN,           "рет",           "return",    PrintReturnAsm }
 };
 
 //---------------------------------------------------------------------------------------------------------------//
