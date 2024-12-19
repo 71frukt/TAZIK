@@ -113,12 +113,9 @@ void PrintInitAsm(Node *init_node, FILE *dest_file)
     assert(dest_file);
     assert(init_node->type == KEY_WORD && (init_node->val.key_word->name == INT_INIT || init_node->val.key_word->name == DOUBLE_INIT));
 
-    Node *var_node = init_node->left->left;
-
     if(init_node->left->type == KEY_WORD && init_node->left->val.key_word->name == VAR_T_INDICATOR)
     {
         PrintAsmCodeByNode(init_node->right, dest_file);
-        // fprintf(dest_file, "%s [AX + %lld]\n", AsmOperations[POP_ASM].sym, var_node->val.prop_name->number);
         PopToEmptyRam(dest_file);
     }
 
@@ -128,7 +125,17 @@ void PrintInitAsm(Node *init_node, FILE *dest_file)
 
         PopToEmptyRam(dest_file);       // pop [BX++]
 
-        PrintAsmCodeByNode(init_node->right, dest_file);                                // BX = AX и pop AX печатаются перед Return
+        PrintAsmCodeByNode(init_node->right, dest_file);   
+
+        // fprintf(dest_file,  "%s CX  \n", AsmOperations[POP_ASM].sym);       // кладём результат функции в CX
+
+        // fprintf(dest_file,  "%s AX  \n"     // AX - start of frame, BX - cur size
+        //                     "%s BX  \n"     // BX := AX
+        //                     "%s AX  \n",    // pop AX
+        // AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
+
+        
+        // fprintf(dest_file,  "%s CX  \n", AsmOperations[PUSH_ASM].sym);      // результат функции в стек
     }
 }
 
@@ -136,11 +143,23 @@ void PrintCallAsm(Node *call_node, FILE *dest_file)
 {
     fprintf(stderr, "Start of PrintCallAsm()\n");
 
-    fprintf(dest_file, "%s AX \n", AsmOperations[PUSH_ASM].sym);
+    fprintf(dest_file, "%s AX   \n", AsmOperations[PUSH_ASM].sym);
 
-    PrintAsmCodeByNode(call_node->left->right, dest_file);
+    PrintAsmCodeByNode(call_node->left->right, dest_file);                              // аргументы
 
-    fprintf(dest_file, "%s %s: \n", AsmOperations[JMP_ASM].sym, call_node->left->left->val.prop_name->name);
+    fprintf(dest_file, "%s BX   \n"                                                     // AX := BX
+                       "%s AX   \n", AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym);
+
+    fprintf(dest_file, "%s %s: \n", AsmOperations[CALL_ASM].sym, call_node->left->left->val.prop_name->name);   // теперь в стеке лежат BP и res_of_func, их нужно будет свапнуть после выхода из вызова функции
+
+    fprintf(dest_file,  "%s CX  \n", AsmOperations[POP_ASM].sym);       // кладём результат функции в CX
+
+    fprintf(dest_file,  "%s AX  \n"     // AX - start of frame, BX - cur size
+                        "%s BX  \n"     // BX := AX
+                        "%s AX  \n",    // pop AX
+    AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
+
+    fprintf(dest_file,  "%s CX  \n", AsmOperations[PUSH_ASM].sym);      // результат функции в стек
 
     fprintf(stderr, "End of PrintCallAsm()\n");
 }
@@ -152,8 +171,12 @@ void PrintAssignAsm(Node *assign_node, FILE *dest_file)
     assert(assign_node->left->type == KEY_WORD && assign_node->left->val.key_word->name == VAR_T_INDICATOR &&
            assign_node->left->left->type == VAR);
 
+    Node *var_node = assign_node->left->left;
+
     PrintAsmCodeByNode(assign_node->right, dest_file);
-    fprintf(dest_file, "%s [%lld]\n", AsmOperations[POP_ASM].sym, assign_node->left->val.prop_name->number);
+    fprintf(dest_file, "%s [AX + %lld]\n", AsmOperations[POP_ASM].sym, var_node->val.prop_name->number);
+
+    fprintf(dest_file, "var '%s'   num = %lld\n", var_node->val.prop_name->name, var_node->val.prop_name->number);
 }
 
 void PrintIfAsm(Node *if_node, FILE *dest_file)
@@ -200,10 +223,10 @@ void PrintReturnAsm(Node *ret_node, FILE *dest_file)
 
     PrintAsmCodeByNode(ret_node->left, dest_file);
 
-    fprintf(dest_file, "%s AX   \n"     // AX - start of frame, BX - cur size
-                       "%s BX   \n"     // BX = AX
-                       "%s AX   \n",    // pop AX
-            AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
+    // fprintf(dest_file, "%s AX   \n"     // AX - start of frame, BX - cur size
+    //                    "%s BX   \n"     // BX = AX
+    //                    "%s AX   \n",    // pop AX
+    //         AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
 
     fprintf(dest_file, "%s\n", AsmOperations[RET_ASM].sym);
 }

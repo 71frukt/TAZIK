@@ -19,6 +19,20 @@ int main(const int argc, const char *argv[])
 
     FILE *asm_file = GetOutputFile(argc, argv);
 
+    fprintf(asm_file,   "PUSH 0 \n"
+                        "POP AX     \n"
+
+                        "PUSH 0 \n"
+                        "POP BX \n"
+
+                        "PUSH AX    \n"
+                        "PUSH 0 \n"
+
+                        "CALL main: \n"
+                        "SPU_OUT    \n"
+                        "HLT    \n"
+            );
+
     PrintAsmCodeByNode(source_tree.root_ptr, asm_file);
 
     fprintf(stderr, "BACKEND_END\n");
