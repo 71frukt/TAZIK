@@ -449,6 +449,7 @@ bool OpNodeIsCommutativity(Node *op_node)
 
 bool IsInitialise(Node *node)
 {
+    assert(node);
     return (node->type == KEY_WORD && (node->val.key_word->name == INT_INIT || node->val.key_word->name == DOUBLE_INIT));
 }
 

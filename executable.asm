@@ -10,6 +10,7 @@ HLT
 
 main:
 
+
 POP [BX] 
 PUSH BX   
 PUSH 1    
@@ -17,7 +18,9 @@ ADD
 POP BX   
 
 PUSH AX   
-PUSH 5
+PUSH 3
+
+PUSH 6
 
 PUSH BX   
 POP AX   
@@ -31,14 +34,22 @@ RET
 
 fact:
 
+
 POP [BX] 
 PUSH BX   
 PUSH 1    
 ADD      
 POP BX   
 
-PUSH [AX + 0]
-PUSH 1
+
+POP [BX] 
+PUSH BX   
+PUSH 1    
+ADD      
+POP BX   
+
+PUSH [AX + 1]
+PUSH 3
 
 JNE if_mark_0:
 
@@ -57,6 +68,8 @@ ADD
 POP BX   
 
 PUSH AX   
+PUSH 6
+
 PUSH [AX + 0]
 PUSH 1
 
@@ -69,10 +82,9 @@ PUSH AX
 POP BX  
 POP AX  
 PUSH CX  
-POP [AX + 1]
-var 'next'   num = 1
+POP [AX + 2]
 
-PUSH [AX + 1]
+PUSH [AX + 2]
 PUSH [AX + 0]
 MUL 
 RET

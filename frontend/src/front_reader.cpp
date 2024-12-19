@@ -608,12 +608,12 @@ Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
         cur_node->type = VAR;
         Node *arg = NULL;
 
-        if (tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == OPEN_EXPR_BRACKET)     // тогда это функция
+        if (tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == OPEN_EXPR_BRACKET)     // тогда это вызов функции
         {
             RemoveNode(dest_tree, &tokens[(*ip)++]);
 
             cur_node->type = FUNC;
-            arg = GetSum(dest_tree, ip);
+            arg = GetExprSequence(dest_tree, ip);
 
             if (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != CLOSE_EXPR_BRACKET)
                 SYNTAX_ERROR(dest_tree, tokens[*ip], Managers[CLOSE_EXPR_BRACKET].my_symbol);

@@ -113,17 +113,21 @@ void PrintInitAsm(Node *init_node, FILE *dest_file)
     assert(dest_file);
     assert(init_node->type == KEY_WORD && (init_node->val.key_word->name == INT_INIT || init_node->val.key_word->name == DOUBLE_INIT));
 
-    if(init_node->left->type == KEY_WORD && init_node->left->val.key_word->name == VAR_T_INDICATOR)
+    if(init_node->left->type == KEY_WORD && init_node->left->val.key_word->name == VAR_T_INDICATOR)     // переменна€
     {
-        PrintAsmCodeByNode(init_node->right, dest_file);
+        if (init_node->right != NULL)                                                                   // нет инициализации, например, при объ€влении функции  func(int a) в теле будет только pop[BX++]
+            PrintAsmCodeByNode(init_node->right, dest_file);
+
         PopToEmptyRam(dest_file);
     }
 
-    else 
+    else                                                                                                // функци€
     {
         fprintf(dest_file, "%s:\n", init_node->left->left->val.prop_name->name);        // AX - start of frame, BX - cur size
 
-        PopToEmptyRam(dest_file);       // pop [BX++]
+        PrintAsmCodeByNode(init_node->left->right, dest_file);
+
+        // PopToEmptyRam(dest_file);       // pop [BX++]
 
         PrintAsmCodeByNode(init_node->right, dest_file);   
 
@@ -145,7 +149,9 @@ void PrintCallAsm(Node *call_node, FILE *dest_file)
 
     fprintf(dest_file, "%s AX   \n", AsmOperations[PUSH_ASM].sym);
 
-    PrintAsmCodeByNode(call_node->left->right, dest_file);                              // аргументы
+    PrintPassArgsInCall(call_node->left->right, dest_file);
+
+    // PrintAsmCodeByNode(call_node->left->right, dest_file);                              // аргументы
 
     fprintf(dest_file, "%s BX   \n"                                                     // AX := BX
                        "%s AX   \n", AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym);
@@ -164,6 +170,18 @@ void PrintCallAsm(Node *call_node, FILE *dest_file)
     fprintf(stderr, "End of PrintCallAsm()\n");
 }
 
+void PrintPassArgsInCall(Node *comma_node, FILE *dest_file)
+{
+    assert(comma_node);
+    assert(comma_node->type == KEY_WORD && comma_node->val.key_word->name == COMMA);
+    assert(dest_file);
+
+    if (comma_node->right != NULL)
+        PrintPassArgsInCall(comma_node->right, dest_file);
+
+    PrintAsmCodeByNode(comma_node->left, dest_file);
+}
+
 void PrintAssignAsm(Node *assign_node, FILE *dest_file)
 {
     assert(assign_node);
@@ -176,7 +194,7 @@ void PrintAssignAsm(Node *assign_node, FILE *dest_file)
     PrintAsmCodeByNode(assign_node->right, dest_file);
     fprintf(dest_file, "%s [AX + %lld]\n", AsmOperations[POP_ASM].sym, var_node->val.prop_name->number);
 
-    fprintf(dest_file, "var '%s'   num = %lld\n", var_node->val.prop_name->name, var_node->val.prop_name->number);
+    fprintf(stderr, "var '%s'   num = %lld\n", var_node->val.prop_name->name, var_node->val.prop_name->number);
 }
 
 void PrintIfAsm(Node *if_node, FILE *dest_file)

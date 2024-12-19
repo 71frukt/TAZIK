@@ -107,14 +107,16 @@ const ManageElem Managers[MANAGE_ELEMS_NUM] =
 
 //------------------------------------------------------------------------------------------------------------//
 
-void PrintVarTAsm     (Node *var_t_node,    FILE *dest_file);
-void PrintInitAsm     (Node *init_node,     FILE *dest_file);
-void PrintAssignAsm   (Node *assign_node,   FILE *dest_file);
-void PrintChildrenAsm (Node *new_expr_node, FILE *dest_file);
-void PrintIfAsm       (Node *if_node,       FILE *dest_file);
-void PrintWhileAsm    (Node *while_node,    FILE *dest_file);
-void PrintReturnAsm   (Node *ret_node,      FILE *dest_file);
-void PrintCallAsm     (Node *call_node,     FILE *dest_file);
+void PrintVarTAsm        (Node *var_t_node,    FILE *dest_file);
+void PrintInitAsm        (Node *init_node,     FILE *dest_file);
+void PrintAssignAsm      (Node *assign_node,   FILE *dest_file);
+void PrintChildrenAsm    (Node *new_expr_node, FILE *dest_file);
+void PrintIfAsm          (Node *if_node,       FILE *dest_file);
+void PrintWhileAsm       (Node *while_node,    FILE *dest_file);
+void PrintReturnAsm      (Node *ret_node,      FILE *dest_file);
+void PrintCallAsm        (Node *call_node,     FILE *dest_file);
+void PrintPassArgsInCall (Node *comma_node,    FILE *dest_file);
+
 
 enum KeyWord_enum
 {
@@ -151,7 +153,7 @@ const KeyWord KeyWords[KEY_WORDS_NUM] =
     { INT_INIT,         "инт",           "int",       PrintInitAsm },
     { DOUBLE_INIT,      "дабл",          "double",    PrintInitAsm },
     { NEW_EXPR,         "новая_строка",  "new_line",  PrintChildrenAsm },
-    { COMMA,            "запятая",       "comma",     NULL },
+    { COMMA,            "запятая",       "comma",     PrintChildrenAsm },
     { NEW_FUNC,         NULL,            "new_func",  PrintChildrenAsm },
     { ASSIGN,           "=" ,            "=",         PrintAssignAsm },
     { IF,               "если",          "if",        PrintIfAsm },
