@@ -4,6 +4,7 @@
 // #include "operations.h"
 // #include "debug.h"
 #include "front_reader.h"
+#include "semantic_anal.h"
 
 #include "../../tree/tree_lib.h"
 #include "../../tree_saver/tree_saver.h"
@@ -24,6 +25,8 @@ int main(const int argc, const char *argv[])
     FILE *output_file = GetOutputSaveFile(argc, argv);
     WriteTreeData(code.root_ptr, output_file);
     fclose(output_file);
+
+    SemanticAnal(&code);
 
     TreeDtor(&code);
 

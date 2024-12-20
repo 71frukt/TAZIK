@@ -33,8 +33,4 @@ Node *GetNumber         (Tree *dest_tree, size_t *ip);
 
 bool IsEngLetter (char ch);
 
-void SyntaxError(Tree *tree, Node *cur_node, const char *expected_token, const char *file, int line, const char *func);
-
-#define SYNTAX_ERROR(tree, cur_token, expected_token)  SyntaxError(tree, cur_token, expected_token, __FILE__, __LINE__, __func__)
-
 #endif

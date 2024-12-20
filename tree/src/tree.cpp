@@ -10,7 +10,7 @@
 #include "tree_debug.h"
 #include "tree_graph.h"
 #include "operations.h"
-
+#include "../../frontend/lib/semantic_anal.h"
 
 void TreeCtor(Tree *tree, size_t start_capacity ON_TREE_DEBUG(, const char *name))
 { 
@@ -263,6 +263,8 @@ ProperName *NewNameInTable(NamesTable *table, char *name)
     table->names[table->size].number = table->size;
     strncpy(table->names[table->size].name, name, TOKEN_LEN);
 
+    table->names[table->size].is_init = false;                  // проверка на семантику после построения дерева
+
     return &table->names[table->size++];
 }
 
@@ -282,16 +284,45 @@ void GetBlockNamesTable(Tree *tree, Node *block, Node *cur_node)
     else if (cur_node->type == VAR)
     {
         ProperName *cur_name = FindNameInBlock(block, cur_node->val.prop_name->name);
-        fprintf(stderr, "use of inited var named '%s', num = %lld\n", cur_name->name, cur_name->number);
+        // fprintf(stderr, "use of inited var named '%s', num = %lld\n", cur_name->name, cur_name->number);
+
+        if (cur_name == NULL)
+        {
+            char error[ERROR_NAME_LEN] = {};
+            SYNTAX_ERROR(tree, cur_node, error);
+        }
+
         cur_node->val.prop_name = cur_name;
     }
 
-    else if (cur_node->type == KEY_WORD && IsInitialise(cur_node))
+    else if (IsInitialise(cur_node))
     {
-        Node *var_node = cur_node->left->left;
-        assert(var_node->type == VAR || var_node->type == FUNC || var_node->type == VAR_OR_FUNC);
+        Node *named_node = cur_node->left->left;
+        assert(named_node->type == VAR || named_node->type == FUNC);
 
-        var_node->val.prop_name = NewNameInTable(table, var_node->val.prop_name->name);
+        ProperName *cur_name = FindNameInBlock(block, named_node->val.prop_name->name);
+        // fprintf(stderr, "use of inited var named '%s', num = %lld\n", cur_name->name, cur_name->number);
+
+        if (cur_name != NULL)
+        {
+            char error[ERROR_NAME_LEN] = {};
+
+            if (named_node->type == VAR)
+                sprintf(error, "Redeclared of variable '%s'", named_node->val.prop_name->name);
+
+            else
+                sprintf(error, "Redeclared of function '%s'", named_node->val.prop_name->name);
+
+            SYNTAX_ERROR(tree, named_node, error);
+        }
+
+        if (named_node->type == VAR)
+            named_node->val.prop_name = NewNameInTable(table, named_node->val.prop_name->name);
+
+        else
+            named_node->val.prop_name = NewNameInTable(&tree->names_table, named_node->val.prop_name->name);
+
+        named_node->val.prop_name->is_init = true;
 
         GetBlockNamesTable(tree, block, cur_node->right);
     }
@@ -315,6 +346,12 @@ void MakeNamesTablesForBlocks(Tree *tree, Node *cur_node)
         Node *block_node = cur_node->left->right;
 
         block_node->val.block.shift = 0;
+
+        Node *func_node = cur_node->left->left->left;
+        func_node->val.prop_name->is_init = true;
+        func_node->val.prop_name->args_count = GetCountOfArgs(cur_node->left->left);
+
+        fprintf(stderr, "count of args = %lld\n\n", func_node->val.prop_name->args_count);
 
         GetBlockNamesTable(tree, block_node, cur_node->left->left->right);
 
@@ -413,7 +450,20 @@ Node *GetNodeInfoBySymbol(char *sym, Tree *tree, Node *cur_node, SymbolMode mode
     return cur_node;
 }
 
+size_t GetCountOfArgs(Node *func_node)
+{
+    size_t res_count = 0;
 
+    Node *cur_comma = func_node->right;
+
+    while (cur_comma != NULL)
+    {
+        res_count++;
+        cur_comma = cur_comma->right;
+    }
+
+    return res_count;
+}
 
 bool SubtreeContainsType(Node *cur_node, NodeType type)
 {

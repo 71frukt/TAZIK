@@ -5,6 +5,7 @@
 
 #include "../../tree/tree_lib.h"
 #include "front_reader.h"
+#include "semantic_anal.h"
 
 FILE *GetInputCodeFile(const int argc, const char *argv[])
 {
@@ -36,13 +37,10 @@ void MakeTokens(Tree *tree, FILE *source)
     size_t cur_column = 0;
 
     char cur_ch = (char) getc(source);
-    ungetc(cur_ch, source); // TODO: fix ungetc(-1)
+    ungetc(cur_ch, source);
 
     while (cur_ch != EOF)
     {
-        // fprintf(stderr, "col = %lld, line = %lld\n", cur_column, cur_line);
-        // fprintf(stderr, "real col = %lld\n\n", ftell(source));
-
         cur_ch = (char) getc(source);
 
         if (cur_ch == EOF)
@@ -203,12 +201,6 @@ Node *GetFuncInit(Tree *dest_tree, size_t *ip)
 
     Node *arg = GetExprSequence(dest_tree, ip);
 
-//     Node *arg = tokens[(*ip)++];                    // int/double
-//     Node *var = tokens[(*ip)++];                    // name of var
-//     var->type = VAR;
-// // 
-//     arg->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[VAR_T_INDICATOR]}, var, NULL);
-
     func_init->left = NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[FUNC_T_INDICATOR]}, func_node, arg);
 
     if (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != CLOSE_EXPR_BRACKET)
@@ -223,7 +215,7 @@ Node *GetFuncInit(Tree *dest_tree, size_t *ip)
 
 Node *GetBlock(Tree *dest_tree, size_t *ip)
 {
-    assert(dest_tree);          // TODO: assert(ip);
+    assert(dest_tree);
     assert(ip);
     // TREE_DUMP(dest_tree);
 
@@ -234,12 +226,8 @@ Node *GetBlock(Tree *dest_tree, size_t *ip)
 
     RemoveNode(dest_tree, &tokens[(*ip)++]);
 
-    // new_block_node->val.block.prev_block = dest_tree->cur_block;
-    // dest_tree->cur_block = new_block_node;
-
     Node *res_block = GetIf(dest_tree, ip);
     Node *cur_top = res_block;
-    // new_block_node->left = res_block;
 
     while (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != CLOSE_BLOCK_BRACKET)
     {
@@ -655,19 +643,4 @@ Node *GetNumber(Tree *dest_tree, size_t *ip)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "type of NUM or VAR");
         return NULL;
     }
-}
-
-void SyntaxError(Tree *tree, Node *cur_node, const char *expected_token, const char *file, int line, const char *func)
-{
-    TREE_DUMP(tree);
-    // TODO: asserts
-
-    fprintf(stderr, "SyntaxError called in %s:%d %s()\n"
-                    "%s here ( position %lld:%lld )",
-                    file, line, func, expected_token, cur_node->born_line, cur_node->born_column);
-
-                    // Syntax error: forgot to put ) here (file ...,line ...)   // TODO ??
-                        // int main (int argc, char *argv[]   {
-                                                        //  ^ 
-    abort();
 }

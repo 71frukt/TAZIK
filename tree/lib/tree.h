@@ -48,6 +48,9 @@ struct ProperName
 {
     size_t number;
     char   name[TOKEN_LEN];
+
+    size_t args_count;
+    bool is_init;
 };
 
 struct NamesTable
@@ -133,6 +136,8 @@ Node *GetNodeInfoBySymbol(char *sym, Tree *tree, Node *cur_node, SymbolMode mode
 
 void    NamesTableCtor  (size_t start_capa, NamesTable *table);
 void    NamesTableDtor  (NamesTable *table);
+
+size_t  GetCountOfArgs  (Node *func_node);
 
 bool    SubtreeContainsType   (Node *cur_node, NodeType type);
 bool    OpNodeIsCommutativity (Node *op_node);
