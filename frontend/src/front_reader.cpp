@@ -41,7 +41,7 @@ void MakeTokens(Tree *tree, FILE *source)
     while (cur_ch != EOF)
     {
         // fprintf(stderr, "col = %lld, line = %lld\n", cur_column, cur_line);
-        // fprintf(stderr, "real col = %ld\n\n", ftell(source));
+        // fprintf(stderr, "real col = %lld\n\n", ftell(source));
 
         cur_ch = (char) getc(source);
         

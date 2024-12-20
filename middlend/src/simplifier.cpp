@@ -87,7 +87,34 @@ Node *DelNeutralElements(Tree *code_tree, Node *cur_node, bool *was_simplified)
     cur_node->right = DelNeutralElements(code_tree, cur_node->right, was_simplified);
 
     if (cur_node->type == MATH_OP)
+    {
         MathOpSimplifierInfos[cur_node->val.math_op->num].simpl_vars_func(code_tree, cur_node, was_simplified);
+    }
+
+    else if (cur_node->type == KEY_WORD)
+    {
+        if (cur_node->val.key_word->name == IF || cur_node->val.key_word->name == WHILE)
+        {
+            if (cur_node->left->type == NUM && cur_node->left->val.num == 0)
+            {
+                RemoveSubtree(code_tree, &cur_node);
+                return NULL;
+            }
+
+            else if (cur_node->left->type == NUM && cur_node->left->val.num != 0)
+            {
+                if (cur_node->val.key_word->name == WHILE)
+                    return cur_node;
+
+                RemoveSubtree (code_tree, &cur_node->left);
+
+                Node *block_node = cur_node->right;
+                *cur_node = *block_node;
+
+                RemoveNode  (code_tree, &block_node);
+            }
+        }
+    }
 
     return cur_node;
 }
