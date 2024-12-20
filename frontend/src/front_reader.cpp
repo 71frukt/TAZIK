@@ -6,7 +6,7 @@
 #include "../../tree/tree_lib.h"
 #include "front_reader.h"
 
-FILE *GetInputFile(const int argc, const char *argv[])
+FILE *GetInputCodeFile(const int argc, const char *argv[])
 {
     FILE *input_file = NULL;
 
@@ -23,9 +23,7 @@ void BuildTreeByCode(Tree *tree, FILE *source)
 {
     MakeTokens(tree, source);
 
-    size_t ip = 0;
     tree->root_ptr = GetCode(tree);
-    // RemoveNode(tree, &tree->node_ptrs[ip]);
 
     MakeNamesTablesForBlocks(tree, tree->root_ptr);
 

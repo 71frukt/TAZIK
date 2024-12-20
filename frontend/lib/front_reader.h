@@ -6,10 +6,11 @@
 #define BASE_INPUT_CODE_FILE_NAME   "../../source_file.txt"
 
 const size_t TOKEN_STR_LEN = 50;
-FILE *GetInputFile    (const int argc, const char *argv[]);
-void  BuildTreeByCode (Tree *tree, FILE *source);
-void  MakeTokens      (Tree *tree, FILE *source);
-Node *GetNamedToken   (Tree *tree, char *token_name);
+
+FILE *GetInputCodeFile  (const int argc, const char *argv[]);
+void  BuildTreeByCode   (Tree *tree, FILE *source);
+void  MakeTokens        (Tree *tree, FILE *source);
+Node *GetNamedToken     (Tree *tree, char *token_name);
 
 Node *GetCode           (Tree *dest_tree);
 Node *GetFuncInit       (Tree *dest_tree, size_t *ip);

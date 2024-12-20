@@ -2,10 +2,9 @@
 #include <string.h>
 #include <assert.h>
 
-#include "back_reader.h"
-#include "../../tree/tree_lib.h"
+#include "tree_saver.h"
 
-FILE *GetInputFile(const int argc, const char *argv[])
+FILE *GetInputSaveFile(const int argc, const char *argv[])
 {
     FILE *input_file = NULL;
 
@@ -16,6 +15,34 @@ FILE *GetInputFile(const int argc, const char *argv[])
         input_file = fopen(argv[1], "r");
 
     return input_file;   
+}
+
+FILE *GetOutputSaveFile(const int argc, const char *argv[])
+{
+    if (argc < 3)
+        return fopen(BASE_SAVE_TREE_FILE_NAME, "w");
+    
+    else
+        return fopen(argv[2], "w");
+}
+
+void WriteTreeData(Node *cur_node, FILE *dest_file)
+{
+    fprintf(dest_file, "%s ", NodeValToStr(cur_node));
+    fprintf(stderr, "write int file  '%s' \n", NodeValToStr(cur_node));
+
+    if (cur_node != NULL)
+    {
+        fprintf(dest_file, "( ");
+
+        WriteTreeData(cur_node->left,  dest_file);
+
+        fprintf(dest_file, "; ");
+
+        WriteTreeData(cur_node->right, dest_file);
+
+        fprintf(dest_file, ") ");
+    }
 }
 
 void BuildTreeByFileData(FILE *source, Tree *tree)

@@ -57,217 +57,99 @@ const ManageElem *GetManageElemBySymbol(char *sym, SymbolMode mode)
     return NULL;
 }
 
-void PrintMathOpAsm(Node *math_op, FILE *dest_file)
+Node *CalculateNode(Tree *tree, Node *op_node)
 {
-    assert(math_op);
-    assert(math_op->type == MATH_OP);
-    assert(dest_file);
+    assert(tree);
+    assert(op_node);
+    assert(op_node->type == MATH_OP);
+    assert(op_node->left != NULL && (op_node->val.math_op->type == UNARY || op_node->right != NULL));
 
-    PrintAsmCodeByNode(math_op->left,  dest_file);
-
-    if (math_op->val.math_op->type == BINARY)
-        PrintAsmCodeByNode(math_op->right, dest_file);
-
-    fprintf(dest_file, "%s ", math_op->val.math_op->asm_symbol);
-
-    if (!IsBool(math_op))
-        fprintf(dest_file, "\n");
-}
-
-void PrintVarTAsm(Node *var_t_node, FILE *dest_file)
-{
-    assert(var_t_node);
-    assert(var_t_node->type == KEY_WORD && var_t_node->val.key_word->name == VAR_T_INDICATOR);
-
-    fprintf(dest_file, "%s [AX + %lld]\n", AsmOperations[PUSH_ASM].sym, var_t_node->left->val.prop_name->number);
-}
-
-void PrintChildrenAsm(Node *new_expr_node, FILE *dest_file)
-{
-    assert(new_expr_node);
-    assert(dest_file);
-
-    fprintf(dest_file, "\n");
-
-    if (new_expr_node->left != NULL)
-        PrintAsmCodeByNode(new_expr_node->left, dest_file);
-
-    if (new_expr_node->right != NULL)
-        PrintAsmCodeByNode(new_expr_node->right, dest_file);
-}
-
-void PopToEmptyRam(FILE *asm_file)                          // pop [BX++]   // BX - размер, AX - начало фрейма
-{
-    fprintf(asm_file, "\n%s [BX] \n", AsmOperations[POP_ASM].sym);
-
-    fprintf(asm_file, "%s BX   \n"                     // BX ++
-                      "%s 1    \n"
-                      "%s      \n"
-                      "%s BX   \n", 
-        AsmOperations[PUSH_ASM].sym, AsmOperations[PUSH_ASM].sym, AsmOperations[ADD_ASM].sym, AsmOperations[POP_ASM].sym);
-}
-
-void PrintInitAsm(Node *init_node, FILE *dest_file)
-{
-    assert(init_node);
-    assert(dest_file);
-    assert(init_node->type == KEY_WORD && (init_node->val.key_word->name == INT_INIT || init_node->val.key_word->name == DOUBLE_INIT));
-
-    if(init_node->left->type == KEY_WORD && init_node->left->val.key_word->name == VAR_T_INDICATOR)     // переменна€
+    if (op_node->left->type != NUM || op_node->right->type != NUM)
     {
-        if (init_node->right != NULL)                                                                   // нет инициализации, например, при объ€влении функции  func(int a) в теле будет только pop[BX++]
-            PrintAsmCodeByNode(init_node->right, dest_file);
-
-        PopToEmptyRam(dest_file);
+        fprintf(stderr, "Trying to calculate op with not-a-number args\n");
+        return op_node;
     }
 
-    else                                                                                                // функци€
-    {
-        fprintf(dest_file, "%s:\n", init_node->left->left->val.prop_name->name);        // AX - start of frame, BX - cur size
+    assert(op_node->left);
+    assert(op_node->right);
 
-        PrintAsmCodeByNode(init_node->left->right, dest_file);
+    TreeElem_t res_val = op_node->val.math_op->op_func(op_node->left, op_node->right);
 
-        // PopToEmptyRam(dest_file);       // pop [BX++]
+    RemoveNode(tree, &op_node->left);
+    RemoveNode(tree, &op_node->right);
 
-        PrintAsmCodeByNode(init_node->right, dest_file);   
+    op_node->type = NUM;
+    op_node->val.num = res_val;
 
-        // fprintf(dest_file,  "%s CX  \n", AsmOperations[POP_ASM].sym);       // кладЄм результат функции в CX
-
-        // fprintf(dest_file,  "%s AX  \n"     // AX - start of frame, BX - cur size
-        //                     "%s BX  \n"     // BX := AX
-        //                     "%s AX  \n",    // pop AX
-        // AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
-
-        
-        // fprintf(dest_file,  "%s CX  \n", AsmOperations[PUSH_ASM].sym);      // результат функции в стек
-    }
+    return op_node;
 }
 
-void PrintCallAsm(Node *call_node, FILE *dest_file)
+TreeElem_t IsEqual(Node *arg1, Node *arg2)
 {
-    fprintf(stderr, "Start of PrintCallAsm()\n");
-
-    fprintf(dest_file, "%s AX   \n", AsmOperations[PUSH_ASM].sym);
-
-    PrintPassArgsInCall(call_node->left->right, dest_file);
-
-    // PrintAsmCodeByNode(call_node->left->right, dest_file);                              // аргументы
-
-    fprintf(dest_file, "%s BX   \n"                                                     // AX := BX
-                       "%s AX   \n", AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym);
-
-    fprintf(dest_file, "%s %s: \n", AsmOperations[CALL_ASM].sym, call_node->left->left->val.prop_name->name);   // теперь в стеке лежат BP и res_of_func, их нужно будет свапнуть после выхода из вызова функции
-
-    fprintf(dest_file,  "%s CX  \n", AsmOperations[POP_ASM].sym);       // кладЄм результат функции в CX
-
-    fprintf(dest_file,  "%s AX  \n"     // AX - start of frame, BX - cur size
-                        "%s BX  \n"     // BX := AX
-                        "%s AX  \n",    // pop AX
-    AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
-
-    fprintf(dest_file,  "%s CX  \n", AsmOperations[PUSH_ASM].sym);      // результат функции в стек
-
-    fprintf(stderr, "End of PrintCallAsm()\n");
+    return arg1->val.num == arg2->val.num;
 }
 
-void PrintPassArgsInCall(Node *comma_node, FILE *dest_file)
+TreeElem_t IsNotEqual(Node *arg1, Node *arg2)
 {
-    assert(comma_node);
-    assert(comma_node->type == KEY_WORD && comma_node->val.key_word->name == COMMA);
-    assert(dest_file);
-
-    if (comma_node->right != NULL)
-        PrintPassArgsInCall(comma_node->right, dest_file);
-
-    PrintAsmCodeByNode(comma_node->left, dest_file);
+    return arg1->val.num != arg2->val.num;
 }
 
-void PrintAssignAsm(Node *assign_node, FILE *dest_file)
+TreeElem_t IsBelow(Node *arg1, Node *arg2)
 {
-    assert(assign_node);
-    assert(dest_file);
-    assert(assign_node->left->type == KEY_WORD && assign_node->left->val.key_word->name == VAR_T_INDICATOR &&
-           assign_node->left->left->type == VAR);
-
-    Node *var_node = assign_node->left->left;
-
-    PrintAsmCodeByNode(assign_node->right, dest_file);
-    fprintf(dest_file, "%s [AX + %lld]\n", AsmOperations[POP_ASM].sym, var_node->val.prop_name->number);
-
-    fprintf(stderr, "var '%s'   num = %lld\n", var_node->val.prop_name->name, var_node->val.prop_name->number);
+    return arg1->val.num < arg2->val.num;
 }
 
-void PrintIfAsm(Node *if_node, FILE *dest_file)
+TreeElem_t IsAbove(Node *arg1, Node *arg2)
 {
-    assert(if_node);
-    assert(dest_file);
-    assert(if_node->left->type == MATH_OP && IsBool(if_node->left));
-
-    static size_t if_marks_count = 0;
-
-    size_t cur_mark_num = if_marks_count++;
-    PrintMathOpAsm(if_node->left, dest_file);
-    fprintf(dest_file, "if_mark_%lld:\n", cur_mark_num);
-
-    PrintAsmCodeByNode(if_node->right, dest_file);
-
-    fprintf(dest_file, "if_mark_%lld:\n", cur_mark_num);
+    return arg1->val.num > arg2->val.num;
 }
 
-void PrintWhileAsm(Node *while_node, FILE *dest_file)
+TreeElem_t Add(Node *arg1, Node *arg2)
 {
-    assert(while_node);
-    assert(dest_file);
-    assert(while_node->left->type == MATH_OP && IsBool(while_node->left));
-
-    static size_t while_marks_count = 0;
-
-    size_t cur_mark_num = while_marks_count++;
-    fprintf(dest_file, "while_start_mark_%lld:\n", cur_mark_num);
-
-    PrintMathOpAsm(while_node->left, dest_file);
-    fprintf(dest_file, "while_end_mark_%lld:\n", cur_mark_num);
-
-    PrintAsmCodeByNode(while_node->right, dest_file);
-
-    fprintf(dest_file,  "%s while_start_mark_%lld:  \n"
-                        "while_end_mark_%lld:       \n", AsmOperations[JMP_ASM].sym, cur_mark_num, cur_mark_num);
+    return arg1->val.num + arg2->val.num;
 }
 
-void PrintReturnAsm(Node *ret_node, FILE *dest_file)
+TreeElem_t Sub(Node *arg1, Node *arg2)
 {
-    assert(ret_node);
-    assert(dest_file);
-
-    PrintAsmCodeByNode(ret_node->left, dest_file);
-
-    // fprintf(dest_file, "%s AX   \n"     // AX - start of frame, BX - cur size
-    //                    "%s BX   \n"     // BX = AX
-    //                    "%s AX   \n",    // pop AX
-    //         AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
-
-    fprintf(dest_file, "%s\n", AsmOperations[RET_ASM].sym);
+    return arg1->val.num - arg2->val.num;
 }
 
-void PrintAsmCodeByNode(Node *node, FILE *dest_file)
+TreeElem_t Mul(Node *arg1, Node *arg2)
 {
-    assert(node);
-    assert(dest_file);
+    return arg1->val.num * arg2->val.num;
+}
 
-    if (node->type == NUM)
-        fprintf(dest_file, "%s " TREE_ELEM_PRINT_SPECIFIER "\n", AsmOperations[PUSH_ASM].sym, node->val.num);
+TreeElem_t Div(Node *arg1, Node *arg2)
+{
+    return arg1->val.num / arg2->val.num;
+}
 
-    if (node->type == MATH_OP)
-        PrintMathOpAsm(node, dest_file);
-    
-    else if (node->type == KEY_WORD)
-    {
-        node->val.key_word->PrintAsmCodeFunc(node, dest_file);
-    }
+TreeElem_t Deg(Node *arg1, Node *arg2)
+{
+    return (TreeElem_t) pow(arg1->val.num, arg2->val.num);
+}
 
-    else if (node->type == NEW_BLOCK)
-        PrintAsmCodeByNode(node->left, dest_file);
+TreeElem_t Sin(Node *arg1, Node *arg2)
+{
+    return (TreeElem_t) sin(arg1->val.num);
+}
 
-    else
-        PrintChildrenAsm(node, dest_file);
+TreeElem_t Cos(Node *arg1, Node *arg2)
+{
+    return (TreeElem_t) cos(arg1->val.num);
+}
+
+TreeElem_t Tan(Node *arg1, Node *arg2)
+{
+    return (TreeElem_t) tan(arg1->val.num);
+}
+
+TreeElem_t Ln(Node *arg1, Node *arg2)
+{
+    return (TreeElem_t) log(arg1->val.num);
+}
+
+TreeElem_t Log(Node *arg1, Node *arg2)
+{
+    return (TreeElem_t) (log(arg2->val.num) / log(arg1->val.num));
 }

@@ -1,14 +1,14 @@
 #include <stdio.h>
 
-#include "back_reader.h"
 #include "back_writer.h"
 #include "../../tree/tree_lib.h"
+#include "../../tree_saver/tree_saver.h"
 
 int main(const int argc, const char *argv[])
 {
     fprintf(stderr, "BACKEND_START\n");
 
-    FILE *source_file = GetInputFile(argc, argv);
+    FILE *source_file = GetInputSaveFile(argc, argv);
 
     Tree source_tree = {};
     TreeCtor(&source_tree, START_TREE_SIZE ON_TREE_DEBUG(, "source"));
@@ -17,7 +17,7 @@ int main(const int argc, const char *argv[])
 
     TREE_DUMP(&source_tree);
 
-    FILE *asm_file = GetOutputFile(argc, argv);
+    FILE *asm_file = GetOutputAsmFile(argc, argv);
 
     fprintf(asm_file,   "PUSH 0 \n"
                         "POP AX     \n"

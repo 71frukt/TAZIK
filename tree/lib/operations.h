@@ -38,10 +38,27 @@ enum MathOperation_enum
 };
 
 struct Node;
+struct Tree;
 
-void PrintAsmCodeByNode (Node *node,    FILE *dest_file);
-void PrintMathOpAsm     (Node *math_op, FILE *dest_file);
-void PopToEmptyRam      (FILE *asm_file);
+Node *CalculateNode(Tree *tree, Node *op_node);
+
+TreeElem_t IsEqual    (Node *arg1, Node *arg2);
+TreeElem_t IsNotEqual (Node *arg1, Node *arg2);
+TreeElem_t IsBelow    (Node *arg1, Node *arg2);
+TreeElem_t IsAbove    (Node *arg1, Node *arg2);
+
+TreeElem_t Add        (Node *arg1, Node *arg2);
+TreeElem_t Sub        (Node *arg1, Node *arg2);
+TreeElem_t Mul        (Node *arg1, Node *arg2);
+TreeElem_t Div        (Node *arg1, Node *arg2);
+
+TreeElem_t Deg        (Node *arg1, Node *arg2);
+TreeElem_t Ln         (Node *arg1, Node *arg2);
+TreeElem_t Log        (Node *arg1, Node *arg2);
+
+TreeElem_t Sin        (Node *arg1, Node *arg2);
+TreeElem_t Cos        (Node *arg1, Node *arg2);
+TreeElem_t Tan        (Node *arg1, Node *arg2);
 
 struct MathOperation
 {
@@ -52,28 +69,30 @@ struct MathOperation
 
     const FuncType       type;                                               // UNARY  / BINARY
     const FuncEntryForm  form;                                               // PREFIX / INFIX
+
+    TreeElem_t  (*op_func)  (Node *arg1, Node *arg2);
 };
 
 const int OPERATIONS_NUM = 14;
 
 const MathOperation MathOperations[OPERATIONS_NUM] = 
 {
-    { BOOL_EQ,      "==",   "==",  "JNE", BINARY, INFIX  },
-    { BOOL_NEQ,     "!=",   "!=",  "JE",  BINARY, INFIX  },
-    { BOOL_GREATER, ">",    "\\>", "JB",  BINARY, INFIX  },
-    { BOOL_LOWER,   "<",    "\\<", "JA",  BINARY, INFIX  },
-    { ADD,          "+",    "+",   "ADD", BINARY, INFIX  },
-    { SUB,          "-",    "-",   "SUB", BINARY, INFIX  },
-    { MUL,          "*",    "*",   "MUL", BINARY, INFIX  },
-    { DIV,          "/",    "/",   "DIV", BINARY, INFIX  },
-    { DEG,          "^",    "^",   NULL,  BINARY, INFIX  },
+    { BOOL_EQ,      "==",   "==",  "JNE", BINARY, INFIX, IsEqual    },
+    { BOOL_NEQ,     "!=",   "!=",  "JE",  BINARY, INFIX, IsNotEqual },
+    { BOOL_LOWER,   "<",    "\\<", "JB",  BINARY, INFIX, IsBelow    },
+    { BOOL_GREATER, ">",    "\\>", "JA",  BINARY, INFIX, IsAbove    },
+    { ADD,          "+",    "+",   "ADD", BINARY, INFIX, Add        },
+    { SUB,          "-",    "-",   "SUB", BINARY, INFIX, Sub        },
+    { MUL,          "*",    "*",   "MUL", BINARY, INFIX, Mul        },
+    { DIV,          "/",    "/",   "DIV", BINARY, INFIX, Div        },
+    { DEG,          "^",    "^",   NULL,  BINARY, INFIX, Deg        },
   
-    { LN,           "лн",   "ln",  NULL,  UNARY,  PREFIX },
-    { LOG,          "лог",  "log", NULL,  BINARY, PREFIX },
+    { LN,           "лн",   "ln",  NULL,  UNARY,  PREFIX, Ln        },
+    { LOG,          "лог",  "log", NULL,  BINARY, PREFIX, Log       },
   
-    { SIN,          "син",  "sin", "SIN", UNARY,  PREFIX },
-    { COS,          "кос",  "cos", "COS", UNARY,  PREFIX },
-    { TAN,          "тан",  "tg",  "TG",  UNARY,  PREFIX }
+    { SIN,          "син",  "sin", "SIN", UNARY,  PREFIX, Sin       },
+    { COS,          "кос",  "cos", "COS", UNARY,  PREFIX, Cos       },
+    { TAN,          "тан",  "tg",  "TG",  UNARY,  PREFIX, Tan       }
 };
 
 //------------------------------------------------------------------------------------------------------------//
@@ -107,15 +126,15 @@ const ManageElem Managers[MANAGE_ELEMS_NUM] =
 
 //------------------------------------------------------------------------------------------------------------//
 
-void PrintVarTAsm        (Node *var_t_node,    FILE *dest_file);
-void PrintInitAsm        (Node *init_node,     FILE *dest_file);
-void PrintAssignAsm      (Node *assign_node,   FILE *dest_file);
-void PrintChildrenAsm    (Node *new_expr_node, FILE *dest_file);
-void PrintIfAsm          (Node *if_node,       FILE *dest_file);
-void PrintWhileAsm       (Node *while_node,    FILE *dest_file);
-void PrintReturnAsm      (Node *ret_node,      FILE *dest_file);
-void PrintCallAsm        (Node *call_node,     FILE *dest_file);
-void PrintPassArgsInCall (Node *comma_node,    FILE *dest_file);
+// void PrintVarTAsm        (Node *var_t_node,    FILE *dest_file);
+// void PrintInitAsm        (Node *init_node,     FILE *dest_file);
+// void PrintAssignAsm      (Node *assign_node,   FILE *dest_file);
+// void PrintChildrenAsm    (Node *new_expr_node, FILE *dest_file);
+// void PrintIfAsm          (Node *if_node,       FILE *dest_file);
+// void PrintWhileAsm       (Node *while_node,    FILE *dest_file);
+// void PrintReturnAsm      (Node *ret_node,      FILE *dest_file);
+// void PrintCallAsm        (Node *call_node,     FILE *dest_file);
+// void PrintPassArgsInCall (Node *comma_node,    FILE *dest_file);
 
 
 enum KeyWord_enum
@@ -139,26 +158,24 @@ struct KeyWord
     const KeyWord_enum  name;
     const char         *my_symbol;
     const char         *real_symbol;
-
-    void (*PrintAsmCodeFunc)(Node *node, FILE *dest_file);
 };
 
 const int KEY_WORDS_NUM = 12;
 
 const KeyWord KeyWords[KEY_WORDS_NUM] = 
 {
-    { VAR_T_INDICATOR,   NULL,           "var_t",     PrintVarTAsm },
-    { FUNC_T_INDICATOR,  NULL,           "func_t",    NULL },
-    { FUNC_CALL,         NULL,           "func_call", PrintCallAsm },
-    { INT_INIT,         "инт",           "int",       PrintInitAsm },
-    { DOUBLE_INIT,      "дабл",          "double",    PrintInitAsm },
-    { NEW_EXPR,         "новая_строка",  "new_line",  PrintChildrenAsm },
-    { COMMA,            "запятая",       "comma",     PrintChildrenAsm },
-    { NEW_FUNC,         NULL,            "new_func",  PrintChildrenAsm },
-    { ASSIGN,           "=" ,            "=",         PrintAssignAsm },
-    { IF,               "если",          "if",        PrintIfAsm },
-    { WHILE,            "пока",          "while",     PrintWhileAsm },
-    { RETURN,           "рет",           "return",    PrintReturnAsm }
+    { VAR_T_INDICATOR,   NULL,           "var_t"     },
+    { FUNC_T_INDICATOR,  NULL,           "func_t"    },
+    { FUNC_CALL,         NULL,           "func_call" },
+    { INT_INIT,         "инт",           "int"       },
+    { DOUBLE_INIT,      "дабл",          "double"    },
+    { NEW_EXPR,         "новая_строка",  "new_line"  },
+    { COMMA,            "запятая",       "comma"     },
+    { NEW_FUNC,         NULL,            "new_func"  },
+    { ASSIGN,           "=" ,            "="         },
+    { IF,               "если",          "if"        },
+    { WHILE,            "пока",          "while"     },
+    { RETURN,           "рет",           "return"    }
 };
 
 //---------------------------------------------------------------------------------------------------------------//

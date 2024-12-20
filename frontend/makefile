@@ -5,10 +5,11 @@ FLAGS = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equa
 
 SOURCES    = $(wildcard src/*.cpp)
 TREE_LIB   = $(wildcard ../tree/src/*.o)
+TREE_SAVER = $(wildcard ../tree_saver/*.o)
 INCLUDE    = -I lib
 BUILD_DIR  = build
 EXECUTABLE = frontend
-OBJECTS    = $(SOURCES:.cpp=.o) $(TREE_LIB)
+OBJECTS    = $(SOURCES:.cpp=.o) $(TREE_LIB) $(TREE_SAVER)
 
 all: clean $(EXECUTABLE)
 

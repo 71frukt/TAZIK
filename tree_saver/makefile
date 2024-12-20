@@ -3,23 +3,15 @@ FLAGS = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equa
 		-Wformat=2 -Wignored-qualifiers -Wlogical-op -Wno-missing-field-initializers -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo \
 		-Wstrict-aliasing -Wstrict-null-sentinel -Wtype-limits -Wwrite-strings -Werror=vla -D_DEBUG -D_EJUDGE_CLIENT_SIDE
 
-SOURCES    = $(wildcard src/*.cpp)
-TREE_LIB   = $(wildcard ../tree/src/*.o)
-TREE_SAVER = $(wildcard ../tree_saver/*.o)
-INCLUDE    = -I lib
-BUILD_DIR  = build
-EXECUTABLE = frontend
-OBJECTS    = $(SOURCES:.cpp=.o) $(TREE_LIB) $(TREE_SAVER)
+SRCS = $(wildcard *.cpp)
+OBJS = $(SRCS:.cpp=.o)
 
-all: clean $(EXECUTABLE)
+all: clean $(OBJS)
 
-$(EXECUTABLE): $(OBJECTS)
-	g++ $(FLAGS) $^ -o $(BUILD_DIR)/$@
-
-%.o : %.cpp
-	g++ -c $(FLAGS) $(INCLUDE) $< -o $@
+%.o: %.cpp
+	g++ $(FLAGS) -c $< -o $@
 
 clean:
-	del src\*.o
+	del *.o
 
 rebuild: clean all
