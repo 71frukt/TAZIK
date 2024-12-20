@@ -7,6 +7,10 @@
 
 #define BASE_OUTPUT_ASM_FILE_NAME  "../../executable.asm"
 
+#ifndef COMMENT_SYMBOL
+#define COMMENT_SYMBOL  ';'
+#endif
+
 FILE *GetOutputAsmFile(const int argc, const char *argv[]);
 
 void PrintAsmCodeByNode (Node *node,    FILE *dest_file);

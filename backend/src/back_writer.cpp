@@ -74,8 +74,13 @@ void PrintInitAsm(Node *init_node, FILE *dest_file)
     assert(dest_file);
     assert(init_node->type == KEY_WORD && (init_node->val.key_word->name == INT_INIT || init_node->val.key_word->name == DOUBLE_INIT));
 
+    Node *prop_name_node = init_node->left->left;
+    assert(prop_name_node->type == VAR || prop_name_node->type == FUNC);
+
     if(init_node->left->type == KEY_WORD && init_node->left->val.key_word->name == VAR_T_INDICATOR)     // переменная
     {
+        fprintf(dest_file, "\t%c инициализация переменной '%s'   \n", COMMENT_SYMBOL, prop_name_node->val.prop_name->name);    
+
         if (init_node->right != NULL)                                                                   // нет инициализации, например, при объявлении функции  func(int a) в теле будет только pop[BX++]
             PrintAsmCodeByNode(init_node->right, dest_file);
 
@@ -84,29 +89,26 @@ void PrintInitAsm(Node *init_node, FILE *dest_file)
 
     else                                                                                                // функция
     {
+        fprintf(dest_file, "\t%c инициализация функции '%s'   \n", COMMENT_SYMBOL, prop_name_node->val.prop_name->name);    
+
         fprintf(dest_file, "%s:\n", init_node->left->left->val.prop_name->name);        // AX - start of frame, BX - cur size
 
         PrintAsmCodeByNode(init_node->left->right, dest_file);
 
-        // PopToEmptyRam(dest_file);       // pop [BX++]
-
         PrintAsmCodeByNode(init_node->right, dest_file);   
 
-        // fprintf(dest_file,  "%s CX  \n", AsmOperations[POP_ASM].sym);       // кладём результат функции в CX
-
-        // fprintf(dest_file,  "%s AX  \n"     // AX - start of frame, BX - cur size
-        //                     "%s BX  \n"     // BX := AX
-        //                     "%s AX  \n",    // pop AX
-        // AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
-
-        
-        // fprintf(dest_file,  "%s CX  \n", AsmOperations[PUSH_ASM].sym);      // результат функции в стек
+        fprintf(dest_file, "\t%c конец инициализации функции '%s'   \n", COMMENT_SYMBOL, prop_name_node->val.prop_name->name);    
     }
 }
 
 void PrintCallAsm(Node *call_node, FILE *dest_file)
 {
+    assert(call_node);
+    assert(dest_file);
+
     fprintf(stderr, "Start of PrintCallAsm()\n");
+
+    fprintf(dest_file, "\t%c вызов функции '%s'   \n", COMMENT_SYMBOL, call_node->left->left->val.prop_name->name);    
 
     fprintf(dest_file, "%s AX   \n", AsmOperations[PUSH_ASM].sym);
 
@@ -126,8 +128,9 @@ void PrintCallAsm(Node *call_node, FILE *dest_file)
                         "%s AX  \n",    // pop AX
     AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
 
-    fprintf(dest_file,  "%s CX  \n", AsmOperations[PUSH_ASM].sym);      // результат функции в стек
+    fprintf(dest_file,  "\t%s CX  \n", AsmOperations[PUSH_ASM].sym);      // результат функции в стек
 
+    fprintf(dest_file, "\t%c конец вызова функции '%s'   \n", COMMENT_SYMBOL, call_node->left->left->val.prop_name->name);    
     fprintf(stderr, "End of PrintCallAsm()\n");
 }
 
@@ -136,6 +139,8 @@ void PrintPassArgsInCall(Node *comma_node, FILE *dest_file)
     assert(comma_node);
     assert(comma_node->type == KEY_WORD && comma_node->val.key_word->name == COMMA);
     assert(dest_file);
+
+    fprintf(dest_file, "\t%c передача аргументов в функцию \n", COMMENT_SYMBOL);
 
     if (comma_node->right != NULL)
         PrintPassArgsInCall(comma_node->right, dest_file);
@@ -152,6 +157,8 @@ void PrintAssignAsm(Node *assign_node, FILE *dest_file)
 
     Node *var_node = assign_node->left->left;
 
+    fprintf(dest_file, "\t%c присваивание значения переменной '%s'\n", COMMENT_SYMBOL, assign_node->left->left->val.prop_name->name);
+
     PrintAsmCodeByNode(assign_node->right, dest_file);
     fprintf(dest_file, "%s [AX + %lld]\n", AsmOperations[POP_ASM].sym, var_node->val.prop_name->number);
 
@@ -164,6 +171,8 @@ void PrintIfAsm(Node *if_node, FILE *dest_file)
     assert(dest_file);
     assert(if_node->left->type == MATH_OP && IsBool(if_node->left));
 
+    fprintf(dest_file, "\t%c начало цикла if\n", COMMENT_SYMBOL);
+
     static size_t if_marks_count = 0;
 
     size_t cur_mark_num = if_marks_count++;
@@ -173,6 +182,8 @@ void PrintIfAsm(Node *if_node, FILE *dest_file)
     PrintAsmCodeByNode(if_node->right, dest_file);
 
     fprintf(dest_file, "if_mark_%lld:\n", cur_mark_num);
+
+    fprintf(dest_file, "\t%c конец цикла if\n", COMMENT_SYMBOL);
 }
 
 void PrintWhileAsm(Node *while_node, FILE *dest_file)
@@ -180,6 +191,8 @@ void PrintWhileAsm(Node *while_node, FILE *dest_file)
     assert(while_node);
     assert(dest_file);
     assert(while_node->left->type == MATH_OP && IsBool(while_node->left));
+
+    fprintf(dest_file, "\t%c начало цикла while\n", COMMENT_SYMBOL);
 
     static size_t while_marks_count = 0;
 
@@ -193,6 +206,8 @@ void PrintWhileAsm(Node *while_node, FILE *dest_file)
 
     fprintf(dest_file,  "%s while_start_mark_%lld:  \n"
                         "while_end_mark_%lld:       \n", AsmOperations[JMP_ASM].sym, cur_mark_num, cur_mark_num);
+
+    fprintf(dest_file, "\t%c конец цикла while\n", COMMENT_SYMBOL);
 }
 
 void PrintReturnAsm(Node *ret_node, FILE *dest_file)
