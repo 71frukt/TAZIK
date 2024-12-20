@@ -40,8 +40,6 @@ enum MathOperation_enum
 struct Node;
 struct Tree;
 
-Node *CalculateNode(Tree *tree, Node *op_node);
-
 TreeElem_t IsEqual    (Node *arg1, Node *arg2);
 TreeElem_t IsNotEqual (Node *arg1, Node *arg2);
 TreeElem_t IsBelow    (Node *arg1, Node *arg2);
@@ -73,9 +71,9 @@ struct MathOperation
     TreeElem_t  (*op_func)  (Node *arg1, Node *arg2);
 };
 
-const int OPERATIONS_NUM = 14;
+const int MATH_OPERATIONS_NUM = 14;
 
-const MathOperation MathOperations[OPERATIONS_NUM] = 
+const MathOperation MathOperations[MATH_OPERATIONS_NUM] = 
 {
     { BOOL_EQ,      "==",   "==",  "JNE", BINARY, INFIX, IsEqual    },
     { BOOL_NEQ,     "!=",   "!=",  "JE",  BINARY, INFIX, IsNotEqual },

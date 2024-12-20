@@ -39,9 +39,9 @@ struct AsmOperation
     const char *sym;
 };
 
-const int ASM_OPERATIONS_NUM = 28;
+const int ASM_MATH_OPERATIONS_NUM = 28;
 
-const AsmOperation AsmOperations[ASM_OPERATIONS_NUM]
+const AsmOperation AsmOperations[ASM_MATH_OPERATIONS_NUM]
 {
     { PUSH_ASM,         "PUSH"      },
     { POP_ASM,          "POP"       },

@@ -13,7 +13,7 @@ const MathOperation *GetOperationBySymbol(char *sym, SymbolMode mode) // TODO: m
 {
     assert(sym);
 
-    for (size_t i = 0; i < OPERATIONS_NUM; i++)
+    for (size_t i = 0; i < MATH_OPERATIONS_NUM; i++)
     {
         const char *compare_sym = (mode == MY_CODE_MODE ? MathOperations[i].my_symbol : MathOperations[i].real_symbol);
 
@@ -55,33 +55,6 @@ const ManageElem *GetManageElemBySymbol(char *sym, SymbolMode mode)
     }
 
     return NULL;
-}
-
-Node *CalculateNode(Tree *tree, Node *op_node)
-{
-    assert(tree);
-    assert(op_node);
-    assert(op_node->type == MATH_OP);
-    assert(op_node->left != NULL && (op_node->val.math_op->type == UNARY || op_node->right != NULL));
-
-    if (op_node->left->type != NUM || op_node->right->type != NUM)
-    {
-        fprintf(stderr, "Trying to calculate op with not-a-number args\n");
-        return op_node;
-    }
-
-    assert(op_node->left);
-    assert(op_node->right);
-
-    TreeElem_t res_val = op_node->val.math_op->op_func(op_node->left, op_node->right);
-
-    RemoveNode(tree, &op_node->left);
-    RemoveNode(tree, &op_node->right);
-
-    op_node->type = NUM;
-    op_node->val.num = res_val;
-
-    return op_node;
 }
 
 TreeElem_t IsEqual(Node *arg1, Node *arg2)

@@ -21,7 +21,7 @@ struct MathOpAsmInfo
     const char *asm_symbol;
 };
 
-const MathOpAsmInfo MathOpAsmInfos[OPERATIONS_NUM] = 
+const MathOpAsmInfo MathOpAsmInfos[MATH_OPERATIONS_NUM] = 
 {
     { BOOL_EQ,      "JNE" },
     { BOOL_NEQ,     "JE"  },
