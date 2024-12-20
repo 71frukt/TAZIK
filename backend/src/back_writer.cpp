@@ -29,7 +29,7 @@ void PrintMathOpAsm(Node *math_op, FILE *dest_file)
     if (math_op->val.math_op->type == BINARY)
         PrintAsmCodeByNode(math_op->right, dest_file);
 
-    fprintf(dest_file, "%s ", math_op->val.math_op->asm_symbol);
+    fprintf(dest_file, "%s ", MathOpAsmInfos[math_op->val.math_op->num].asm_symbol);
 
     if (!IsBool(math_op))
         fprintf(dest_file, "\n");

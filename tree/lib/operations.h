@@ -162,14 +162,14 @@ const int KEY_WORDS_NUM = 12;
 
 const KeyWord KeyWords[KEY_WORDS_NUM] = 
 {
-    { VAR_T_INDICATOR,   NULL,           "var_t"     },
-    { FUNC_T_INDICATOR,  NULL,           "func_t"    },
-    { FUNC_CALL,         NULL,           "func_call" },
+    { VAR_T_INDICATOR,  "",              "var_t"     },
+    { FUNC_T_INDICATOR, "",              "func_t"    },
+    { FUNC_CALL,        "",              "func_call" },
     { INT_INIT,         "инт",           "int"       },
     { DOUBLE_INIT,      "дабл",          "double"    },
     { NEW_EXPR,         "новая_строка",  "new_line"  },
     { COMMA,            "запятая",       "comma"     },
-    { NEW_FUNC,         NULL,            "new_func"  },
+    { NEW_FUNC,         "",              "new_func"  },
     { ASSIGN,           "=" ,            "="         },
     { IF,               "если",          "if"        },
     { WHILE,            "пока",          "while"     },

@@ -68,7 +68,7 @@ PUSH 3
 
 PUSH 3
 
-JA if_mark_0:
+JB if_mark_0:
 
 PUSH 1
 
