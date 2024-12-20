@@ -44,6 +44,9 @@ void MakeTokens(Tree *tree, FILE *source)
         // fprintf(stderr, "real col = %lld\n\n", ftell(source));
 
         cur_ch = (char) getc(source);
+
+        if (cur_ch == EOF)
+            break;
         
         if (cur_ch == '\n')
         {
@@ -100,6 +103,8 @@ fprintf(stderr, "tree size = %lld\n\n", tree->size);
 
 Node *GetNamedToken(Tree *tree, char *token_name)
 {
+    fprintf(stderr, "cur_token = '%s'\n", token_name);
+
     if (IsEngLetter(*token_name))                                                       // это имя функции или переменной
     {
         ProperName *cur_name_ptr = FindNameInTable(&tree->names_table, token_name);

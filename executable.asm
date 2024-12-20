@@ -1,12 +1,15 @@
-PUSH 0 
-POP AX     
-PUSH 0 
-POP BX 
-PUSH AX    
-PUSH 0 
-CALL main: 
-SPU_OUT    
-HLT    
+PUSH 0                     
+POP AX                   
+
+PUSH 0                     
+POP BX                   
+
+PUSH AX                    
+PUSH 0                   
+
+CALL main:   
+SPU_OUT                    
+HLT                        
 
 	; инициализация функции 'main'   
 main:
@@ -22,11 +25,6 @@ POP BX
 	; вызов функции 'fact'   
 PUSH AX   
 	; передача аргументов в функцию 
-	; передача аргументов в функцию 
-PUSH [AX + 0]
-PUSH 0
-
-MUL 
 PUSH 6
 
 PUSH 2
@@ -55,20 +53,11 @@ PUSH 1
 ADD      
 POP BX   
 
-	; инициализация переменной 'p'   
-
-POP [BX] 
-PUSH BX   
-PUSH 1    
-ADD      
-POP BX   
-
 	; начало цикла if
-PUSH 3
+PUSH [AX + 0]
+PUSH 1
 
-PUSH 3
-
-JB if_mark_0:
+JNE if_mark_0:
 
 PUSH 1
 
@@ -90,9 +79,6 @@ POP BX
 	; вызов функции 'fact'   
 PUSH AX   
 	; передача аргументов в функцию 
-	; передача аргументов в функцию 
-PUSH 6
-
 PUSH [AX + 0]
 PUSH 1
 
@@ -106,9 +92,9 @@ POP BX
 POP AX  
 	PUSH CX  
 	; конец вызова функции 'fact'   
-POP [AX + 2]
+POP [AX + 1]
 
-PUSH [AX + 2]
+PUSH [AX + 1]
 PUSH [AX + 0]
 MUL 
 RET

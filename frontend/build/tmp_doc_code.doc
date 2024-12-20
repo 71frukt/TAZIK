@@ -1,145 +1,125 @@
 digraph G{               
 bgcolor = "darkslategray";      
 edge [color = "aqua"]; 
-node_000001c762236680 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
-node_000001c7622366d0 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "main"]
-node_000001c762236770 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
-node_000001c7622367c0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "arg"]
-node_000001c7622368b0 [shape = "egg", style = filled, fillcolor = "tan", label = "return"]
-node_000001c762236900 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "fact"]
-node_000001c7622369a0 [shape = "oval", style = filled, fillcolor = "skyblue", label = "6"]
-node_000001c7622369f0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "*"]
-node_000001c762236a40 [shape = "oval", style = filled, fillcolor = "skyblue", label = "2"]
-node_000001c762236a90 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
-node_000001c762236ae0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "arg"]
-node_000001c762236b30 [shape = "record", style = filled, fillcolor = "seagreen1", label = "*"]
-node_000001c762236b80 [shape = "oval", style = filled, fillcolor = "skyblue", label = "0"]
-node_000001c762236c20 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
-node_000001c762236cc0 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
-node_000001c762236d10 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "fact"]
-node_000001c762236db0 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
-node_000001c762236e00 [shape = "square", style = filled, fillcolor = "aquamarine", label = "n"]
-node_000001c762236e50 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
-node_000001c762236ea0 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
-node_000001c762236ef0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "p"]
-node_000001c762236fe0 [shape = "egg", style = filled, fillcolor = "tan", label = "if"]
-node_000001c762237080 [shape = "oval", style = filled, fillcolor = "skyblue", label = "3"]
-node_000001c7622370d0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "\>"]
-node_000001c762237120 [shape = "oval", style = filled, fillcolor = "skyblue", label = "3"]
-node_000001c762237210 [shape = "egg", style = filled, fillcolor = "tan", label = "return"]
-node_000001c762237260 [shape = "oval", style = filled, fillcolor = "skyblue", label = "1"]
-node_000001c7622372b0 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
-node_000001c762237350 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
-node_000001c7622373a0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "next"]
-node_000001c762237440 [shape = "oval", style = filled, fillcolor = "skyblue", label = "0"]
-node_000001c762237490 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
-node_000001c7622374e0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "next"]
-node_000001c762237530 [shape = "egg", style = filled, fillcolor = "tan", label = "="]
-node_000001c762237580 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "fact"]
-node_000001c762237620 [shape = "square", style = filled, fillcolor = "aquamarine", label = "n"]
-node_000001c762237670 [shape = "record", style = filled, fillcolor = "seagreen1", label = "-"]
-node_000001c7622376c0 [shape = "oval", style = filled, fillcolor = "skyblue", label = "1"]
-node_000001c762237710 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
-node_000001c762237760 [shape = "oval", style = filled, fillcolor = "skyblue", label = "6"]
-node_000001c762237800 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
-node_000001c762237850 [shape = "egg", style = filled, fillcolor = "tan", label = "return"]
-node_000001c7622378a0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "next"]
-node_000001c7622378f0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "*"]
-node_000001c762237940 [shape = "square", style = filled, fillcolor = "aquamarine", label = "n"]
-node_000001c762237990 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
-node_000001c762237a80 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000001c762237ad0 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
-node_000001c762237b20 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
-node_000001c762237b70 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
-node_000001c762237bc0 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000001c762237c10 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
-node_000001c762237c60 [shape = "egg", style = filled, fillcolor = "tan", label = "func_call"]
-node_000001c762237cb0 [shape = "hexagon", style = filled, fillcolor = "yellow", label = "new_block"]
-node_000001c762237d00 [shape = "egg", style = filled, fillcolor = "tan", label = "new_func"]
-node_000001c762237d50 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000001c762237da0 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
-node_000001c762237df0 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000001c762237e40 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
-node_000001c762237e90 [shape = "hexagon", style = filled, fillcolor = "yellow", label = "new_block"]
-node_000001c762237ee0 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
-node_000001c762237f30 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000001c762237f80 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000001c762237fd0 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000001c762238020 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
-node_000001c762238070 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
-node_000001c7622380c0 [shape = "egg", style = filled, fillcolor = "tan", label = "func_call"]
-node_000001c762238110 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000001c762238160 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
-node_000001c7622381b0 [shape = "hexagon", style = filled, fillcolor = "yellow", label = "new_block"]
-node_000001c762238200 [shape = "egg", style = filled, fillcolor = "tan", label = "new_func"]
-node_000001c762236680 -> node_000001c762237b20
-node_000001c762236680 -> node_000001c762237cb0
-node_000001c762236770 -> node_000001c762237a80
-node_000001c7622368b0 -> node_000001c762237c60
-node_000001c7622369f0 -> node_000001c7622369a0
-node_000001c7622369f0 -> node_000001c762236a40
-node_000001c762236a90 -> node_000001c762236b30
-node_000001c762236b30 -> node_000001c762237bc0
-node_000001c762236b30 -> node_000001c762236b80
-node_000001c762236c20 -> node_000001c7622368b0
-node_000001c762236cc0 -> node_000001c762237e40
-node_000001c762236cc0 -> node_000001c7622381b0
-node_000001c762236db0 -> node_000001c762237d50
-node_000001c762236e50 -> node_000001c762236ea0
-node_000001c762236ea0 -> node_000001c762237df0
-node_000001c762236fe0 -> node_000001c7622370d0
-node_000001c762236fe0 -> node_000001c762237e90
-node_000001c7622370d0 -> node_000001c762237080
-node_000001c7622370d0 -> node_000001c762237120
-node_000001c762237210 -> node_000001c762237260
-node_000001c7622372b0 -> node_000001c762237210
-node_000001c762237350 -> node_000001c762237f30
-node_000001c762237350 -> node_000001c762237440
-node_000001c762237490 -> node_000001c762237350
-node_000001c762237490 -> node_000001c762237800
-node_000001c762237530 -> node_000001c762237f80
-node_000001c762237530 -> node_000001c7622380c0
-node_000001c762237670 -> node_000001c762237fd0
-node_000001c762237670 -> node_000001c7622376c0
-node_000001c762237710 -> node_000001c762237760
-node_000001c762237800 -> node_000001c762237530
-node_000001c762237800 -> node_000001c762237990
-node_000001c762237850 -> node_000001c7622378f0
-node_000001c7622378f0 -> node_000001c762238110
-node_000001c7622378f0 -> node_000001c762238160
-node_000001c762237990 -> node_000001c762237850
-node_000001c762237a80 -> node_000001c7622367c0
-node_000001c762237ad0 -> node_000001c762236770
-node_000001c762237b20 -> node_000001c7622366d0
-node_000001c762237b20 -> node_000001c762237ad0
-node_000001c762237b70 -> node_000001c7622369f0
-node_000001c762237b70 -> node_000001c762236a90
-node_000001c762237bc0 -> node_000001c762236ae0
-node_000001c762237c10 -> node_000001c762236900
-node_000001c762237c10 -> node_000001c762237b70
-node_000001c762237c60 -> node_000001c762237c10
-node_000001c762237cb0 -> node_000001c762236c20
-node_000001c762237d00 -> node_000001c762236680
-node_000001c762237d00 -> node_000001c762238200
-node_000001c762237d50 -> node_000001c762236e00
-node_000001c762237da0 -> node_000001c762236db0
-node_000001c762237da0 -> node_000001c762236e50
-node_000001c762237df0 -> node_000001c762236ef0
-node_000001c762237e40 -> node_000001c762236d10
-node_000001c762237e40 -> node_000001c762237da0
-node_000001c762237e90 -> node_000001c7622372b0
-node_000001c762237ee0 -> node_000001c762236fe0
-node_000001c762237ee0 -> node_000001c762237490
-node_000001c762237f30 -> node_000001c7622373a0
-node_000001c762237f80 -> node_000001c7622374e0
-node_000001c762237fd0 -> node_000001c762237620
-node_000001c762238020 -> node_000001c762237670
-node_000001c762238020 -> node_000001c762237710
-node_000001c762238070 -> node_000001c762237580
-node_000001c762238070 -> node_000001c762238020
-node_000001c7622380c0 -> node_000001c762238070
-node_000001c762238110 -> node_000001c7622378a0
-node_000001c762238160 -> node_000001c762237940
-node_000001c7622381b0 -> node_000001c762237ee0
-node_000001c762238200 -> node_000001c762236cc0
+node_0000024fa3036680 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_0000024fa30366d0 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "GOIDA"]
+node_0000024fa3036770 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_0000024fa30367c0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "arg"]
+node_0000024fa30368b0 [shape = "egg", style = filled, fillcolor = "tan", label = "return"]
+node_0000024fa3036900 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "fact"]
+node_0000024fa30369a0 [shape = "oval", style = filled, fillcolor = "skyblue", label = "6"]
+node_0000024fa30369f0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "*"]
+node_0000024fa3036a40 [shape = "oval", style = filled, fillcolor = "skyblue", label = "2"]
+node_0000024fa3036ae0 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
+node_0000024fa3036b80 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_0000024fa3036bd0 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "fact"]
+node_0000024fa3036c70 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_0000024fa3036cc0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "n"]
+node_0000024fa3036db0 [shape = "egg", style = filled, fillcolor = "tan", label = "if"]
+node_0000024fa3036e50 [shape = "square", style = filled, fillcolor = "aquamarine", label = "n"]
+node_0000024fa3036ea0 [shape = "record", style = filled, fillcolor = "seagreen1", label = "=="]
+node_0000024fa3036ef0 [shape = "oval", style = filled, fillcolor = "skyblue", label = "1"]
+node_0000024fa3036fe0 [shape = "egg", style = filled, fillcolor = "tan", label = "return"]
+node_0000024fa3037030 [shape = "oval", style = filled, fillcolor = "skyblue", label = "1"]
+node_0000024fa3037080 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
+node_0000024fa3037120 [shape = "egg", style = filled, fillcolor = "tan", label = "int"]
+node_0000024fa3037170 [shape = "square", style = filled, fillcolor = "aquamarine", label = "next"]
+node_0000024fa3037210 [shape = "oval", style = filled, fillcolor = "skyblue", label = "0"]
+node_0000024fa3037260 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
+node_0000024fa30372b0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "next"]
+node_0000024fa3037300 [shape = "egg", style = filled, fillcolor = "tan", label = "="]
+node_0000024fa3037350 [shape = "square", style = filled, fillcolor = "darkturquoise", label = "fact"]
+node_0000024fa30373f0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "n"]
+node_0000024fa3037440 [shape = "record", style = filled, fillcolor = "seagreen1", label = "-"]
+node_0000024fa3037490 [shape = "oval", style = filled, fillcolor = "skyblue", label = "1"]
+node_0000024fa3037530 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
+node_0000024fa3037580 [shape = "egg", style = filled, fillcolor = "tan", label = "return"]
+node_0000024fa30375d0 [shape = "square", style = filled, fillcolor = "aquamarine", label = "next"]
+node_0000024fa3037620 [shape = "record", style = filled, fillcolor = "seagreen1", label = "*"]
+node_0000024fa3037670 [shape = "square", style = filled, fillcolor = "aquamarine", label = "n"]
+node_0000024fa30376c0 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
+node_0000024fa30377b0 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_0000024fa3037800 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
+node_0000024fa3037850 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
+node_0000024fa30378a0 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
+node_0000024fa30378f0 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
+node_0000024fa3037940 [shape = "egg", style = filled, fillcolor = "tan", label = "func_call"]
+node_0000024fa3037990 [shape = "hexagon", style = filled, fillcolor = "yellow", label = "new_block"]
+node_0000024fa30379e0 [shape = "egg", style = filled, fillcolor = "tan", label = "new_func"]
+node_0000024fa3037a30 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_0000024fa3037a80 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
+node_0000024fa3037ad0 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
+node_0000024fa3037b20 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_0000024fa3037b70 [shape = "hexagon", style = filled, fillcolor = "yellow", label = "new_block"]
+node_0000024fa3037bc0 [shape = "egg", style = filled, fillcolor = "tan", label = "new_line"]
+node_0000024fa3037c10 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_0000024fa3037c60 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_0000024fa3037cb0 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_0000024fa3037d00 [shape = "egg", style = filled, fillcolor = "tan", label = "comma"]
+node_0000024fa3037d50 [shape = "egg", style = filled, fillcolor = "tan", label = "func_t"]
+node_0000024fa3037da0 [shape = "egg", style = filled, fillcolor = "tan", label = "func_call"]
+node_0000024fa3037df0 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_0000024fa3037e40 [shape = "egg", style = filled, fillcolor = "tan", label = "var_t"]
+node_0000024fa3037e90 [shape = "hexagon", style = filled, fillcolor = "yellow", label = "new_block"]
+node_0000024fa3037ee0 [shape = "egg", style = filled, fillcolor = "tan", label = "new_func"]
+node_0000024fa3036680 -> node_0000024fa3037850
+node_0000024fa3036680 -> node_0000024fa3037990
+node_0000024fa3036770 -> node_0000024fa30377b0
+node_0000024fa30368b0 -> node_0000024fa3037940
+node_0000024fa30369f0 -> node_0000024fa30369a0
+node_0000024fa30369f0 -> node_0000024fa3036a40
+node_0000024fa3036ae0 -> node_0000024fa30368b0
+node_0000024fa3036b80 -> node_0000024fa3037ad0
+node_0000024fa3036b80 -> node_0000024fa3037e90
+node_0000024fa3036c70 -> node_0000024fa3037a30
+node_0000024fa3036db0 -> node_0000024fa3036ea0
+node_0000024fa3036db0 -> node_0000024fa3037b70
+node_0000024fa3036ea0 -> node_0000024fa3037b20
+node_0000024fa3036ea0 -> node_0000024fa3036ef0
+node_0000024fa3036fe0 -> node_0000024fa3037030
+node_0000024fa3037080 -> node_0000024fa3036fe0
+node_0000024fa3037120 -> node_0000024fa3037c10
+node_0000024fa3037120 -> node_0000024fa3037210
+node_0000024fa3037260 -> node_0000024fa3037120
+node_0000024fa3037260 -> node_0000024fa3037530
+node_0000024fa3037300 -> node_0000024fa3037c60
+node_0000024fa3037300 -> node_0000024fa3037da0
+node_0000024fa3037440 -> node_0000024fa3037cb0
+node_0000024fa3037440 -> node_0000024fa3037490
+node_0000024fa3037530 -> node_0000024fa3037300
+node_0000024fa3037530 -> node_0000024fa30376c0
+node_0000024fa3037580 -> node_0000024fa3037620
+node_0000024fa3037620 -> node_0000024fa3037df0
+node_0000024fa3037620 -> node_0000024fa3037e40
+node_0000024fa30376c0 -> node_0000024fa3037580
+node_0000024fa30377b0 -> node_0000024fa30367c0
+node_0000024fa3037800 -> node_0000024fa3036770
+node_0000024fa3037850 -> node_0000024fa30366d0
+node_0000024fa3037850 -> node_0000024fa3037800
+node_0000024fa30378a0 -> node_0000024fa30369f0
+node_0000024fa30378f0 -> node_0000024fa3036900
+node_0000024fa30378f0 -> node_0000024fa30378a0
+node_0000024fa3037940 -> node_0000024fa30378f0
+node_0000024fa3037990 -> node_0000024fa3036ae0
+node_0000024fa30379e0 -> node_0000024fa3036680
+node_0000024fa30379e0 -> node_0000024fa3037ee0
+node_0000024fa3037a30 -> node_0000024fa3036cc0
+node_0000024fa3037a80 -> node_0000024fa3036c70
+node_0000024fa3037ad0 -> node_0000024fa3036bd0
+node_0000024fa3037ad0 -> node_0000024fa3037a80
+node_0000024fa3037b20 -> node_0000024fa3036e50
+node_0000024fa3037b70 -> node_0000024fa3037080
+node_0000024fa3037bc0 -> node_0000024fa3036db0
+node_0000024fa3037bc0 -> node_0000024fa3037260
+node_0000024fa3037c10 -> node_0000024fa3037170
+node_0000024fa3037c60 -> node_0000024fa30372b0
+node_0000024fa3037cb0 -> node_0000024fa30373f0
+node_0000024fa3037d00 -> node_0000024fa3037440
+node_0000024fa3037d50 -> node_0000024fa3037350
+node_0000024fa3037d50 -> node_0000024fa3037d00
+node_0000024fa3037da0 -> node_0000024fa3037d50
+node_0000024fa3037df0 -> node_0000024fa30375d0
+node_0000024fa3037e40 -> node_0000024fa3037670
+node_0000024fa3037e90 -> node_0000024fa3037bc0
+node_0000024fa3037ee0 -> node_0000024fa3036b80
 } 

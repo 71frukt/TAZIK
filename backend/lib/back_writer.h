@@ -7,6 +7,8 @@
 
 #define BASE_OUTPUT_ASM_FILE_NAME  "../../executable.asm"
 
+#define MAIN_FUNC_NAME  "GOIDA"
+
 #ifndef COMMENT_SYMBOL
 #define COMMENT_SYMBOL  ';'
 #endif
@@ -47,6 +49,7 @@ const MathOpAsmInfo MathOpAsmInfos[MATH_OPERATIONS_NUM] =
 
 //---------------------------------------------------------------------------------------------------------------//
 
+void PrintStartRegisterValues(FILE *dest_file);
 
 void PrintVarTAsm        (Node *var_t_node,    FILE *dest_file);
 void PrintInitAsm        (Node *init_node,     FILE *dest_file);

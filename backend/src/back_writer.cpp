@@ -18,6 +18,23 @@ FILE *GetOutputAsmFile(const int argc, const char *argv[])
     return output_file;   
 }
 
+void PrintStartRegisterValues(FILE *dest_file)
+{
+    fprintf(dest_file,  "PUSH 0                     \n"
+                        "POP AX                   \n\n"
+        
+                        "PUSH 0                     \n"
+                        "POP BX                   \n\n"
+        
+                        "PUSH AX                    \n"
+                        "PUSH 0                   \n\n"
+        
+                        "CALL " MAIN_FUNC_NAME ":   \n"
+                        "SPU_OUT                    \n"
+                        "HLT                        \n"
+    );
+}
+
 void PrintMathOpAsm(Node *math_op, FILE *dest_file)
 {
     assert(math_op);
