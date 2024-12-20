@@ -8,6 +8,7 @@
 void SemanticAnal(Tree *tree)
 {
     CheckFuncsValidity(tree, tree->root_ptr);
+
 }
 
 void CheckFuncsValidity(Tree *tree, Node *cur_node)
@@ -44,22 +45,22 @@ void CheckFuncsValidity(Tree *tree, Node *cur_node)
     }
 }
 
-void SyntaxError(Tree *tree, Node *cur_node, const char *error, const char *file, int line, const char *func)
-{
-    assert(tree);
-    assert(cur_node);
-    assert(error);
-    assert(file);
-    assert(func);
+// void SyntaxError(Tree *tree, Node *cur_node, const char *error, const char *file, int line, const char *func)
+// {
+//     assert(tree);
+//     assert(cur_node);
+//     assert(error);
+//     assert(file);
+//     assert(func);
 
-    TREE_DUMP(tree);
+//     TREE_DUMP(tree);
 
-    fprintf(stderr, "SyntaxError called in %s:%d %s()\n"
-                    "Error: %s   ( position %lld:%lld )",
-                    file, line, func, error, cur_node->born_line, cur_node->born_column);
+//     fprintf(stderr, "SyntaxError called in %s:%d %s()\n"
+//                     "Error: %s   ( position %lld:%lld )",
+//                     file, line, func, error, cur_node->born_line, cur_node->born_column);
 
-                    // Syntax error: forgot to put ) here (file ...,line ...)   // TODO ??
-                        // int main (int argc, char *argv[]   {
-                                                        //  ^ 
-    abort();
-}
+//                     // Syntax error: forgot to put ) here (file ...,line ...)   // TODO ??
+//                         // int main (int argc, char *argv[]   {
+//                                                         //  ^ 
+//     abort();
+// }

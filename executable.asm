@@ -7,14 +7,14 @@ POP BX
 PUSH AX                    
 PUSH 0                   
 
-CALL main:   
+CALL ГОЙДА:   
 SPU_OUT                    
 HLT                        
 
-	; инициализация функции 'main'   
-main:
+	; инициализация функции 'ГОЙДА'   
+ГОЙДА:
 
-	; инициализация переменной 'arg'   
+	; инициализация переменной 'Н'   
 
 POP [BX] 
 PUSH BX   
@@ -22,30 +22,26 @@ PUSH 1
 ADD      
 POP BX   
 
-	; вызов функции 'fact'   
+	; вызов функции 'Бум'   
 PUSH AX   
 	; передача аргументов в функцию 
-PUSH 6
-
-PUSH 2
-
-MUL 
+SPU_IN
 PUSH BX   
 POP AX   
-CALL fact: 
+CALL Бум: 
 POP CX  
 PUSH AX  
 POP BX  
 POP AX  
 	PUSH CX  
-	; конец вызова функции 'fact'   
+	; конец вызова функции 'Бум'   
 RET
-	; конец инициализации функции 'main'   
+	; конец инициализации функции 'ГОЙДА'   
 
-	; инициализация функции 'fact'   
-fact:
+	; инициализация функции 'Бум'   
+Бум:
 
-	; инициализация переменной 'n'   
+	; инициализация переменной 'Пункт'   
 
 POP [BX] 
 PUSH BX   
@@ -57,7 +53,7 @@ POP BX
 PUSH [AX + 0]
 PUSH 1
 
-JNE if_mark_0:
+JA if_mark_0:
 
 PUSH 1
 
@@ -65,37 +61,11 @@ RET
 if_mark_0:
 	; конец цикла if
 
-	; инициализация переменной 'next'   
-PUSH 0
+PUSH [AX + 0]
+RET
 
-
-POP [BX] 
-PUSH BX   
-PUSH 1    
-ADD      
-POP BX   
-
-	; присваивание значения переменной 'next'
-	; вызов функции 'fact'   
-PUSH AX   
-	; передача аргументов в функцию 
 PUSH [AX + 0]
 PUSH 1
 
 SUB 
-PUSH BX   
-POP AX   
-CALL fact: 
-POP CX  
-PUSH AX  
-POP BX  
-POP AX  
-	PUSH CX  
-	; конец вызова функции 'fact'   
-POP [AX + 1]
-
-PUSH [AX + 1]
-PUSH [AX + 0]
-MUL 
-RET
-	; конец инициализации функции 'fact'   
+	; конец инициализации функции 'Бум'   

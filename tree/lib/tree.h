@@ -144,4 +144,8 @@ bool    OpNodeIsCommutativity (Node *op_node);
 bool    IsInitialise          (Node *node);
 bool    IsBool                (Node *node);
 
+void SyntaxError(Tree *tree, Node *cur_node, const char *error, const char *file, int line, const char *func);
+
+#define SYNTAX_ERROR(tree, cur_token, error)  SyntaxError(tree, cur_token, error, __FILE__, __LINE__, __func__)
+
 #endif

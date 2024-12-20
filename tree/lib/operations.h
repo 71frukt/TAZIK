@@ -27,6 +27,7 @@ enum MathOperation_enum
     SUB,
     MUL,
     DIV,
+    SQRT,
     DEG,
 
     LN,
@@ -50,6 +51,7 @@ TreeElem_t Sub        (Node *arg1, Node *arg2);
 TreeElem_t Mul        (Node *arg1, Node *arg2);
 TreeElem_t Div        (Node *arg1, Node *arg2);
 
+TreeElem_t Sqrt       (Node *arg1, Node *arg2);
 TreeElem_t Deg        (Node *arg1, Node *arg2);
 TreeElem_t Ln         (Node *arg1, Node *arg2);
 TreeElem_t Log        (Node *arg1, Node *arg2);
@@ -71,26 +73,27 @@ struct MathOperation
     TreeElem_t  (*op_func)  (Node *arg1, Node *arg2);
 };
 
-const int MATH_OPERATIONS_NUM = 14;
+const int MATH_OPERATIONS_NUM = 15;
 
 const MathOperation MathOperations[MATH_OPERATIONS_NUM] = 
 {
-    { BOOL_EQ,      "==",   "==",  "JNE", BINARY, INFIX, IsEqual    },
-    { BOOL_NEQ,     "!=",   "!=",  "JE",  BINARY, INFIX, IsNotEqual },
-    { BOOL_LOWER,   "<",    "\\<", "JB",  BINARY, INFIX, IsBelow    },
-    { BOOL_GREATER, ">",    "\\>", "JA",  BINARY, INFIX, IsAbove    },
-    { ADD,          "+",    "+",   "ADD", BINARY, INFIX, Add        },
-    { SUB,          "-",    "-",   "SUB", BINARY, INFIX, Sub        },
-    { MUL,          "*",    "*",   "MUL", BINARY, INFIX, Mul        },
-    { DIV,          "/",    "/",   "DIV", BINARY, INFIX, Div        },
-    { DEG,          "^",    "^",   NULL,  BINARY, INFIX, Deg        },
-  
-    { LN,           "лн",   "ln",  NULL,  UNARY,  PREFIX, Ln        },
-    { LOG,          "лог",  "log", NULL,  BINARY, PREFIX, Log       },
-  
-    { SIN,          "син",  "sin", "SIN", UNARY,  PREFIX, Sin       },
-    { COS,          "кос",  "cos", "COS", UNARY,  PREFIX, Cos       },
-    { TAN,          "тан",  "tg",  "TG",  UNARY,  PREFIX, Tan       }
+    { BOOL_EQ,      "сравняет",     "==",  "JNE",  BINARY, INFIX,  IsEqual    },
+    { BOOL_NEQ,     "несравняет",   "!=",  "JE",   BINARY, INFIX,  IsNotEqual },
+    { BOOL_LOWER,   "меньше",       "\\<", "JA",   BINARY, INFIX,  IsBelow    },         // JA для JB специально 
+    { BOOL_GREATER, "больше",       "\\>", "JB",   BINARY, INFIX,  IsAbove    },         // JB для JA специально   
+    { ADD,          "+",            "+",   "ADD",  BINARY, INFIX,  Add        },
+    { SUB,          "-",            "-",   "SUB",  BINARY, INFIX,  Sub        },
+    { MUL,          "*",            "*",   "MUL",  BINARY, INFIX,  Mul        },
+    { DIV,          "/",            "/",   "DIV",  BINARY, INFIX,  Div        },
+    { SQRT,         "корень",       "cor", "SQRT", UNARY,  PREFIX, Sqrt       },
+    { DEG,          "^",            "^",   NULL,   BINARY, INFIX,  Deg        },
+   
+    { LN,           "лн",           "ln",  NULL,   UNARY,  PREFIX, Ln        },
+    { LOG,          "лог",          "log", NULL,   BINARY, PREFIX, Log       },
+   
+    { SIN,          "син",          "sin", "SIN",  UNARY,  PREFIX, Sin       },
+    { COS,          "кос",          "cos", "COS",  UNARY,  PREFIX, Cos       },
+    { TAN,          "тан",          "tg",  "TG",   UNARY,  PREFIX, Tan       }
 };
 
 //------------------------------------------------------------------------------------------------------------//
@@ -115,10 +118,10 @@ const int MANAGE_ELEMS_NUM = 5;
 
 const ManageElem Managers[MANAGE_ELEMS_NUM] = 
 {
-    { OPEN_BLOCK_BRACKET,  "начало_блока", "{"   },
-    { CLOSE_BLOCK_BRACKET, "конец_блока",  "}"   },
-    { OPEN_EXPR_BRACKET,   "(",            "("   },
-    { CLOSE_EXPR_BRACKET,  ")",            ")"   },
+    { OPEN_BLOCK_BRACKET,  "повезло",      "{"   },
+    { CLOSE_BLOCK_BRACKET, "назло",        "}"   },
+    { OPEN_EXPR_BRACKET,   "орешник",      "("   },
+    { CLOSE_EXPR_BRACKET,  "долетел",      ")"   },
     { EOT,                 "$",            "EOT" }
 };
 
@@ -148,7 +151,9 @@ enum KeyWord_enum
     ASSIGN,
     IF,
     WHILE,
-    RETURN
+    RETURN,
+    SPU_IN,
+    SPU_OUT,
 };
 
 struct KeyWord
@@ -158,22 +163,24 @@ struct KeyWord
     const char         *real_symbol;
 };
 
-const int KEY_WORDS_NUM = 12;
+const int KEY_WORDS_NUM = 14;
 
 const KeyWord KeyWords[KEY_WORDS_NUM] = 
 {
     { VAR_T_INDICATOR,  "",              "var_t"     },
     { FUNC_T_INDICATOR, "",              "func_t"    },
     { FUNC_CALL,        "",              "func_call" },
-    { INT_INIT,         "инт",           "int"       },
+    { INT_INIT,         "русский",       "int"       },
     { DOUBLE_INIT,      "дабл",          "double"    },
-    { NEW_EXPR,         "новая_строка",  "new_line"  },
-    { COMMA,            "запятая",       "comma"     },
+    { NEW_EXPR,         "хей",           "new_line"  },
+    { COMMA,            "по",            "comma"     },
     { NEW_FUNC,         "",              "new_func"  },
-    { ASSIGN,           "=" ,            "="         },
-    { IF,               "если",          "if"        },
+    { ASSIGN,           "есть" ,         "="         },
+    { IF,               "когда",         "if"        },
     { WHILE,            "пока",          "while"     },
-    { RETURN,           "рет",           "return"    }
+    { RETURN,           "отца",          "return"    },
+    { SPU_IN,           "наводка",       "scanf"     },
+    { SPU_OUT,          "прилёт",        "printf"    },
 };
 
 //---------------------------------------------------------------------------------------------------------------//

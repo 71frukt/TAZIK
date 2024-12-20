@@ -1,8 +1,6 @@
-// #include <stdio.h>
-// 
-// #include "tree.h"
-// #include "operations.h"
-// #include "debug.h"
+#include <stdio.h>
+#include <locale.h>
+
 #include "front_reader.h"
 #include "semantic_anal.h"
 

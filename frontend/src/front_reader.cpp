@@ -103,7 +103,7 @@ Node *GetNamedToken(Tree *tree, char *token_name)
 {
     fprintf(stderr, "cur_token = '%s'\n", token_name);
 
-    if (IsEngLetter(*token_name))                                                       // это имя функции или переменной
+    if (IsCapitalLetter(*token_name))                                                       // это имя функции или переменной
     {
         ProperName *cur_name_ptr = FindNameInTable(&tree->names_table, token_name);
 
@@ -148,6 +148,11 @@ bool IsEngLetter(char ch) // isalpha
     return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
 
+bool IsCapitalLetter(char letter)
+{
+    return (letter >= 'А' && letter <= 'Я' );
+}
+
 Node *GetCode(Tree *dest_tree)
 {
     assert(dest_tree);
@@ -178,6 +183,8 @@ Node *GetCode(Tree *dest_tree)
 
 Node *GetFuncInit(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetFuncInit()\n");
+
     assert(dest_tree);
     assert(ip);
     TREE_DUMP(dest_tree);
@@ -215,6 +222,8 @@ Node *GetFuncInit(Tree *dest_tree, size_t *ip)
 
 Node *GetBlock(Tree *dest_tree, size_t *ip)
 {
+                    fprintf(stderr, "In GetBlock()\n");
+
     assert(dest_tree);
     assert(ip);
     // TREE_DUMP(dest_tree);
@@ -245,6 +254,8 @@ Node *GetBlock(Tree *dest_tree, size_t *ip)
 
 Node *GetIf(Tree *dest_tree, size_t *ip)
 {
+                fprintf(stderr, "In GetIf()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -272,6 +283,8 @@ Node *GetIf(Tree *dest_tree, size_t *ip)
 
 Node *GetWhile(Tree *dest_tree, size_t *ip)
 {
+            fprintf(stderr, "In GetWhile()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -299,6 +312,8 @@ Node *GetWhile(Tree *dest_tree, size_t *ip)
 
 Node *GetExpr(Tree *dest_tree, size_t *ip)              // то, что отделяется ;
 {
+        fprintf(stderr, "In GetExpr()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -317,6 +332,8 @@ Node *GetExpr(Tree *dest_tree, size_t *ip)              // то, что отделяется ;
 
 Node *GetVarInit(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetVarInit()\n");
+
     assert(dest_tree);
     assert(ip);
     
@@ -327,7 +344,7 @@ Node *GetVarInit(Tree *dest_tree, size_t *ip)
 
     Node *init_node = tokens[(*ip)++];
     Node *var_node  = GetVarOrFunc(dest_tree, ip);
-
+fprintf(stderr, "Gett var. need arg\n");
     if (var_node->type != KEY_WORD || var_node->val.key_word->name != VAR_T_INDICATOR)
         SYNTAX_ERROR(dest_tree, tokens[*ip], "type of VAR");
 
@@ -345,6 +362,8 @@ Node *GetVarInit(Tree *dest_tree, size_t *ip)
 
 Node *GetExprSequence(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetExprSequence()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -369,6 +388,8 @@ TREE_DUMP(dest_tree);
 
 Node *GetReturn(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetReturn()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -385,6 +406,8 @@ Node *GetReturn(Tree *dest_tree, size_t *ip)
 
 Node *GetAssign(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetAssign()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -409,6 +432,8 @@ fprintf(stderr, "ip = %lld\n", *ip);
 
 Node *GetBool(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetBool()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -430,6 +455,8 @@ Node *GetBool(Tree *dest_tree, size_t *ip)
 
 Node *GetSum(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetSum()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -451,6 +478,8 @@ Node *GetSum(Tree *dest_tree, size_t *ip)
 
 Node *GetMul(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetMul()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -472,6 +501,8 @@ Node *GetMul(Tree *dest_tree, size_t *ip)
 
 Node *GetPow(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetPow()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -501,6 +532,8 @@ Node *GetPow(Tree *dest_tree, size_t *ip)
 
 Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 {
+    fprintf(stderr, "In GetOp()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -557,6 +590,8 @@ Node *GetOp(Tree *dest_tree, size_t *ip)              // f(..) или f(.. , ..)
 
 Node *GetSumInBrackets(Tree *dest_tree, size_t *ip)
 {
+    fprintf(stderr, "In GetSumInBrackets()\n");
+
     assert(dest_tree);
     assert(ip);
 
@@ -591,9 +626,11 @@ Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
 
     Node **tokens = dest_tree->node_ptrs;
 
+    fprintf(stderr, "In getVarOrFunc()\n");
+
     if (tokens[*ip]->type == VAR_OR_FUNC)
     {
-        fprintf(stderr, "In getVarOrFunc()\n");
+        fprintf(stderr, "1\n");
 
         Node *cur_node = tokens[(*ip)++];
         cur_node->type = VAR;
@@ -601,10 +638,13 @@ Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
 
         if (tokens[*ip]->type == MANAGER && tokens[*ip]->val.manager->name == OPEN_EXPR_BRACKET)     // тогда это вызов функции
         {
+            fprintf(stderr, "3\n");
+
             RemoveNode(dest_tree, &tokens[(*ip)++]);
 
             cur_node->type = FUNC;
             arg = GetExprSequence(dest_tree, ip);
+            fprintf(stderr, "3.1\n");
 
             if (tokens[*ip]->type != MANAGER || tokens[*ip]->val.manager->name != CLOSE_EXPR_BRACKET)
                 SYNTAX_ERROR(dest_tree, tokens[*ip], Managers[CLOSE_EXPR_BRACKET].my_symbol);
@@ -617,13 +657,56 @@ Node *GetVarOrFunc(Tree *dest_tree, size_t *ip)
         }
 
         else
+        {
+            fprintf(stderr, "4\n");
             return NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[VAR_T_INDICATOR]}, cur_node, arg);
+        }
     }
 
     else
     {
-        return GetNumber(dest_tree, ip);
+        fprintf(stderr, "2\n");
+        return GetScanf(dest_tree, ip);
     }
+}
+
+Node *GetScanf(Tree *dest_tree, size_t *ip)
+{
+    fprintf(stderr, "GetScanf()\n");
+
+    assert(dest_tree);
+    assert(ip);
+
+    Node **tokens = dest_tree->node_ptrs;
+
+    if (tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == SPU_IN)
+        return tokens[(*ip)++];
+
+    else 
+        return GetPrintf(dest_tree, ip);
+}
+
+Node *GetPrintf(Tree *dest_tree, size_t *ip)
+{
+    fprintf(stderr, "GetPrintf()\n");
+
+
+    assert(dest_tree);
+    assert(ip);
+
+    Node **tokens = dest_tree->node_ptrs;
+
+    if (tokens[*ip]->type == KEY_WORD && tokens[*ip]->val.key_word->name == SPU_OUT)
+    {
+        Node *spu_out_node = tokens[(*ip)++];
+
+        spu_out_node->left = GetSum(dest_tree, ip);
+
+        return spu_out_node;
+    }
+
+    else
+        return GetNumber(dest_tree, ip);
 }
 
 Node *GetNumber(Tree *dest_tree, size_t *ip)
@@ -640,7 +723,7 @@ Node *GetNumber(Tree *dest_tree, size_t *ip)
 
     else
     {
-        SYNTAX_ERROR(dest_tree, tokens[*ip], "type of NUM or VAR");
+        SYNTAX_ERROR(dest_tree, tokens[*ip], "expected type of NUM or VAR");
         return NULL;
     }
 }

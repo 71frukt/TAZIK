@@ -97,6 +97,11 @@ TreeElem_t Div(Node *arg1, Node *arg2)
     return arg1->val.num / arg2->val.num;
 }
 
+TreeElem_t Sqrt(Node *arg1, Node *arg2)
+{
+    return (TreeElem_t) pow(arg1->val.num, 0.5f);
+}
+
 TreeElem_t Deg(Node *arg1, Node *arg2)
 {
     return (TreeElem_t) pow(arg1->val.num, arg2->val.num);

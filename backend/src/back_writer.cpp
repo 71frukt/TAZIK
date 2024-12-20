@@ -242,6 +242,22 @@ void PrintReturnAsm(Node *ret_node, FILE *dest_file)
     fprintf(dest_file, "%s\n", AsmOperations[RET_ASM].sym);
 }
 
+void PrintSpuInAsm(Node *spu_in_node, FILE *dest_file)
+{
+    assert(spu_in_node);
+    assert(dest_file);
+
+    fprintf(dest_file, "%s\n", AsmOperations[SPU_IN_ASM].sym);
+}
+
+void PrintSpuOutAsm(Node *spu_in_node, FILE *dest_file)
+{
+    assert(spu_in_node);
+    assert(dest_file);
+
+    fprintf(dest_file, "%s\n", AsmOperations[SPU_OUT_ASM].sym);
+}
+
 void PrintAsmCodeByNode(Node *node, FILE *dest_file)
 {
     assert(node);

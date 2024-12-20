@@ -4,6 +4,6 @@ cd logs/graphs
 rmdir . /s /q 2>nul
 cd ..\\
 cd ..\\
-frontend.exe
+frontend.exe 
 cd ../
 cd ../

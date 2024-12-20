@@ -29,8 +29,11 @@ Node *GetPow            (Tree *dest_tree, size_t *ip);
 Node *GetOp             (Tree *dest_tree, size_t *ip);
 Node *GetSumInBrackets  (Tree *dest_tree, size_t *ip);
 Node *GetVarOrFunc      (Tree *dest_tree, size_t *ip);
+Node *GetScanf          (Tree *dest_tree, size_t *ip);
+Node *GetPrintf         (Tree *dest_tree, size_t *ip);
 Node *GetNumber         (Tree *dest_tree, size_t *ip);
 
 bool IsEngLetter (char ch);
+bool IsCapitalLetter(char letter);
 
 #endif

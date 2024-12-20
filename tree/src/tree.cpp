@@ -308,10 +308,10 @@ void GetBlockNamesTable(Tree *tree, Node *block, Node *cur_node)
             char error[ERROR_NAME_LEN] = {};
 
             if (named_node->type == VAR)
-                sprintf(error, "Redeclared of variable '%s'", named_node->val.prop_name->name);
+                sprintf(error, "Redeclared of variable '%s'", cur_name->name);
 
             else
-                sprintf(error, "Redeclared of function '%s'", named_node->val.prop_name->name);
+                sprintf(error, "Redeclared of function '%s'", cur_name->name);
 
             SYNTAX_ERROR(tree, named_node, error);
         }
@@ -485,6 +485,26 @@ bool SubtreeContainsType(Node *cur_node, NodeType type)
 
         return (left_subtree_cont_type || right_subtree_cont_type);
     }
+}
+
+void SyntaxError(Tree *tree, Node *cur_node, const char *error, const char *file, int line, const char *func)
+{
+    assert(tree);
+    assert(cur_node);
+    assert(error);
+    assert(file);
+    assert(func);
+
+    TREE_DUMP(tree);
+
+    fprintf(stderr, "SyntaxError called in %s:%d %s()\n"
+                    "Error: %s   ( position %lld:%lld )",
+                    file, line, func, error, cur_node->born_line, cur_node->born_column);
+
+                    // Syntax error: forgot to put ) here (file ...,line ...)   // TODO ??
+                        // int main (int argc, char *argv[]   {
+                                                        //  ^ 
+    abort();
 }
 
 bool OpNodeIsCommutativity(Node *op_node)

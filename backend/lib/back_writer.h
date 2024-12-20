@@ -7,7 +7,7 @@
 
 #define BASE_OUTPUT_ASM_FILE_NAME  "../../executable.asm"
 
-#define MAIN_FUNC_NAME  "GOIDA"
+#define MAIN_FUNC_NAME  "√Œ…ƒ¿"
 
 #ifndef COMMENT_SYMBOL
 #define COMMENT_SYMBOL  ';'
@@ -60,6 +60,8 @@ void PrintWhileAsm       (Node *while_node,    FILE *dest_file);
 void PrintReturnAsm      (Node *ret_node,      FILE *dest_file);
 void PrintCallAsm        (Node *call_node,     FILE *dest_file);
 void PrintPassArgsInCall (Node *comma_node,    FILE *dest_file);
+void PrintSpuInAsm       (Node *spu_in_node,   FILE *dest_file);
+void PrintSpuOutAsm      (Node *spu_in_node,   FILE *dest_file);
 
 struct KeyWordAsmInfo
 {
@@ -80,7 +82,9 @@ const KeyWordAsmInfo KeyWordAsmInfos[KEY_WORDS_NUM] =
     { ASSIGN,           PrintAssignAsm   },
     { IF,               PrintIfAsm       },
     { WHILE,            PrintWhileAsm    },
-    { RETURN,           PrintReturnAsm   }
+    { RETURN,           PrintReturnAsm   },
+    { SPU_IN,           PrintSpuInAsm    },
+    { SPU_OUT,          PrintSpuOutAsm   },
 };
 
 #endif
