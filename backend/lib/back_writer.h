@@ -7,7 +7,7 @@
 
 #define BASE_OUTPUT_ASM_FILE_NAME  "../../executable.asm"
 
-#define MAIN_FUNC_NAME  "√Œ…ƒ¿"
+#define MAIN_FUNC_NAME  "GOIDA"
 
 #ifndef COMMENT_SYMBOL
 #define COMMENT_SYMBOL  ';'
@@ -37,6 +37,7 @@ const MathOpAsmInfo MathOpAsmInfos[MATH_OPERATIONS_NUM] =
     { SUB,          "SUB" },
     { MUL,          "MUL" },
     { DIV,          "DIV" },
+    { SQRT,         "SQRT" },
     { DEG,          NULL  },
   
     { LN,           NULL  },

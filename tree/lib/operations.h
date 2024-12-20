@@ -77,10 +77,10 @@ const int MATH_OPERATIONS_NUM = 15;
 
 const MathOperation MathOperations[MATH_OPERATIONS_NUM] = 
 {
-    { BOOL_EQ,      "сравняет",     "==",  "JNE",  BINARY, INFIX,  IsEqual    },
-    { BOOL_NEQ,     "несравняет",   "!=",  "JE",   BINARY, INFIX,  IsNotEqual },
-    { BOOL_LOWER,   "меньше",       "\\<", "JA",   BINARY, INFIX,  IsBelow    },         // JA для JB специально 
-    { BOOL_GREATER, "больше",       "\\>", "JB",   BINARY, INFIX,  IsAbove    },         // JB для JA специально   
+    { BOOL_EQ,      "==",     "==",  "JNE",  BINARY, INFIX,  IsEqual    },
+    { BOOL_NEQ,     "!=",   "!=",  "JE",   BINARY, INFIX,  IsNotEqual },
+    { BOOL_LOWER,   "<",       "\\<", "JA",   BINARY, INFIX,  IsBelow    },         // JA для JB специально 
+    { BOOL_GREATER, ">",       "\\>", "JB",   BINARY, INFIX,  IsAbove    },         // JB для JA специально   
     { ADD,          "+",            "+",   "ADD",  BINARY, INFIX,  Add        },
     { SUB,          "-",            "-",   "SUB",  BINARY, INFIX,  Sub        },
     { MUL,          "*",            "*",   "MUL",  BINARY, INFIX,  Mul        },
@@ -118,10 +118,10 @@ const int MANAGE_ELEMS_NUM = 5;
 
 const ManageElem Managers[MANAGE_ELEMS_NUM] = 
 {
-    { OPEN_BLOCK_BRACKET,  "повезло",      "{"   },
-    { CLOSE_BLOCK_BRACKET, "назло",        "}"   },
-    { OPEN_EXPR_BRACKET,   "орешник",      "("   },
-    { CLOSE_EXPR_BRACKET,  "долетел",      ")"   },
+    { OPEN_BLOCK_BRACKET,  "{",      "{"   },
+    { CLOSE_BLOCK_BRACKET, "}",        "}"   },
+    { OPEN_EXPR_BRACKET,   "(",      "("   },
+    { CLOSE_EXPR_BRACKET,  ")",      ")"   },
     { EOT,                 "$",            "EOT" }
 };
 
@@ -169,18 +169,18 @@ const KeyWord KeyWords[KEY_WORDS_NUM] =
 {
     { VAR_T_INDICATOR,  "",              "var_t"     },
     { FUNC_T_INDICATOR, "",              "func_t"    },
-    { FUNC_CALL,        "",              "func_call" },
-    { INT_INIT,         "русский",       "int"       },
+    { FUNC_CALL,        "",              "call"      },
+    { INT_INIT,         "инт",       "int"       },
     { DOUBLE_INIT,      "дабл",          "double"    },
-    { NEW_EXPR,         "хей",           "new_line"  },
-    { COMMA,            "по",            "comma"     },
+    { NEW_EXPR,         ";",           "new_line"  },
+    { COMMA,            ",",            "param"     },
     { NEW_FUNC,         "",              "new_func"  },
-    { ASSIGN,           "есть" ,         "="         },
-    { IF,               "когда",         "if"        },
+    { ASSIGN,           "=" ,         "="         },
+    { IF,               "если",         "if"        },
     { WHILE,            "пока",          "while"     },
-    { RETURN,           "отца",          "return"    },
-    { SPU_IN,           "наводка",       "scanf"     },
-    { SPU_OUT,          "прилёт",        "printf"    },
+    { RETURN,           "рет",          "return"    },
+    { SPU_IN,           "скан",       "scanf"     },
+    { SPU_OUT,          "принт",        "printf"    },
 };
 
 //---------------------------------------------------------------------------------------------------------------//

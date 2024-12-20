@@ -250,10 +250,12 @@ void PrintSpuInAsm(Node *spu_in_node, FILE *dest_file)
     fprintf(dest_file, "%s\n", AsmOperations[SPU_IN_ASM].sym);
 }
 
-void PrintSpuOutAsm(Node *spu_in_node, FILE *dest_file)
+void PrintSpuOutAsm(Node *spu_out_node, FILE *dest_file)
 {
-    assert(spu_in_node);
+    assert(spu_out_node);
     assert(dest_file);
+
+    PrintAsmCodeByNode(spu_out_node->left, dest_file);
 
     fprintf(dest_file, "%s\n", AsmOperations[SPU_OUT_ASM].sym);
 }

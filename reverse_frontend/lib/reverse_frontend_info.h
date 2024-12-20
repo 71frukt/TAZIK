@@ -17,6 +17,8 @@ void ReverseFrontendComma (Node *cur_comma,     FILE *dest_file);
 void ReverseFrontAssign   (Node *assign_node,   FILE *dest_file);
 void ReverseFrontIfWhile  (Node *cur_node,      FILE *dest_file);
 void ReverseFrontReturn   (Node *cur_node,      FILE *dest_file);
+void ReverseFrontSpuIn    (Node *cur_node,      FILE *dest_file);
+void ReverseFrontSpuOut   (Node *cur_node,      FILE *dest_file);
 void ReverseFrontChildren (Node *node,          FILE *dest_file);
 
 
@@ -39,7 +41,9 @@ const KeyWordReverseFrontendInfo KeyWordReverseFrontendInfos[KEY_WORDS_NUM] =
     { ASSIGN,           ReverseFrontAssign   },
     { IF,               ReverseFrontIfWhile  },
     { WHILE,            ReverseFrontIfWhile  },
-    { RETURN,           ReverseFrontReturn   }
+    { RETURN,           ReverseFrontReturn   },
+    { SPU_IN,           ReverseFrontSpuIn    },
+    { SPU_OUT,          ReverseFrontSpuOut   },
 };
 
 #endif

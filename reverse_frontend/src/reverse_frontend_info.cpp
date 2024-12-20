@@ -22,9 +22,18 @@ void PrintNodeMySym(Node *node, FILE *dest_file)
 
     else if (node->type == MATH_OP)
     {
-        PrintNodeMySym(node->left, dest_file);
-        fprintf(dest_file, "%s ", node->val.math_op->my_symbol);
-        PrintNodeMySym(node->right, dest_file);
+        if (node->val.math_op->type == UNARY)
+        {
+            fprintf(dest_file, "%s ", node->val.math_op->my_symbol);
+            PrintNodeMySym(node->left, dest_file);
+        }
+
+        else
+        {
+            PrintNodeMySym(node->left, dest_file);
+            fprintf(dest_file, "%s ", node->val.math_op->my_symbol);
+            PrintNodeMySym(node->right, dest_file);
+        }
     }
 
     else if (node->type == VAR || node->type == FUNC)
@@ -78,10 +87,6 @@ void ReverseFrontNewExpr(Node *new_expr_node, FILE *dest_file)
 
 void ReverseFrontendComma(Node *cur_comma, FILE *dest_file)
 {
-    assert(cur_comma);
-    assert(dest_file);
-    assert(cur_comma->type == KEY_WORD && cur_comma->val.key_word->name == COMMA);
-
     PrintNodeMySym(cur_comma->left, dest_file);
 
     if (cur_comma->right != NULL)
@@ -112,6 +117,18 @@ void ReverseFrontIfWhile(Node *cur_node, FILE *dest_file)
 }
 
 void ReverseFrontReturn(Node *cur_node, FILE *dest_file)
+{
+    fprintf(dest_file, "%s ", cur_node->val.key_word->my_symbol);
+    PrintNodeMySym(cur_node->left, dest_file);
+}
+
+void ReverseFrontSpuIn(Node *cur_node, FILE *dest_file)
+{
+    fprintf(dest_file, "%s ", cur_node->val.key_word->my_symbol);
+    PrintNodeMySym(cur_node->left, dest_file);
+}
+
+void ReverseFrontSpuOut(Node *cur_node, FILE *dest_file)
 {
     fprintf(dest_file, "%s ", cur_node->val.key_word->my_symbol);
     PrintNodeMySym(cur_node->left, dest_file);
