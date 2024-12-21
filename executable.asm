@@ -124,12 +124,12 @@ JNE if_mark_2:
 PUSH 0
 
 PUSH [AX + 2]
+SUB 
 PUSH 2
 
 DIV 
 PUSH [AX + 1]
 DIV 
-SUB 
 SPU_OUT
 
 PUSH 0
@@ -145,12 +145,12 @@ PUSH [AX + 2]
 SUB 
 PUSH [AX + 4]
 SQRT 
+SUB 
 PUSH 2
 
 DIV 
 PUSH [AX + 1]
 DIV 
-SUB 
 
 POP [BX] 
 PUSH BX   
@@ -165,12 +165,12 @@ PUSH [AX + 2]
 SUB 
 PUSH [AX + 4]
 SQRT 
+ADD 
 PUSH 2
 
 DIV 
 PUSH [AX + 1]
 DIV 
-ADD 
 
 POP [BX] 
 PUSH BX   
@@ -209,7 +209,7 @@ ADD
 POP BX   
 
 	; начало цикла if
-PUSH [AX + 0]
+PUSH [AX + 1]
 PUSH 0
 
 JNE if_mark_3:

@@ -108,7 +108,7 @@ void PrintInitAsm(Node *init_node, FILE *dest_file)
     {
         fprintf(dest_file, "\t%c инициализация функции '%s'   \n", COMMENT_SYMBOL, prop_name_node->val.prop_name->name);    
 
-        fprintf(dest_file, "%s:\n", init_node->left->left->val.prop_name->name);        // AX - start of frame, BX - cur size
+        fprintf(dest_file, "%s:\n", init_node->left->left->val.prop_name->name);
 
         PrintAsmCodeByNode(init_node->left->right, dest_file);
 
@@ -127,18 +127,16 @@ void PrintCallAsm(Node *call_node, FILE *dest_file)
 
     fprintf(dest_file, "\t%c вызов функции '%s'   \n", COMMENT_SYMBOL, call_node->left->left->val.prop_name->name);    
 
-    fprintf(dest_file, "%s AX   \n", AsmOperations[PUSH_ASM].sym);
+    fprintf(dest_file,  "%s AX   \n", AsmOperations[PUSH_ASM].sym);
 
     PrintPassArgsInCall(call_node->left->right, dest_file);
 
-    // PrintAsmCodeByNode(call_node->left->right, dest_file);                              // аргументы
+    fprintf(dest_file,  "%s BX   \n", AsmOperations[PUSH_ASM].sym);                                                                            // AX := BX
+    fprintf(dest_file,  "%s AX   \n", AsmOperations[POP_ASM].sym );
 
-    fprintf(dest_file, "%s BX   \n"                                                     // AX := BX
-                       "%s AX   \n", AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym);
+    fprintf(dest_file,  "%s %s: \n", AsmOperations[CALL_ASM].sym, call_node->left->left->val.prop_name->name);  // теперь в стеке лежат BP и res_of_func, их нужно будет свапнуть после выхода из вызова функции
 
-    fprintf(dest_file, "%s %s: \n", AsmOperations[CALL_ASM].sym, call_node->left->left->val.prop_name->name);   // теперь в стеке лежат BP и res_of_func, их нужно будет свапнуть после выхода из вызова функции
-
-    fprintf(dest_file,  "%s CX  \n", AsmOperations[POP_ASM].sym);       // кладём результат функции в CX
+    fprintf(dest_file,  "%s CX  \n", AsmOperations[POP_ASM].sym);                                               // кладём результат функции в CX
 
     fprintf(dest_file,  "%s AX  \n"     // AX - start of frame, BX - cur size
                         "%s BX  \n"     // BX := AX
@@ -151,18 +149,18 @@ void PrintCallAsm(Node *call_node, FILE *dest_file)
     fprintf(stderr, "End of PrintCallAsm()\n");
 }
 
-void PrintPassArgsInCall(Node *comma_node, FILE *dest_file)
+void PrintPassArgsInCall(Node *param_node , FILE *dest_file)
 {
-    assert(comma_node);
-    assert(comma_node->type == KEY_WORD && comma_node->val.key_word->name == COMMA);
+    assert(param_node);
+    assert(param_node->type == KEY_WORD &&  param_node->val.key_word->name == COMMA);
     assert(dest_file);
 
     fprintf(dest_file, "\t%c передача аргументов в функцию \n", COMMENT_SYMBOL);
 
-    if (comma_node->right != NULL)
-        PrintPassArgsInCall(comma_node->right, dest_file);
+    if ( param_node ->right != NULL)
+        PrintPassArgsInCall( param_node ->right, dest_file);
 
-    PrintAsmCodeByNode(comma_node->left, dest_file);
+    PrintAsmCodeByNode( param_node ->left, dest_file);
 }
 
 void PrintAssignAsm(Node *assign_node, FILE *dest_file)
@@ -233,11 +231,6 @@ void PrintReturnAsm(Node *ret_node, FILE *dest_file)
     assert(dest_file);
 
     PrintAsmCodeByNode(ret_node->left, dest_file);
-
-    // fprintf(dest_file, "%s AX   \n"     // AX - start of frame, BX - cur size
-    //                    "%s BX   \n"     // BX = AX
-    //                    "%s AX   \n",    // pop AX
-    //         AsmOperations[PUSH_ASM].sym, AsmOperations[POP_ASM].sym, AsmOperations[POP_ASM].sym);
 
     fprintf(dest_file, "%s\n", AsmOperations[RET_ASM].sym);
 }
