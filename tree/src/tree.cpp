@@ -60,6 +60,8 @@ void TreeDtor(Tree *tree)
 
 void NamesTableCtor(size_t start_capa, NamesTable *table)
 {
+    assert(table);
+
     table->capacity = start_capa;
     table->size     = 0;
     table->names    = (ProperName *) calloc(start_capa, sizeof(ProperName));
@@ -251,9 +253,16 @@ ProperName *FindNameInBlock(Node *cur_block, char *name)
 
 ProperName *NewNameInTable(NamesTable *table, char *name)
 {
+    assert(table);
+    assert(name);
+
+    fprintf(stderr, "table size = %lld, capa = %lld, name = '%s'\n", table->size, table->capacity, name);
+
+
     if (table->capacity == 0)
         NamesTableCtor(START_NAMES_TABLE_CAPA, table);
 
+    fprintf(stderr, "name = '%s'\n", name);
     if (table->size >= table->capacity)
     {
         table->capacity *= 2;
@@ -262,6 +271,8 @@ ProperName *NewNameInTable(NamesTable *table, char *name)
 
     table->names[table->size].number = table->size;
     strncpy(table->names[table->size].name, name, TOKEN_LEN);
+
+    fprintf(stderr, "NAME SSS = '%s', name = '%s'\n", table->names[table->size].name, name);
 
     table->names[table->size].is_init = false;                  // проверка на семантику после построения дерева
 
@@ -284,7 +295,7 @@ void GetBlockNamesTable(Tree *tree, Node *block, Node *cur_node)
     else if (cur_node->type == VAR)
     {
         ProperName *cur_name = FindNameInBlock(block, cur_node->val.prop_name->name);
-        // fprintf(stderr, "use of inited var named '%s', num = %lld\n", cur_name->name, cur_name->number);
+        fprintf(stderr, "use of inited var named '%s', num = %lld\n", cur_name->name, cur_name->number);
 
         if (cur_name == NULL)
         {
@@ -317,7 +328,15 @@ void GetBlockNamesTable(Tree *tree, Node *block, Node *cur_node)
         }
 
         if (named_node->type == VAR)
+        {
+            fprintf(stderr, "i init the var named '%s'\n", named_node->val.prop_name->name);
+                        TREE_DUMP(tree);
+
             named_node->val.prop_name = NewNameInTable(table, named_node->val.prop_name->name);
+
+            fprintf(stderr, "i donedone init the var named '%s'\n", named_node->val.prop_name->name);
+            TREE_DUMP(tree);
+        }
 
         else
             named_node->val.prop_name = NewNameInTable(&tree->names_table, named_node->val.prop_name->name);
@@ -332,6 +351,8 @@ void GetBlockNamesTable(Tree *tree, Node *block, Node *cur_node)
         GetBlockNamesTable(tree, block, cur_node->left);
         GetBlockNamesTable(tree, block, cur_node->right);
     }
+
+
 }
 
 void MakeNamesTablesForBlocks(Tree *tree, Node *cur_node)
@@ -353,17 +374,23 @@ void MakeNamesTablesForBlocks(Tree *tree, Node *cur_node)
 
         fprintf(stderr, "count of args = %lld\n\n", func_node->val.prop_name->args_count);
 
+        TREE_DUMP(tree);
+        fprintf(stderr, "\nBEFORE GetBlockNamesTable!!!\n\n\n\n\n\n");
         GetBlockNamesTable(tree, block_node, cur_node->left->left->right);
+        fprintf(stderr, "\nAFTER GetBlockNamesTable!!!\n\n\n\n\n\n");
+        TREE_DUMP(tree);
 
         MakeNamesTablesForBlocks(tree, block_node);
-
-        MakeNamesTablesForBlocks(tree, cur_node->right);
 
         fprintf(stderr, "size of names table = %lld\n", block_node->val.block.names_table.size);
         for (size_t i = 0; i < block_node->val.block.names_table.size; i++)
         {
             fprintf(stderr, "init node = '%s', num = %lld\n", block_node->val.block.names_table.names[i].name, block_node->val.block.names_table.names[i].number);
         }
+
+        TREE_DUMP(tree);
+        MakeNamesTablesForBlocks(tree, cur_node->right);
+        TREE_DUMP(tree);
     }
 
     else if (cur_node->type == NEW_BLOCK)

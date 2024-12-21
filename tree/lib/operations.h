@@ -78,14 +78,14 @@ const int MATH_OPERATIONS_NUM = 15;
 const MathOperation MathOperations[MATH_OPERATIONS_NUM] = 
 {
     { BOOL_EQ,      "будто",    "==",  "JNE",  BINARY, INFIX,  IsEqual    },
-    { BOOL_NEQ,     "!=",       "!=",  "JE",   BINARY, INFIX,  IsNotEqual },
-    { BOOL_LOWER,   "<",        "\\<", "JA",   BINARY, INFIX,  IsBelow    },         // JA для JB специально 
-    { BOOL_GREATER, ">",        "\\>", "JB",   BINARY, INFIX,  IsAbove    },         // JB для JA специально   
-    { ADD,          "+",        "+",   "ADD",  BINARY, INFIX,  Add        },
-    { SUB,          "-",        "-",   "SUB",  BINARY, INFIX,  Sub        },
-    { MUL,          "*",        "*",   "MUL",  BINARY, INFIX,  Mul        },
-    { DIV,          "/",        "/",   "DIV",  BINARY, INFIX,  Div        },
-    { SQRT,         "корень",   "cor", "SQRT", UNARY,  PREFIX, Sqrt       },
+    { BOOL_NEQ,     "отличает", "!=",  "JE",   BINARY, INFIX,  IsNotEqual },
+    { BOOL_LOWER,   "слабее",   "\\<", "JA",   BINARY, INFIX,  IsBelow    },         // JA для JB специально 
+    { BOOL_GREATER, "сильнее",  "\\>", "JB",   BINARY, INFIX,  IsAbove    },         // JB для JA специально   
+    { ADD,          "вместе",   "+",   "ADD",  BINARY, INFIX,  Add        },
+    { SUB,          "без",      "-",   "SUB",  BINARY, INFIX,  Sub        },
+    { MUL,          "дохера",   "*",   "MUL",  BINARY, INFIX,  Mul        },
+    { DIV,          "ограбить", "/",   "DIV",  BINARY, INFIX,  Div        },
+    { SQRT,         "корешок",  "cor", "SQRT", UNARY,  PREFIX, Sqrt       },
     { DEG,          "^",        "^",   NULL,   BINARY, INFIX,  Deg        },
    
     { LN,           "лн",       "ln",  NULL,   UNARY,  PREFIX, Ln        },
@@ -129,7 +129,18 @@ enum Managers_enum
     CLOSE_BLOCK_BRACKET,
     OPEN_EXPR_BRACKET,
     CLOSE_EXPR_BRACKET,
-    EOT
+    EOT,
+    
+    DIGIT_ZERO,
+    DIGIT_ONE,
+    DIGIT_TWO,
+    DIGIT_TREE,
+    DIGIT_FOUR,
+    DIGIT_FIVE,
+    DIGIT_SIX,
+    DIGIT_SEVEN,
+    DIGIT_EIGHT,
+    DIGIT_NINE
 };
 
 struct ManageElem
@@ -139,19 +150,30 @@ struct ManageElem
     const char          *real_symbol;
 };
 
-const int MANAGE_ELEMS_NUM = 9;
+const int MANAGE_ELEMS_NUM = 19;
 
 const ManageElem Managers[MANAGE_ELEMS_NUM] = 
 {
-    { OPEN_BLOCK_BRACKET_P1,  "панки"       , "{1" },    
-    { OPEN_BLOCK_BRACKET_P2,  "хой"         , "{2" },    
-    { OPEN_BLOCK_BRACKET,     "панки хой"   , "{" },  
-    { CLOSE_BLOCK_BRACKET_P1, "попса"       , "}1" },
-    { CLOSE_BLOCK_BRACKET_P2, "отстой"      , "}2" },
-    { CLOSE_BLOCK_BRACKET,    "попса отстой", "}" },
-    { OPEN_EXPR_BRACKET,      "желаешь"     , "(" },  
-    { CLOSE_EXPR_BRACKET,     "расскажу"    , ")" }, 
-    { EOT,                    "$"           , "EOT" },       
+    { OPEN_BLOCK_BRACKET_P1,  "панки"       , "{1"  },    
+    { OPEN_BLOCK_BRACKET_P2,  "хой"         , "{2"  },    
+    { OPEN_BLOCK_BRACKET,     "панки хой"   , "{"   },  
+    { CLOSE_BLOCK_BRACKET_P1, "попса"       , "}1"  },
+    { CLOSE_BLOCK_BRACKET_P2, "отстой"      , "}2"  },
+    { CLOSE_BLOCK_BRACKET,    "попса отстой", "}"   },
+    { OPEN_EXPR_BRACKET,      "желаешь"     , "("   },  
+    { CLOSE_EXPR_BRACKET,     "расскажу"    , ")"   }, 
+    { EOT,                    "$"           , "EOT" },
+
+    { DIGIT_ZERO,             "ноль"        , "0"   },
+    { DIGIT_ONE,              "раз"         , "1"   },
+    { DIGIT_TWO,              "два"         , "2"   },
+    { DIGIT_TREE,             "три"         , "3"   },
+    { DIGIT_FOUR,             "четыре"      , "4"   },
+    { DIGIT_FIVE,             "пять"        , "5"   },
+    { DIGIT_SIX,              "шесть"       , "6"   },
+    { DIGIT_SEVEN,            "семь"        , "7"   },
+    { DIGIT_EIGHT,            "восемь"      , "8"   },
+    { DIGIT_NINE,             "девять"      , "9"   },
 };
 
 

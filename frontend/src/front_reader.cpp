@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <iostream>
 #include <string.h>
+#include <stdlib.h>
 
 #include "../../tree/tree_lib.h"
 #include "front_reader.h"
@@ -25,6 +26,8 @@ void BuildTreeByCode(Tree *tree, FILE *source)
     MakeTokens(tree, source);
 
     tree->root_ptr = GetCode(tree);
+
+    TREE_DUMP(tree);
 
     MakeNamesTablesForBlocks(tree, tree->root_ptr);
 
@@ -92,24 +95,28 @@ void MakeTokens(Tree *tree, FILE *source)
             new_node->born_column = cur_column;
             new_node->born_line   = cur_line;
 
-            cur_ch = getc(source);
+            cur_ch = (char) getc(source);
             while (isspace(cur_ch))
             {
+                if (cur_ch == '\n')
+                {
+                    cur_line++;
+                    cur_column = 0;
+                }
+
                 cur_column++;
-                cur_ch = getc(source);
+                cur_ch = (char) getc(source);
             }
             ungetc(cur_ch, source);
 
             char next_token[TOKEN_STR_LEN] = {};
-            fscanf(source, "%s%n", next_token, &shift);
+            fscanf(source, "%[^\n]%n", next_token, &shift);
             cur_column += shift;
 
             if (new_node->type == MANAGER && new_node->val.manager->name == OPEN_BLOCK_BRACKET_P1)
             {
                 if (strcmp(Managers[OPEN_BLOCK_BRACKET_P2].my_symbol, next_token) == 0)
-                {
                     new_node->val.manager = &Managers[OPEN_BLOCK_BRACKET];
-                }
 
                 else
                     SYNTAX_ERROR(tree, new_node, "expected second part of open block token");
@@ -118,9 +125,7 @@ void MakeTokens(Tree *tree, FILE *source)
             else if (new_node->type == MANAGER && new_node->val.manager->name == CLOSE_BLOCK_BRACKET_P1)
             {
                 if (strcmp(Managers[CLOSE_BLOCK_BRACKET_P2].my_symbol, next_token) == 0)
-                {
                     new_node->val.manager = &Managers[CLOSE_BLOCK_BRACKET];
-                }
 
                 else
                     SYNTAX_ERROR(tree, new_node, "expected second part of close block token");
@@ -173,7 +178,13 @@ Node *GetNamedToken(Tree *tree, char *token_name)
 
         else if (manage_el != NULL)
         {
-            return NewNode(tree, MANAGER, {.manager = manage_el}, NULL, NULL);
+            if (manage_el->name >= DIGIT_ZERO && manage_el->name <= DIGIT_NINE)
+            {
+                return NewNode(tree, NUM, {.num = *manage_el->real_symbol - '0'}, NULL, NULL);
+            }
+
+            else
+                return NewNode(tree, MANAGER, {.manager = manage_el}, NULL, NULL);
         }
 
         // Node *new_node = NewNode(tree, POISON_TYPE, {}, NULL, NULL);
@@ -258,6 +269,7 @@ Node *GetFuncInit(Tree *dest_tree, size_t *ip)
     func_init->right = GetBlock(dest_tree, ip);
 
     return NewNode(dest_tree, KEY_WORD, {.key_word = &KeyWords[NEW_FUNC]}, func_init, NULL);
+
 }
 
 Node *GetBlock(Tree *dest_tree, size_t *ip)

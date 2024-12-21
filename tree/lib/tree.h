@@ -60,7 +60,7 @@ struct NamesTable
     size_t capacity;
 };
 
-#define NEW_BLOCK_SYM  "new_block"
+#define NEW_BLOCK_SYM  "NEW_BLOCK"
 
 struct Block
 {
