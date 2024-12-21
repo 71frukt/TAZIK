@@ -86,10 +86,50 @@ void MakeTokens(Tree *tree, FILE *source)
 
             Node *new_node = GetNamedToken(tree, cur_token);
 
-            if (new_node != NULL)
+            if (new_node == NULL)
+                continue;
+
+            new_node->born_column = cur_column;
+            new_node->born_line   = cur_line;
+
+            cur_ch = getc(source);
+            while (isspace(cur_ch))
             {
-                new_node->born_column = cur_column;
-                new_node->born_line   = cur_line;
+                cur_column++;
+                cur_ch = getc(source);
+            }
+            ungetc(cur_ch, source);
+
+            char next_token[TOKEN_STR_LEN] = {};
+            fscanf(source, "%s%n", next_token, &shift);
+            cur_column += shift;
+
+            if (new_node->type == MANAGER && new_node->val.manager->name == OPEN_BLOCK_BRACKET_P1)
+            {
+                if (strcmp(Managers[OPEN_BLOCK_BRACKET_P2].my_symbol, next_token) == 0)
+                {
+                    new_node->val.manager = &Managers[OPEN_BLOCK_BRACKET];
+                }
+
+                else
+                    SYNTAX_ERROR(tree, new_node, "expected second part of open block token");
+            }
+
+            else if (new_node->type == MANAGER && new_node->val.manager->name == CLOSE_BLOCK_BRACKET_P1)
+            {
+                if (strcmp(Managers[CLOSE_BLOCK_BRACKET_P2].my_symbol, next_token) == 0)
+                {
+                    new_node->val.manager = &Managers[CLOSE_BLOCK_BRACKET];
+                }
+
+                else
+                    SYNTAX_ERROR(tree, new_node, "expected second part of close block token");
+            }
+
+            else
+            {
+                fseek(source, -shift, SEEK_CUR);
+                cur_column -= shift;
             }
         }
     }
@@ -117,9 +157,9 @@ Node *GetNamedToken(Tree *tree, char *token_name)
 
     else                                                                                // имя операнда или рандомный вкид
     {
-        const MathOperation   *cur_op     = GetOperationBySymbol  (token_name, MY_CODE_MODE);
-        const KeyWord         *key_word   = GetKeyWordBySymbol    (token_name, MY_CODE_MODE);
-        const ManageElem      *manage_el  = GetManageElemBySymbol (token_name, MY_CODE_MODE);
+        const MathOperation *cur_op    = GetOperationBySymbol  (token_name, MY_CODE_MODE);
+        const KeyWord       *key_word  = GetKeyWordBySymbol    (token_name, MY_CODE_MODE);
+        const ManageElem    *manage_el = GetManageElemBySymbol (token_name, MY_CODE_MODE);
 
         if (cur_op != NULL)
         {

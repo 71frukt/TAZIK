@@ -77,7 +77,7 @@ const int MATH_OPERATIONS_NUM = 15;
 
 const MathOperation MathOperations[MATH_OPERATIONS_NUM] = 
 {
-    { BOOL_EQ,      "будто",       "==",  "JNE",  BINARY, INFIX,  IsEqual    },
+    { BOOL_EQ,      "будто",    "==",  "JNE",  BINARY, INFIX,  IsEqual    },
     { BOOL_NEQ,     "!=",       "!=",  "JE",   BINARY, INFIX,  IsNotEqual },
     { BOOL_LOWER,   "<",        "\\<", "JA",   BINARY, INFIX,  IsBelow    },         // JA дл€ JB специально 
     { BOOL_GREATER, ">",        "\\>", "JB",   BINARY, INFIX,  IsAbove    },         // JB дл€ JA специально   
@@ -121,7 +121,11 @@ const MathOperation MathOperations[MATH_OPERATIONS_NUM] =
 
 enum Managers_enum
 {
+    OPEN_BLOCK_BRACKET_P1,
+    OPEN_BLOCK_BRACKET_P2,
     OPEN_BLOCK_BRACKET,
+    CLOSE_BLOCK_BRACKET_P1,
+    CLOSE_BLOCK_BRACKET_P2,
     CLOSE_BLOCK_BRACKET,
     OPEN_EXPR_BRACKET,
     CLOSE_EXPR_BRACKET,
@@ -135,21 +139,25 @@ struct ManageElem
     const char          *real_symbol;
 };
 
-const int MANAGE_ELEMS_NUM = 5;
+const int MANAGE_ELEMS_NUM = 9;
 
 const ManageElem Managers[MANAGE_ELEMS_NUM] = 
 {
-    { OPEN_BLOCK_BRACKET,  "панки_хой", "{"   },
-    { CLOSE_BLOCK_BRACKET, "попса_отстой", "}"   },
-    { OPEN_EXPR_BRACKET,   "желаешь", "("   },
-    { CLOSE_EXPR_BRACKET,  "расскажу", ")"   },
-    { EOT,                 "$", "EOT" }
+    { OPEN_BLOCK_BRACKET_P1,  "панки"       , "{1" },    
+    { OPEN_BLOCK_BRACKET_P2,  "хой"         , "{2" },    
+    { OPEN_BLOCK_BRACKET,     "панки хой"   , "{" },  
+    { CLOSE_BLOCK_BRACKET_P1, "попса"       , "}1" },
+    { CLOSE_BLOCK_BRACKET_P2, "отстой"      , "}2" },
+    { CLOSE_BLOCK_BRACKET,    "попса отстой", "}" },
+    { OPEN_EXPR_BRACKET,      "желаешь"     , "(" },  
+    { CLOSE_EXPR_BRACKET,     "расскажу"    , ")" }, 
+    { EOT,                    "$"           , "EOT" },       
 };
 
 
 // const ManageElem Managers[MANAGE_ELEMS_NUM] = 
 // {
-//     { OPEN_BLOCK_BRACKET,  "{", "{"   },
+//     { OPEN_BLOCK_BRACKET_P1,  "{", "{"   },
 //     { CLOSE_BLOCK_BRACKET, "}", "}"   },
 //     { OPEN_EXPR_BRACKET,   "(", "("   },
 //     { CLOSE_EXPR_BRACKET,  ")", ")"   },
@@ -188,20 +196,20 @@ const int KEY_WORDS_NUM = 14;
 
 const KeyWord KeyWords[KEY_WORDS_NUM] = 
 {
-    { VAR_T_INDICATOR,  "",      "var_t"     },
-    { FUNC_T_INDICATOR, "",      "func_t"    },
-    { FUNC_CALL,        "",      "call"      },
-    { INT_INIT,         "целый",   "int"       },
-    { DOUBLE_INIT,      "дабл",  "double"    },
-    { NEW_EXPR,         "хой",     "new_line"  },
-    { COMMA,            ",",     "param"     },
-    { NEW_FUNC,         "",      "new_func"  },
-    { ASSIGN,           "теперь" ,    "="         },
-    { IF,               "коль",  "if"        },
-    { WHILE,            "пока",  "while"     },
-    { RETURN,           "лес",   "return"    },
+    { VAR_T_INDICATOR,  "",         "var_t"     },
+    { FUNC_T_INDICATOR, "",         "func_t"    },
+    { FUNC_CALL,        "",         "call"      },
+    { INT_INIT,         "целый",    "int"       },
+    { DOUBLE_INIT,      "дабл",     "double"    },
+    { NEW_EXPR,         "хой",      "new_line"  },
+    { COMMA,            ",",        "param"     },
+    { NEW_FUNC,         "",         "new_func"  },
+    { ASSIGN,           "теперь" ,  "="         },
+    { IF,               "коль",     "if"        },
+    { WHILE,            "пока",     "while"     },
+    { RETURN,           "лес",      "return"    },
     { SPU_IN,           "почитаю",  "scanf"     },
-    { SPU_OUT,          "болтал", "printf"    },
+    { SPU_OUT,          "болтал",   "printf"    },
 };
 
 // const KeyWord KeyWords[KEY_WORDS_NUM] = 
